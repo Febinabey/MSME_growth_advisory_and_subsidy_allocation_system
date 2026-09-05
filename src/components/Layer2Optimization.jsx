@@ -3,7 +3,7 @@ import { SAMPLE_APPLICANTS } from '../data/sampleApplicants';
 import { optimizeSubsidyBudget } from '../engine/knapsackSolver';
 import { 
   Sliders, DollarSign, Users, TrendingUp, Award, CheckCircle2, XCircle, 
-  Sparkles, ShieldCheck, Scale, Zap, Info
+  Sparkles, ShieldCheck, Scale, Zap, Info, Sprout
 } from 'lucide-react';
 
 export default function Layer2Optimization() {
@@ -31,21 +31,36 @@ export default function Layer2Optimization() {
   return (
     <div>
       {/* Header Banner */}
-      <div className="glass-panel" style={{ padding: '1.5rem 2rem', marginBottom: '1.5rem', background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(99, 102, 241, 0.05) 100%)', border: '1px solid var(--border-highlight)' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
+      <div className="glass-panel organic-card-1" style={{
+        padding: '2rem 2.5rem',
+        marginBottom: '2rem',
+        background: 'linear-gradient(135deg, rgba(93, 112, 82, 0.09) 0%, rgba(193, 140, 93, 0.08) 100%)',
+        border: '1.5px solid var(--border)'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1.25rem' }}>
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
-              <span className="badge badge-emerald">Layer 2 Engine</span>
-              <h2 style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--text-primary)' }}>Government Policy & Subsidy Optimization Engine</h2>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '0.4rem' }}>
+              <span className="badge badge-emerald">
+                <Sprout size={13} /> Layer 2 Engine
+              </span>
+              <h2 style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>
+                Government Policy & Subsidy Optimization Engine
+              </h2>
             </div>
-            <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)' }}>
-              Multiple-Choice Knapsack (MCKP) Solver maximizing economic ROI & employment creation under budget constraints.
+            <p style={{ fontSize: '0.92rem', color: 'var(--text-secondary)', margin: 0 }}>
+              Multiple-Choice Knapsack (MCKP) Solver maximizing economic ROI & employment creation under finite government budget ceilings.
             </p>
           </div>
 
-          <div style={{ background: 'var(--bg-secondary)', padding: '0.6rem 1.25rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', textAlign: 'right' }}>
-            <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>AI ROI Multiplier vs FCFS</div>
-            <div style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--emerald-main)' }}>
+          <div style={{
+            background: 'var(--muted)',
+            padding: '0.75rem 1.5rem',
+            borderRadius: 'var(--radius-pill)',
+            border: '1px solid var(--border)',
+            textAlign: 'right'
+          }}>
+            <div style={{ fontSize: '0.74rem', color: 'var(--text-muted)', fontWeight: 800, textTransform: 'uppercase' }}>AI Yield Multiplier vs FCFS</div>
+            <div style={{ fontSize: '1.6rem', fontFamily: 'var(--font-serif)', fontWeight: 800, color: 'var(--primary)' }}>
               {gains.roiMultiplier}x Yield
             </div>
           </div>
@@ -53,13 +68,13 @@ export default function Layer2Optimization() {
       </div>
 
       {/* Control Panel: Budget & Policy Weights */}
-      <div className="grid-3" style={{ marginBottom: '1.5rem' }}>
+      <div className="grid-3" style={{ marginBottom: '2rem' }}>
         
         {/* Card 1: Available Government Budget Slider */}
-        <div className="glass-panel" style={{ padding: '1.25rem' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
-            <label className="form-label" style={{ margin: 0 }}>Available Government Budget</label>
-            <strong style={{ color: 'var(--emerald-main)', fontSize: '1.1rem', fontWeight: 800 }}>
+        <div className="glass-panel organic-card-2" style={{ padding: '1.75rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+            <label className="form-label" style={{ margin: 0 }}>Available Subsidy Budget</label>
+            <strong style={{ color: 'var(--primary)', fontFamily: 'var(--font-serif)', fontSize: '1.3rem', fontWeight: 800 }}>
               ₹{(budgetINR / 10000000).toFixed(2)} Crore
             </strong>
           </div>
@@ -72,7 +87,7 @@ export default function Layer2Optimization() {
             onChange={(e) => setBudgetINR(parseFloat(e.target.value))} 
             className="slider-input" 
           />
-          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: '0.4rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.6rem' }}>
             <span>₹50 Lakhs</span>
             <span>₹5 Crore</span>
             <span>₹10 Crore</span>
@@ -80,10 +95,10 @@ export default function Layer2Optimization() {
         </div>
 
         {/* Card 2: Objective Weighting (Jobs vs Revenue) */}
-        <div className="glass-panel" style={{ padding: '1.25rem' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
-            <label className="form-label" style={{ margin: 0 }}>Optimization Weighting</label>
-            <span style={{ fontSize: '0.75rem', color: 'var(--accent-primary)', fontWeight: 600 }}>
+        <div className="glass-panel organic-card-3" style={{ padding: '1.75rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+            <label className="form-label" style={{ margin: 0 }}>Policy Weighting Balance</label>
+            <span style={{ fontSize: '0.8rem', color: 'var(--secondary)', fontWeight: 700 }}>
               Jobs: {(policyWeights.jobWeight * 100).toFixed(0)}% / Rev: {(policyWeights.revenueWeight * 100).toFixed(0)}%
             </span>
           </div>
@@ -99,7 +114,7 @@ export default function Layer2Optimization() {
             }} 
             className="slider-input" 
           />
-          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: '0.4rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.6rem' }}>
             <span>Prioritize Jobs</span>
             <span>Balanced</span>
             <span>Prioritize Revenue</span>
@@ -107,72 +122,73 @@ export default function Layer2Optimization() {
         </div>
 
         {/* Card 3: Green Sector Incentive Bonus */}
-        <div className="glass-panel" style={{ padding: '1.25rem' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
-            <label className="form-label" style={{ margin: 0 }}>Green Tech Priority Bonus</label>
-            <strong style={{ color: 'var(--cyan-main)', fontSize: '1rem' }}>+{(policyWeights.greenBonus * 100).toFixed(0)}% Boost</strong>
+        <div className="glass-panel organic-card-1" style={{ padding: '1.75rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+            <label className="form-label" style={{ margin: 0 }}>Green Sector Weighting Bonus</label>
+            <strong style={{ color: 'var(--primary)', fontSize: '1.1rem', fontFamily: 'var(--font-serif)' }}>
+              +{(policyWeights.greenBonus * 100).toFixed(0)}% Boost
+            </strong>
           </div>
           <select 
             value={policyWeights.greenBonus} 
             onChange={(e) => setPolicyWeights(prev => ({ ...prev, greenBonus: parseFloat(e.target.value) }))} 
             className="form-select"
-            style={{ padding: '0.45rem 0.75rem', fontSize: '0.85rem' }}
           >
-            <option value={0.0}>No Priority Bonus (0%)</option>
-            <option value={0.15}>Standard Green Bonus (+15%)</option>
-            <option value={0.30}>Aggressive Sustainability (+30%)</option>
+            <option value={0.0}>Standard Neutral Evaluation (0%)</option>
+            <option value={0.15}>Clean Energy Priority (+15%)</option>
+            <option value={0.30}>Aggressive Net-Zero Mandate (+30%)</option>
           </select>
         </div>
 
       </div>
 
       {/* Comparative Results Analytics Banner */}
-      <div className="glass-panel" style={{ padding: '1.5rem', marginBottom: '1.5rem' }}>
-        <h3 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <Zap size={18} color="var(--amber-main)" />
-          Algorithm Performance: AI Knapsack vs First-Come-First-Served (FCFS) Baseline
+      <div className="glass-panel organic-card-2" style={{ padding: '2rem', marginBottom: '2rem' }}>
+        <h3 style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+          <Zap size={20} color="var(--secondary)" />
+          Algorithm Comparative Evaluation: AI Knapsack vs First-Come-First-Served (FCFS) Baseline
         </h3>
 
         <div className="grid-3">
           
           {/* Card 1: Job Creation Gain */}
-          <div style={{ background: 'var(--bg-secondary)', padding: '1.25rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
+          <div style={{ background: 'var(--muted)', padding: '1.5rem', borderRadius: '1.75rem', border: '1.5px solid var(--border)' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>Total New Jobs Created</span>
-              <span className="badge badge-emerald">+{gains.jobGainPercent}% Jobs</span>
+              <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)', fontWeight: 700 }}>Total New Jobs Created</span>
+              <span className="badge badge-emerald">+{gains.jobGainPercent}% Impact</span>
             </div>
-            <div style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--emerald-main)', margin: '0.2rem 0' }}>
-              {aiAllocation.totalJobsCreated} <span style={{ fontSize: '0.85rem', fontWeight: 500, color: 'var(--text-muted)' }}>vs {baselineFCFS.totalJobsCreated} FCFS</span>
+            <div style={{ fontSize: '2.2rem', fontFamily: 'var(--font-serif)', fontWeight: 800, color: 'var(--primary)', margin: '0.3rem 0' }}>
+              {aiAllocation.totalJobsCreated} <span style={{ fontSize: '0.9rem', fontWeight: 500, color: 'var(--text-muted)' }}>vs {baselineFCFS.totalJobsCreated} FCFS</span>
             </div>
-            <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
-              AI Knapsack generates +{aiAllocation.totalJobsCreated - baselineFCFS.totalJobsCreated} additional employment opportunities.
+            <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+              AI Knapsack creates +{aiAllocation.totalJobsCreated - baselineFCFS.totalJobsCreated} additional verified employment opportunities.
             </div>
           </div>
 
           {/* Card 2: Total Revenue Uplift */}
-          <div style={{ background: 'var(--bg-secondary)', padding: '1.25rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
+          <div style={{ background: 'var(--muted)', padding: '1.5rem', borderRadius: '1.75rem', border: '1.5px solid var(--border)' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>Total Economic Revenue Impact</span>
-              <span className="badge badge-indigo">+{gains.revenueGainPercent}% Uplift</span>
+              <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)', fontWeight: 700 }}>Total Economic Revenue Uplift</span>
+              <span className="badge badge-amber">+{gains.revenueGainPercent}% Uplift</span>
             </div>
-            <div style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--accent-primary)', margin: '0.2rem 0' }}>
+            <div style={{ fontSize: '2.2rem', fontFamily: 'var(--font-serif)', fontWeight: 800, color: 'var(--secondary)', margin: '0.3rem 0' }}>
               ₹{(aiAllocation.totalRevenueUpliftINR / 10000000).toFixed(2)} Cr
             </div>
-            <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
-              vs ₹{(baselineFCFS.totalRevenueUpliftINR / 10000000).toFixed(2)} Cr Baseline FCFS.
+            <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+              vs ₹{(baselineFCFS.totalRevenueUpliftINR / 10000000).toFixed(2)} Cr under unoptimized FCFS disbursement.
             </div>
           </div>
 
           {/* Card 3: Budget Utilization Rate */}
-          <div style={{ background: 'var(--bg-secondary)', padding: '1.25rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
+          <div style={{ background: 'var(--muted)', padding: '1.5rem', borderRadius: '1.75rem', border: '1.5px solid var(--border)' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>Budget Efficiency</span>
-              <span className="badge badge-cyan">{aiAllocation.budgetUtilizationPercent}% Spent</span>
+              <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)', fontWeight: 700 }}>Budget Allocation Efficiency</span>
+              <span className="badge badge-cyan">{aiAllocation.budgetUtilizationPercent}% Disbursed</span>
             </div>
-            <div style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--cyan-main)', margin: '0.2rem 0' }}>
+            <div style={{ fontSize: '2.2rem', fontFamily: 'var(--font-serif)', fontWeight: 800, color: 'var(--cyan-main)', margin: '0.3rem 0' }}>
               ₹{(aiAllocation.totalBudgetSpentINR / 10000000).toFixed(2)} Cr
             </div>
-            <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+            <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
               Remaining Unallocated: ₹{((budgetINR - aiAllocation.totalBudgetSpentINR) / 100000).toFixed(1)} Lakhs.
             </div>
           </div>
@@ -181,14 +197,14 @@ export default function Layer2Optimization() {
       </div>
 
       {/* Applicant Allocation Queue Table */}
-      <div className="glass-panel" style={{ padding: '1.5rem' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
+      <div className="glass-panel organic-card-3" style={{ padding: '2rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
           <div>
-            <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: 'var(--text-primary)' }}>
-              Applicant Queue & AI Subsidy Award Decision Log
+            <h3 style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--text-primary)' }}>
+              State & District Applicant Queue & AI Subsidy Award Log
             </h3>
-            <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>
-              Showing {filteredApplicants.length} applicants sorted by AI Value Density score.
+            <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+              Showing {filteredApplicants.length} applicants ranked by AI Marginal Value Density score.
             </p>
           </div>
 
@@ -197,9 +213,9 @@ export default function Layer2Optimization() {
             value={selectedSectorFilter} 
             onChange={(e) => setSelectedSectorFilter(e.target.value)} 
             className="form-select"
-            style={{ width: '200px', padding: '0.4rem 0.75rem', fontSize: '0.82rem' }}
+            style={{ width: '220px' }}
           >
-            <option value="All">All Sectors</option>
+            <option value="All">All Priority Sectors</option>
             <option value="Manufacturing">Manufacturing</option>
             <option value="Agro-processing">Agro-processing</option>
             <option value="IT Services">IT Services</option>
@@ -215,55 +231,59 @@ export default function Layer2Optimization() {
             <thead>
               <tr>
                 <th>Applicant Enterprise</th>
-                <th>Sector</th>
+                <th>Region</th>
                 <th>Growth Score</th>
                 <th>Requested Subsidy</th>
-                <th>Predicted Revenue Impact</th>
+                <th>Projected Revenue Yield</th>
                 <th>Jobs Created</th>
-                <th>AI Award Status</th>
+                <th>AI Award Decision</th>
               </tr>
             </thead>
             <tbody>
               {aiAllocation.awardedList.map((app) => (
                 <tr key={app.id}>
                   <td>
-                    <div style={{ fontWeight: 700, color: 'var(--text-primary)' }}>{app.name}</div>
-                    <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>{app.id} • {app.requestedScheme}</div>
+                    <div style={{ fontWeight: 800, color: 'var(--text-primary)' }}>{app.name}</div>
+                    <div style={{ fontSize: '0.76rem', color: 'var(--text-muted)' }}>{app.id} • {app.requestedScheme}</div>
                   </td>
                   <td>
-                    <span className="badge badge-indigo">{app.sector}</span>
+                    <span className="badge badge-emerald">{app.state || "Kerala"}</span>
                   </td>
                   <td>
-                    <strong style={{ color: 'var(--emerald-main)' }}>{app.predictions.growthScore} / 100</strong>
+                    <strong style={{ color: 'var(--primary)', fontFamily: 'var(--font-serif)', fontSize: '1.05rem' }}>
+                      {app.predictions.growthScore} / 100
+                    </strong>
                   </td>
                   <td>
                     ₹{(app.cost / 100000).toFixed(1)} Lakhs
                   </td>
                   <td>
-                    <span style={{ color: 'var(--accent-primary)', fontWeight: 600 }}>+₹{(app.projectedRevenueUpliftINR / 100000).toFixed(1)} Lakhs</span>
+                    <span style={{ color: 'var(--primary)', fontWeight: 700 }}>+₹{(app.projectedRevenueUpliftINR / 100000).toFixed(1)} Lakhs</span>
                   </td>
                   <td>
-                    <span style={{ color: 'var(--cyan-main)', fontWeight: 700 }}>+{app.predictedJobs} Jobs</span>
+                    <span style={{ color: 'var(--secondary)', fontWeight: 800 }}>+{app.predictedJobs} Jobs</span>
                   </td>
                   <td>
-                    <span className="badge badge-emerald" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.2rem' }}>
-                      <CheckCircle2 size={13} /> Awarded Subsidy
+                    <span className="badge badge-emerald" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
+                      <CheckCircle2 size={14} /> Awarded Subsidy
                     </span>
                   </td>
                 </tr>
               ))}
 
               {aiAllocation.rejectedList.map((app) => (
-                <tr key={app.id} style={{ opacity: 0.7 }}>
+                <tr key={app.id} style={{ opacity: 0.65 }}>
                   <td>
-                    <div style={{ fontWeight: 700, color: 'var(--text-primary)' }}>{app.name}</div>
-                    <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>{app.id} • {app.requestedScheme}</div>
+                    <div style={{ fontWeight: 800, color: 'var(--text-primary)' }}>{app.name}</div>
+                    <div style={{ fontSize: '0.76rem', color: 'var(--text-muted)' }}>{app.id} • {app.requestedScheme}</div>
                   </td>
                   <td>
-                    <span className="badge badge-amber">{app.sector}</span>
+                    <span className="badge badge-amber">{app.state || "India"}</span>
                   </td>
                   <td>
-                    <strong style={{ color: 'var(--amber-main)' }}>{app.predictions.growthScore} / 100</strong>
+                    <strong style={{ color: 'var(--text-muted)', fontFamily: 'var(--font-serif)' }}>
+                      {app.predictions.growthScore} / 100
+                    </strong>
                   </td>
                   <td>
                     ₹{(app.cost / 100000).toFixed(1)} Lakhs
@@ -275,8 +295,8 @@ export default function Layer2Optimization() {
                     <span>+{app.predictedJobs} Jobs</span>
                   </td>
                   <td>
-                    <span className="badge badge-rose" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.2rem' }}>
-                      <XCircle size={13} /> Budget Exhausted
+                    <span className="badge badge-rose" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
+                      <XCircle size={14} /> Budget Ceiling
                     </span>
                   </td>
                 </tr>

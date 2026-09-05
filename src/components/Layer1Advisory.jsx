@@ -6,7 +6,7 @@ import SHAPWaterfall from './SHAPWaterfall';
 import ReportModal from './ReportModal';
 import { 
   Building2, TrendingUp, Users, DollarSign, Cpu, Award, 
-  Sparkles, CheckCircle2, AlertTriangle, FileText, ArrowRight, RefreshCw, Sliders
+  Sparkles, CheckCircle2, AlertTriangle, FileText, ArrowRight, RefreshCw, Sliders, Sprout, Leaf
 } from 'lucide-react';
 
 export default function Layer1Advisory() {
@@ -42,21 +42,30 @@ export default function Layer1Advisory() {
 
   return (
     <div>
-      {/* Layer 1 Intro Banner */}
-      <div className="glass-panel" style={{ padding: '1.5rem 2rem', marginBottom: '1.5rem', background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%)', border: '1px solid var(--border-highlight)' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
+      {/* Layer 1 Intro Banner (Handcrafted Organic Container) */}
+      <div className="glass-panel organic-card-1" style={{
+        padding: '2rem 2.5rem',
+        marginBottom: '2rem',
+        background: 'linear-gradient(135deg, rgba(93, 112, 82, 0.09) 0%, rgba(193, 140, 93, 0.07) 100%)',
+        border: '1.5px solid var(--border)'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1.25rem' }}>
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
-              <span className="badge badge-indigo">Layer 1 Engine</span>
-              <h2 style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--text-primary)' }}>MSME Growth Advisory & Scheme Matcher</h2>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '0.4rem' }}>
+              <span className="badge badge-emerald">
+                <Sprout size={13} /> Layer 1 Engine
+              </span>
+              <h2 style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>
+                MSME Growth Advisory & Scheme Matcher
+              </h2>
             </div>
-            <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)' }}>
-              Input business metrics to generate XGBoost growth predictions, SHAP feature diagnostics, and semantic scheme recommendations.
+            <p style={{ fontSize: '0.92rem', color: 'var(--text-secondary)', margin: 0 }}>
+              Grounded in MoSPI ASUSE statistical distributions. Input business metrics to predict sustainable enterprise trajectories, transparent SHAP diagnostics, and verified government assistance.
             </p>
           </div>
 
-          <button onClick={() => setIsReportModalOpen(true)} className="btn btn-emerald">
-            <FileText size={16} /> Generate Audit Report
+          <button onClick={() => setIsReportModalOpen(true)} className="btn btn-primary">
+            <FileText size={17} /> Generate Executive Audit
           </button>
         </div>
       </div>
@@ -64,9 +73,9 @@ export default function Layer1Advisory() {
       <div className="grid-1-2">
         
         {/* Left Column: MSME Data Entry Form */}
-        <div className="glass-panel" style={{ padding: '1.5rem' }}>
-          <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <Building2 size={18} color="var(--accent-primary)" />
+        <div className="glass-panel organic-card-3" style={{ padding: '2rem' }}>
+          <h3 style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+            <Building2 size={20} color="var(--primary)" />
             Enterprise Profile Data
           </h3>
 
@@ -89,7 +98,9 @@ export default function Layer1Advisory() {
             <div className="form-group">
               <div className="form-label">
                 <span>Annual Revenue (₹)</span>
-                <strong style={{ color: 'var(--accent-primary)' }}>₹{(formData.annualRevenue / 100000).toFixed(1)} Lakhs</strong>
+                <strong style={{ color: 'var(--primary)', fontFamily: 'var(--font-serif)', fontSize: '1.05rem' }}>
+                  ₹{(formData.annualRevenue / 100000).toFixed(1)} Lakhs
+                </strong>
               </div>
               <input 
                 type="range" 
@@ -104,10 +115,10 @@ export default function Layer1Advisory() {
             </div>
 
             {/* Revenue Growth Rate & Profit Margin */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.25rem' }}>
               <div className="form-group">
                 <div className="form-label">
-                  <span>Revenue Growth</span>
+                  <span>YoY Growth</span>
                   <strong>{formData.revenueGrowthRate}%</strong>
                 </div>
                 <input 
@@ -136,7 +147,7 @@ export default function Layer1Advisory() {
             </div>
 
             {/* Debt Ratio & Employees */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.25rem' }}>
               <div className="form-group">
                 <div className="form-label">
                   <span>Debt / Revenue</span>
@@ -156,7 +167,7 @@ export default function Layer1Advisory() {
 
               <div className="form-group">
                 <div className="form-label">
-                  <span>Workforce</span>
+                  <span>Workforce Scale</span>
                   <strong>{formData.employees} Staff</strong>
                 </div>
                 <input 
@@ -172,11 +183,11 @@ export default function Layer1Advisory() {
             </div>
 
             {/* Tech Level & GST Score */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.25rem' }}>
               <div className="form-group">
                 <div className="form-label">
-                  <span>Tech Level</span>
-                  <strong style={{ color: 'var(--cyan-main)' }}>Level {formData.techLevel} / 5</strong>
+                  <span>Technology Level</span>
+                  <strong style={{ color: 'var(--primary)' }}>Level {formData.techLevel} / 5</strong>
                 </div>
                 <select name="techLevel" value={formData.techLevel} onChange={handleChange} className="form-select">
                   <option value={1}>Level 1 (Basic/Manual)</option>
@@ -190,7 +201,7 @@ export default function Layer1Advisory() {
               <div className="form-group">
                 <div className="form-label">
                   <span>GST Score</span>
-                  <strong style={{ color: 'var(--emerald-main)' }}>{formData.gstScore} / 100</strong>
+                  <strong style={{ color: 'var(--secondary)' }}>{formData.gstScore} / 100</strong>
                 </div>
                 <input 
                   type="number" 
@@ -204,17 +215,16 @@ export default function Layer1Advisory() {
               </div>
             </div>
 
-            {/* Free-text Operational Needs Requirement */}
+            {/* Operational Needs Text */}
             <div className="form-group">
-              <label className="form-label">Business Requirement & Technology Need (For Semantic Matcher)</label>
+              <label className="form-label">Business Needs & Technology Upgradation Intent</label>
               <textarea 
                 name="requirementText" 
                 rows="3" 
                 value={formData.requirementText} 
                 onChange={handleChange} 
                 className="form-input"
-                style={{ resize: 'none', fontSize: '0.85rem' }}
-                placeholder="Describe your funding purpose, e.g., machinery purchase, solar installation, export expansion..."
+                placeholder="Describe your funding requirements, machinery modernization, solar installation, export ambition..."
               />
             </div>
 
@@ -222,14 +232,14 @@ export default function Layer1Advisory() {
         </div>
 
         {/* Right Column: AI Predictions & Recommendations */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
           
           {/* Growth Prediction Score Cards */}
-          <div className="glass-panel" style={{ padding: '1.5rem', background: 'var(--bg-card)' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
-              <h3 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <Sparkles size={18} color="var(--amber-main)" />
-                XGBoost Growth Model Outputs
+          <div className="glass-panel organic-card-2" style={{ padding: '2rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
+              <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                <Sparkles size={20} color="var(--secondary)" />
+                Predictive Growth Indicators
               </h3>
               <span className={`badge badge-${predictions.tierColor}`}>
                 {predictions.tier}
@@ -238,54 +248,69 @@ export default function Layer1Advisory() {
 
             <div className="grid-3">
               {/* Card 1: Score */}
-              <div style={{ background: 'var(--bg-secondary)', padding: '1rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', textAlign: 'center' }}>
-                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Growth Score</div>
-                <div style={{ fontSize: '2.2rem', fontWeight: 800, color: predictions.tierColor === 'emerald' ? 'var(--emerald-main)' : predictions.tierColor === 'amber' ? 'var(--amber-main)' : 'var(--rose-main)' }}>
+              <div style={{ background: 'var(--muted)', padding: '1.25rem', borderRadius: '1.5rem', border: '1.5px solid var(--border)', textAlign: 'center' }}>
+                <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.04em' }}>Growth Score</div>
+                <div style={{
+                  fontSize: '2.4rem',
+                  fontFamily: 'var(--font-serif)',
+                  fontWeight: 800,
+                  color: predictions.tierColor === 'emerald' ? 'var(--primary)' : predictions.tierColor === 'amber' ? 'var(--secondary)' : 'var(--rose-main)',
+                  margin: '0.2rem 0'
+                }}>
                   {predictions.growthScore}
                 </div>
-                <div style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>Out of 100</div>
+                <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>Out of 100 Index</div>
               </div>
 
               {/* Card 2: Projected Growth */}
-              <div style={{ background: 'var(--bg-secondary)', padding: '1rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', textAlign: 'center' }}>
-                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>1-Yr Projected Growth</div>
-                <div style={{ fontSize: '2.2rem', fontWeight: 800, color: 'var(--accent-primary)' }}>
+              <div style={{ background: 'var(--muted)', padding: '1.25rem', borderRadius: '1.5rem', border: '1.5px solid var(--border)', textAlign: 'center' }}>
+                <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.04em' }}>1-Yr Projected Growth</div>
+                <div style={{ fontSize: '2.4rem', fontFamily: 'var(--font-serif)', fontWeight: 800, color: 'var(--primary)', margin: '0.2rem 0' }}>
                   +{predictions.predictedRevenueGrowth}%
                 </div>
-                <div style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>₹{(predictions.projectedRevenueAmount / 100000).toFixed(1)} Lakhs</div>
+                <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>₹{(predictions.projectedRevenueAmount / 100000).toFixed(1)} Lakhs Est.</div>
               </div>
 
               {/* Card 3: Job Potential */}
-              <div style={{ background: 'var(--bg-secondary)', padding: '1rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', textAlign: 'center' }}>
-                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>New Jobs Potential</div>
-                <div style={{ fontSize: '2.2rem', fontWeight: 800, color: 'var(--cyan-main)' }}>
+              <div style={{ background: 'var(--muted)', padding: '1.25rem', borderRadius: '1.5rem', border: '1.5px solid var(--border)', textAlign: 'center' }}>
+                <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.04em' }}>New Jobs Potential</div>
+                <div style={{ fontSize: '2.4rem', fontFamily: 'var(--font-serif)', fontWeight: 800, color: 'var(--secondary)', margin: '0.2rem 0' }}>
                   +{predictions.predictedJobs}
                 </div>
-                <div style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>Risk: {predictions.riskLevel}</div>
+                <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>Risk: <strong>{predictions.riskLevel}</strong></div>
               </div>
             </div>
           </div>
 
-          {/* Tab Controls for Output Views */}
-          <div style={{ display: 'flex', gap: '0.5rem', borderBottom: '1px solid var(--border-color)', paddingBottom: '0.5rem' }}>
+          {/* Section Selector Tab Pills */}
+          <div style={{
+            display: 'flex',
+            gap: '0.5rem',
+            background: 'var(--muted)',
+            padding: '0.35rem',
+            borderRadius: 'var(--radius-pill)',
+            border: '1px solid var(--border)',
+            width: 'fit-content',
+            flexWrap: 'wrap'
+          }}>
             <button 
               onClick={() => setActiveTabSection('recommendations')} 
               className={`btn ${activeTabSection === 'recommendations' ? 'btn-primary' : 'btn-secondary'}`}
-              style={{ fontSize: '0.85rem' }}
+              style={{ fontSize: '0.85rem', padding: '0.55rem 1.25rem', border: 'none' }}
             >
               <Award size={16} /> Scheme Recommendations ({matchedSchemes.filter(s => s.isEligible).length} Eligible)
             </button>
             <button 
               onClick={() => setActiveTabSection('shap')} 
               className={`btn ${activeTabSection === 'shap' ? 'btn-primary' : 'btn-secondary'}`}
-              style={{ fontSize: '0.85rem' }}
+              style={{ fontSize: '0.85rem', padding: '0.55rem 1.25rem', border: 'none' }}
             >
-              <Cpu size={16} /> SHAP XAI Diagnostics
+              <Leaf size={16} /> SHAP Feature Diagnostics
             </button>
             <button 
               onClick={() => setActiveTabSection('whatif')} 
               className={`btn ${activeTabSection === 'whatif' ? 'btn-primary' : 'btn-secondary'}`}
-              style={{ fontSize: '0.85rem' }}
+              style={{ fontSize: '0.85rem', padding: '0.55rem 1.25rem', border: 'none' }}
             >
               <Sliders size={16} /> What-If Simulator
             </button>
@@ -293,16 +318,17 @@ export default function Layer1Advisory() {
 
           {/* Section A: Scheme Recommendations */}
           {activeTabSection === 'recommendations' && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              {matchedSchemes.map((scheme) => (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+              {matchedSchemes.map((scheme, idx) => (
                 <div key={scheme.id} className="glass-panel" style={{ 
-                  padding: '1.25rem', 
-                  borderLeft: `4px solid ${scheme.isEligible ? 'var(--emerald-main)' : scheme.isPartiallyEligible ? 'var(--amber-main)' : 'var(--border-color)'}`
+                  padding: '1.75rem',
+                  borderRadius: idx % 2 === 0 ? '2.5rem 1.5rem 2rem 1.75rem' : '1.5rem 2.5rem 1.75rem 2.25rem',
+                  borderLeft: `5px solid ${scheme.isEligible ? 'var(--primary)' : scheme.isPartiallyEligible ? 'var(--secondary)' : 'var(--border)'}`
                 }}>
-                  <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '1rem', marginBottom: '0.75rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '1rem', marginBottom: '0.85rem', flexWrap: 'wrap' }}>
                     <div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
-                        <h4 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-primary)' }}>{scheme.name}</h4>
+                        <h4 style={{ fontSize: '1.15rem', fontWeight: 700, color: 'var(--text-primary)' }}>{scheme.name}</h4>
                         {scheme.isEligible ? (
                           <span className="badge badge-emerald">Eligible ✅</span>
                         ) : scheme.isPartiallyEligible ? (
@@ -312,30 +338,30 @@ export default function Layer1Advisory() {
                         )}
                         <span className="badge badge-indigo">Semantic Match {scheme.semanticScore}%</span>
                       </div>
-                      <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: '0.2rem' }}>
-                        {scheme.ministry} • Category: <strong>{scheme.category}</strong>
+                      <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)', marginTop: '0.25rem' }}>
+                        {scheme.ministry} • Category: <strong style={{ color: 'var(--text-secondary)' }}>{scheme.category}</strong>
                       </p>
                     </div>
 
                     <div style={{ textAlign: 'right' }}>
-                      <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Max Scheme Subsidy</div>
-                      <div style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--emerald-main)' }}>
+                      <div style={{ fontSize: '0.74rem', color: 'var(--text-muted)' }}>Max Scheme Assistance</div>
+                      <div style={{ fontSize: '1.25rem', fontFamily: 'var(--font-serif)', fontWeight: 800, color: 'var(--primary)' }}>
                         ₹{(scheme.maxSubsidy / 100000).toFixed(1)} Lakhs
                       </div>
-                      <div style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>up to {scheme.subsidyPercentage}% assistance</div>
+                      <div style={{ fontSize: '0.74rem', color: 'var(--text-secondary)' }}>up to {scheme.subsidyPercentage}% subsidy</div>
                     </div>
                   </div>
 
-                  <p style={{ fontSize: '0.84rem', color: 'var(--text-secondary)', marginBottom: '0.85rem', lineHeight: 1.4 }}>
+                  <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', marginBottom: '1rem', lineHeight: 1.5 }}>
                     {scheme.description}
                   </p>
 
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'var(--bg-secondary)', padding: '0.6rem 1rem', borderRadius: 'var(--radius-md)', fontSize: '0.78rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'var(--muted)', padding: '0.75rem 1.25rem', borderRadius: 'var(--radius-pill)', fontSize: '0.82rem', flexWrap: 'wrap', gap: '0.5rem' }}>
                     <div>
                       <strong>Recommended Allocation:</strong> ₹{(scheme.recommendedSubsidyAmount / 100000).toFixed(1)} Lakhs
                     </div>
                     <div>
-                      <strong>Checks Passed:</strong> {scheme.passedChecksCount}/5
+                      <strong>Eligibility Checks Met:</strong> {scheme.passedChecksCount}/5
                     </div>
                   </div>
                 </div>
@@ -350,28 +376,36 @@ export default function Layer1Advisory() {
 
           {/* Section C: What-If Simulator */}
           {activeTabSection === 'whatif' && (
-            <div className="glass-panel" style={{ padding: '1.5rem' }}>
-              <h3 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <Sliders size={18} color="var(--accent-primary)" />
+            <div className="glass-panel organic-card-1" style={{ padding: '2rem' }}>
+              <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                <Sliders size={20} color="var(--secondary)" />
                 Scenario Optimization Simulator
               </h3>
-              <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', marginBottom: '1.25rem' }}>
-                Test how operational improvements (e.g. boosting GST compliance or adopting Industry 4.0 tech) dynamically upgrade your growth score and scheme eligibility.
+              <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', marginBottom: '1.5rem' }}>
+                Simulate how strategic operational and technological upgrades immediately enhance enterprise creditworthiness and unlock targeted government grants.
               </p>
 
               <div className="grid-2">
-                <div style={{ background: 'var(--bg-secondary)', padding: '1rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
-                  <h4 style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '0.5rem' }}>Scenario A: Increase GST Compliance to 98%</h4>
-                  <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginBottom: '0.75rem' }}>Improves creditworthiness and audit eligibility for top bank guarantee schemes.</p>
-                  <button onClick={() => setFormData(prev => ({ ...prev, gstScore: 98 }))} className="btn btn-secondary" style={{ width: '100%', fontSize: '0.8rem' }}>
+                <div style={{ background: 'var(--muted)', padding: '1.5rem', borderRadius: '2rem', border: '1.5px solid var(--border)' }}>
+                  <h4 style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '0.5rem' }}>
+                    Scenario A: Boost GST Compliance to 98%
+                  </h4>
+                  <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
+                    Improves formal compliance rating, unlocks CGTMSE credit guarantee limits, and lowers credit risk penalty.
+                  </p>
+                  <button onClick={() => setFormData(prev => ({ ...prev, gstScore: 98 }))} className="btn btn-secondary" style={{ width: '100%', fontSize: '0.85rem' }}>
                     Apply Scenario (+GST Score)
                   </button>
                 </div>
 
-                <div style={{ background: 'var(--bg-secondary)', padding: '1rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
-                  <h4 style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '0.5rem' }}>Scenario B: Upgrade Tech Level to Industry 4.0</h4>
-                  <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginBottom: '0.75rem' }}>Unlocks SAMERTH grants and boosts predicted 1-year revenue uplift by ~6.5%.</p>
-                  <button onClick={() => setFormData(prev => ({ ...prev, techLevel: 5 }))} className="btn btn-emerald" style={{ width: '100%', fontSize: '0.8rem' }}>
+                <div style={{ background: 'var(--muted)', padding: '1.5rem', borderRadius: '2rem', border: '1.5px solid var(--border)' }}>
+                  <h4 style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '0.5rem' }}>
+                    Scenario B: Adopt Industry 4.0 & Automation
+                  </h4>
+                  <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
+                    Unlocks SAMERTH technology co-funding grants and expands projected 1-year revenue yield by ~6.5%.
+                  </p>
+                  <button onClick={() => setFormData(prev => ({ ...prev, techLevel: 5 }))} className="btn btn-emerald" style={{ width: '100%', fontSize: '0.85rem' }}>
                     Apply Scenario (Tech Level 5)
                   </button>
                 </div>

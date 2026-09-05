@@ -1,51 +1,53 @@
 import React from 'react';
-import { ShieldCheck, Cpu, Database, CheckCircle2, Award, Building2 } from 'lucide-react';
+import { ShieldCheck, Cpu, Database, Award, Leaf } from 'lucide-react';
 
 export default function OfficialHeader() {
   return (
     <div style={{
-      background: 'linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%)',
-      borderBottom: '2px solid #6366f1',
-      color: '#ffffff',
+      background: 'var(--muted)',
+      borderBottom: '1px solid var(--border)',
+      color: 'var(--text-secondary)',
       padding: '0.65rem 2rem',
-      fontSize: '0.78rem'
+      fontSize: '0.8rem',
+      transition: 'all 0.3s ease'
     }}>
-      <div className="app-container" style={{ padding: '0 2rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.75rem' }}>
+      <div className="app-container" style={{ padding: '0', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.75rem' }}>
         
         {/* Left: Official Government Identification */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
           <div style={{
-            background: '#ffffff',
-            padding: '2px 8px',
-            borderRadius: '4px',
+            background: 'var(--primary)',
+            padding: '3px 10px',
+            borderRadius: 'var(--radius-pill)',
             fontWeight: 800,
-            fontSize: '0.72rem',
-            color: '#0f172a',
-            letterSpacing: '0.05em'
+            fontSize: '0.7rem',
+            color: '#FFFFFF',
+            letterSpacing: '0.06em',
+            boxShadow: 'var(--shadow-sm)'
           }}>
             GOVT OF INDIA
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#cbd5e1' }}>
-            <Building2 size={14} color="#38bdf8" />
-            <span>Ministry of Micro, Small & Medium Enterprises (MSME) • Official Decision Support Portal</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', color: 'var(--text-primary)', fontWeight: 600 }}>
+            <Leaf size={14} color="var(--primary)" />
+            <span>Ministry of Micro, Small & Medium Enterprises • Growth Advisory & Subsidy Engine</span>
           </div>
         </div>
 
-        {/* Right: Real Data Integration Verification Badges */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', color: '#4ade80' }}>
+        {/* Right: Verified Data Seals */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--primary)', fontWeight: 700 }}>
             <Database size={13} />
-            <span>MoSPI ASUSE 2023-24 Benchmarks Integrated</span>
+            <span>MoSPI ASUSE 2023-24 Benchmarks</span>
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', color: '#a78bfa' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--secondary)', fontWeight: 700 }}>
             <ShieldCheck size={13} />
-            <span>myScheme & Udyam Portal Gazette Compliant</span>
+            <span>Udyam & myScheme Verified</span>
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', color: '#fde047' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--cyan-main)', fontWeight: 700 }}>
             <Cpu size={13} />
-            <span>XGBoost + SHAP + OR-Tools Active</span>
+            <span>XGBoost + SHAP + Knapsack</span>
           </div>
         </div>
 
