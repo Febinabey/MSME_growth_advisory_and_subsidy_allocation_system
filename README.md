@@ -43,11 +43,13 @@ The platform operates on a unique **Dual-Layer Decision Framework**:
 ## 📊 Real Datasets & Benchmarks Integrated
 
 1. **MoSPI ASUSE 2023–24 (Annual Survey of Unincorporated Sector Enterprises)**
-   * Source: Ministry of Statistics and Programme Implementation (MoSPI), Govt. of India (July 2024).
-   * Scope: Unit-level survey data from 6.5 Crore enterprises providing Gross Value Added (GVA) per worker benchmarks, capacity utilization rates, turnover averages, and labor productivity indices across sectors.
-2. **Ministry of MSME Udyam Registration & Open Government Data (OGD)**
-   * Official classification thresholds (Micro: $\le ₹2.5\text{Cr}$ Inv / $\le ₹10\text{Cr}$ Turnover; Small: $\le ₹25\text{Cr}$ Inv / $\le ₹100\text{Cr}$ Turnover; Medium: $\le ₹125\text{Cr}$ Inv / $\le ₹500\text{Cr}$ Turnover).
-   * State and district-wise MSME distribution data.
+   * **Source**: Ministry of Statistics and Programme Implementation (MoSPI), Govt. of India (July 2024 Microdata Release).
+   * **Scope**: Official unit-level microdata covering **5,23,775 surveyed enterprise units** across 16 survey blocks.
+   * **Role**: Empirically computes sector-wise revenue percentiles (P25, P50, P75, P90), Gross Value Added (GVA) per worker benchmarks, capacity utilization rates, and operational profit margins across Indian MSMEs.
+2. **Ministry of MSME Udyam Registration Registry (Open Government Data - data.gov.in)**
+   * **Source**: Open Government Data (OGD) Platform, Ministry of MSME (`api.data.gov.in`, Resource ID: `8b68ae56-84cf-4728-a0a6-1be11028dea7`).
+   * **Scope & Methodology**: The current project uses 70,929 Udyam records retrieved from the official Data.gov.in Udyam API resource. The downloader supports resumable batch retrieval if additional records are required.
+   * **Role**: Supplies authentic registered enterprise names, official state/district geographic distributions across 36 States/UTs, and registered 5-digit National Industrial Classification (NIC) activities.
 3. **Official Scheme Guidelines Master Database (myScheme & Ministry of MSME)**
    * Structurally parsed parameters for 30+ schemes including **PMEGP, CLCSS, ZED, CGTMSE, MSME Champions, SAMERTH Industry 4.0, SFURTI, MSE-CDP, PM-FME, ATUFS, Stand Up India, PM Vishwakarma, TREAD, SMILE, Digital MSME, LMCS**, and more.
 4. **Reserve Bank of India (RBI) & SIDBI MSME Financial Health Indicators**

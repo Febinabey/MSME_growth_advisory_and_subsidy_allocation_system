@@ -18,6 +18,7 @@ export const REAL_DATASET_METRICS = {
     name: "Ministry of MSME Udyam Registration Registry",
     source: "Open Government Data (OGD) Portal - data.gov.in",
     resourceId: "8b68ae56-84cf-4728-a0a6-1be11028dea7",
+    description: "The current project uses 70,929 Udyam records retrieved from the official Data.gov.in Udyam API resource. The downloader supports resumable batch retrieval if additional records are required.",
     totalLiveRecords: 70929,
     coverageStates: 36,
     topStates: [
