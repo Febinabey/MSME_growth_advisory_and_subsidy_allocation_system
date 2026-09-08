@@ -247,7 +247,7 @@ export default function Layer2Optimization() {
                     <div style={{ fontSize: '0.76rem', color: 'var(--text-muted)' }}>{app.id} • {app.requestedScheme}</div>
                   </td>
                   <td>
-                    <span className="badge badge-emerald">{app.state || "Kerala"}</span>
+                    <span className="badge badge-emerald">{app.district ? `${app.district}, ${app.state}` : (app.state || "India")}</span>
                   </td>
                   <td>
                     <strong style={{ color: 'var(--primary)', fontFamily: 'var(--font-serif)', fontSize: '1.05rem' }}>
@@ -278,7 +278,7 @@ export default function Layer2Optimization() {
                     <div style={{ fontSize: '0.76rem', color: 'var(--text-muted)' }}>{app.id} • {app.requestedScheme}</div>
                   </td>
                   <td>
-                    <span className="badge badge-amber">{app.state || "India"}</span>
+                    <span className="badge badge-amber">{app.district ? `${app.district}, ${app.state}` : (app.state || "India")}</span>
                   </td>
                   <td>
                     <strong style={{ color: 'var(--text-muted)', fontFamily: 'var(--font-serif)' }}>

@@ -37,12 +37,12 @@ export default function OfficialHeader() {
         <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem', flexWrap: 'wrap' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--primary)', fontWeight: 700 }}>
             <Database size={13} />
-            <span>MoSPI ASUSE 2023-24 Benchmarks</span>
+            <span>MoSPI ASUSE 2023-24 (5.2 Lakh Units)</span>
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--secondary)', fontWeight: 700 }}>
             <ShieldCheck size={13} />
-            <span>Udyam & myScheme Verified</span>
+            <span>Udyam Live Registry (70,929 Units)</span>
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--cyan-main)', fontWeight: 700 }}>

@@ -214,13 +214,24 @@ export default function BenchmarkView() {
               {ASUSE_UDYAM_BENCHMARKS.nationalStateDistribution.map((row) => (
                 <tr key={row.state}>
                   <td style={{ fontWeight: 800, color: 'var(--text-primary)' }}>{row.state}</td>
-                  <td>{row.totalMSMEs}</td>
+                  <td style={{ fontWeight: 700 }}>
+                    {row.udyamCount ? `${row.udyamCount.toLocaleString('en-IN')} Units` : row.totalMSMEs}
+                  </td>
                   <td><span className="badge badge-emerald">{row.udyamShare}</span></td>
                   <td>{row.topSector}</td>
                 </tr>
               ))}
             </tbody>
           </table>
+        </div>
+
+        <div style={{ marginTop: '1.25rem', padding: '0.85rem 1.25rem', background: 'var(--muted)', borderRadius: 'var(--radius-md)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.75rem', fontSize: '0.76rem', color: 'var(--text-muted)' }}>
+          <div>
+            <strong>MoSPI ASUSE Survey Provenance:</strong> {ASUSE_UDYAM_BENCHMARKS.metadata.totalSurveyUnits} • 16 Microdata Survey Levels
+          </div>
+          <div>
+            <strong>Udyam OGD Provenance:</strong> {ASUSE_UDYAM_BENCHMARKS.metadata.totalUdyamRecords} • 36 States/UTs Covered
+          </div>
         </div>
       </div>
 

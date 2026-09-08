@@ -2,16 +2,22 @@ import React, { useState, useMemo } from 'react';
 import { predictMSMEGrowth } from '../engine/xgboostPredictor';
 import { computeSHAPValues } from '../engine/shapExplainer';
 import { matchSchemesForMSME } from '../engine/semanticMatcher';
+import { REAL_UDYAM_DIRECTORY } from '../data/realUdyamDirectory';
 import SHAPWaterfall from './SHAPWaterfall';
 import ReportModal from './ReportModal';
 import { 
   Building2, TrendingUp, Users, DollarSign, Cpu, Award, 
-  Sparkles, CheckCircle2, AlertTriangle, FileText, ArrowRight, RefreshCw, Sliders, Sprout, Leaf
+  Sparkles, CheckCircle2, AlertTriangle, FileText, ArrowRight, RefreshCw, Sliders, Sprout, Leaf, ShieldCheck, MapPin
 } from 'lucide-react';
 
 export default function Layer1Advisory() {
+  const [selectedUdyamId, setSelectedUdyamId] = useState('');
+
   // 1. MSME Input State
   const [formData, setFormData] = useState({
+    enterpriseName: "Shri Salasar Balaji Contractor",
+    state: "Uttar Pradesh",
+    district: "Shahjahanpur",
     sector: "Manufacturing",
     annualRevenue: 35000000, // ₹3.5 Crore
     revenueGrowthRate: 18,   // 18% YoY
@@ -39,6 +45,40 @@ export default function Layer1Advisory() {
       [name]: type === 'number' ? parseFloat(value) || 0 : value
     }));
   };
+
+  const handleUdyamSelect = (unitId) => {
+    const unit = REAL_UDYAM_DIRECTORY.find(u => u.id === unitId);
+    if (!unit) return;
+    setSelectedUdyamId(unitId);
+
+    // Map sector to standard options
+    let mappedSec = "Manufacturing";
+    if (unit.sector.includes("Agro") || unit.sector.includes("Food")) mappedSec = "Agro-processing";
+    else if (unit.sector.includes("Textil")) mappedSec = "Textiles";
+    else if (unit.sector.includes("IT")) mappedSec = "IT Services";
+    else if (unit.sector.includes("Chemical")) mappedSec = "Manufacturing";
+
+    setFormData({
+      enterpriseName: unit.enterpriseName,
+      state: unit.state,
+      district: unit.district,
+      pincode: unit.pincode,
+      registrationDate: unit.registrationDate,
+      nicActivity: unit.nicActivity,
+      sector: mappedSec,
+      annualRevenue: unit.annualRevenue,
+      revenueGrowthRate: unit.revenueGrowthRate,
+      employees: unit.employees,
+      debtRatio: unit.debtRatio,
+      profitMargin: unit.profitMargin,
+      techLevel: unit.techLevel,
+      gstScore: unit.gstScore,
+      exportShare: unit.exportShare,
+      requirementText: `Official registered MSME unit in ${unit.district}, ${unit.state} seeking modernization subsidy under ${unit.requestedScheme} for expansion of: ${unit.nicActivity}.`
+    });
+  };
+
+  const currentUnit = REAL_UDYAM_DIRECTORY.find(u => u.id === selectedUdyamId);
 
   return (
     <div>
@@ -74,10 +114,46 @@ export default function Layer1Advisory() {
         
         {/* Left Column: MSME Data Entry Form */}
         <div className="glass-panel organic-card-3" style={{ padding: '2rem' }}>
-          <h3 style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+          <h3 style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
             <Building2 size={20} color="var(--primary)" />
             Enterprise Profile Data
           </h3>
+
+          {/* Quick-Import from Real Udyam Registry */}
+          <div style={{
+            background: 'var(--muted)',
+            padding: '1rem 1.25rem',
+            borderRadius: 'var(--radius-md)',
+            marginBottom: '1.5rem',
+            border: '1.5px solid var(--border)'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+              <span style={{ fontSize: '0.78rem', fontWeight: 800, textTransform: 'uppercase', color: 'var(--primary)', letterSpacing: '0.04em', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                <ShieldCheck size={14} color="var(--primary)" />
+                Load Real Udyam Unit (70k Dataset)
+              </span>
+              <span className="badge badge-emerald" style={{ fontSize: '0.68rem' }}>Live Udyam Data</span>
+            </div>
+            <select 
+              className="form-select"
+              value={selectedUdyamId}
+              onChange={(e) => handleUdyamSelect(e.target.value)}
+            >
+              <option value="">-- Choose a Registered MSME Across India --</option>
+              {REAL_UDYAM_DIRECTORY.map((unit) => (
+                <option key={unit.id} value={unit.id}>
+                  {unit.enterpriseName} ({unit.state} • {unit.district})
+                </option>
+              ))}
+            </select>
+            {currentUnit && (
+              <div style={{ marginTop: '0.65rem', fontSize: '0.74rem', color: 'var(--text-secondary)', background: 'rgba(255,255,255,0.6)', padding: '0.5rem 0.75rem', borderRadius: 'var(--radius-sm)' }}>
+                <div style={{ fontWeight: 700, color: 'var(--primary)' }}>NIC Activity ({currentUnit.nicCode}):</div>
+                <div>{currentUnit.nicActivity}</div>
+                <div style={{ marginTop: '0.2rem', color: 'var(--text-muted)' }}>Reg Date: {currentUnit.registrationDate} • Pincode: {currentUnit.pincode}</div>
+              </div>
+            )}
+          </div>
 
           <form onSubmit={(e) => e.preventDefault()}>
             
