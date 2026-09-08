@@ -18,7 +18,11 @@ export function benchmarkMSME(metrics) {
     sector = "Manufacturing"
   } = metrics;
 
-  const benchmark = ASUSE_UDYAM_BENCHMARKS.sectorBenchmarks[sector] || ASUSE_UDYAM_BENCHMARKS.sectorBenchmarks["Manufacturing"];
+  const benchmark = 
+    ASUSE_UDYAM_BENCHMARKS.sectorBenchmarks[sector] || 
+    ASUSE_UDYAM_BENCHMARKS.sectorBenchmarks["Manufacturing - Metals & Engineering"] ||
+    ASUSE_UDYAM_BENCHMARKS.sectorBenchmarks["Manufacturing"] ||
+    Object.values(ASUSE_UDYAM_BENCHMARKS.sectorBenchmarks)[0];
 
   // 1. Revenue Percentile Estimation
   const revRatio = annualRevenue / benchmark.avgRevenue;
