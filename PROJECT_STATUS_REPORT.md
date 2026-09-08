@@ -34,7 +34,7 @@
 
 ```
                              OFFICIAL GOVERNMENT DATASETS
-             (MoSPI ASUSE 2023-24 Microdata & MoMSME Udyam Live Registry)
+             (MoSPI ASUSE 2023-24, MoMSME Udyam & MoMSME/KVIC PMEGP)
                                          │
         ┌────────────────────────────────┴────────────────────────────────┐
         ▼                                                                 ▼
@@ -96,10 +96,22 @@ The project has moved beyond synthetic placeholder data and is connected to auth
   * *Manufacturing - Metals & Engineering*, *Manufacturing - Food & Agro*, *Manufacturing - Textiles & Apparel*, *Manufacturing - Chemicals & Plastics*, *IT & Technology Services*, *Retail & Wholesale Trade*, *Healthcare & Pharmaceuticals*, *Logistics & Transportation*.
 * **Where Used in App:** Powers the **ASUSE Benchmarks tab** (`BenchmarkView.jsx`), national percentile comparisons, and productivity indexes.
 
-### ⏳ Dataset 3 (Pending / Remaining): Historical Subsidy Disbursement Logs
-* **Target Source:** MSME Dashboard (`dashboard.msme.gov.in`) / PMEGP / DBT Bharat.
-* **Target Data:** Historical records of Margin Money subsidies disbursed, bank credit sanctioned, and actual post-allocation job creation outcomes by state/sector.
-* **Role in System:** Provides historical empirical proof to refine the Knapsack impact weights and calibrate ML prediction accuracy.
+### ✅ Dataset 3: Ministry of MSME / KVIC PMEGP State-Wise Historical Dataset (2021-22 to 2025-26)
+* **Source:** Ministry of MSME / Khadi & Village Industries Commission (KVIC) via `data.gov.in` (`PMEGP_StateWise_Combined_2021-22_to_2025-26.csv`).
+* **Scope Ingested:** **175 state-year records** across 35 Indian States/UTs over 5 Financial Years (FY 2021-22 through FY 2025-26).
+* **Granularity & Architecture Role:** State-level macro programme performance and employment intensity norms (NOT an individual enterprise predictor).
+* **Calibration & Benchmark Metrics (Training Period FY22–FY25):**
+  * Total Projects Assisted (National): **3,01,587 units**
+  * Total Employment Generated (National): **24,12,696 persons**
+  * Observed Employment Intensity: **~8.0 persons per assisted project**
+  * Total Margin Money Disbursed: **₹15,710.4 Crores**
+* **Methodological Integrity Guardrails:**
+  1. **Provisional Data Quarantine:** FY 2025-26 records (as of 10-02-2026) are flagged `dataStatus: "provisional"` and quarantined (`isTrainingEligible: false`).
+  2. **Reconciliation Discrepancy Note:** FY 2024-25 state figures are preserved as reported (`dataStatus: "subject_to_validation"`), noting reconciliation variance with the national portal.
+  3. **Unit Reporting Calibration:** Corrected the unit disparity where FY 2021-22 and 2022-23 margin money was reported in Lakhs vs. Crores, while preserving source numbers unmodified.
+* **Where Used in App:**
+  * **Layer 2 Optimization:** Integrated a dedicated **"PMEGP Macro Benchmark Context"** panel displaying national and state assisted units, employment generation, and the 8.0 jobs/unit empirical intensity norm.
+  * **Applicant Decision Table:** Dynamically enriches each applicant's state tag with real PMEGP historical assisted units and scheme absorption capacity.
 
 ---
 
@@ -123,7 +135,8 @@ msme_platform/
 ├── package.json                      # Dependencies (React 18, Vite, Lucide)
 ├── README.md                         # Comprehensive documentation
 ├── scripts/
-│   └── link_datasets.py              # Automated ASUSE & Udyam data extraction pipeline
+│   ├── link_datasets.py              # Automated ASUSE & Udyam data extraction pipeline
+│   └── process_pmegp.py              # PMEGP dataset parser, cleaner & benchmark extractor
 ├── src/
 │   ├── App.jsx                       # Main shell with tab switcher and theme state
 │   ├── index.css                     # Complete Organic / Natural Design System
@@ -131,7 +144,7 @@ msme_platform/
 │   │   ├── OfficialHeader.jsx        # Govt of India identification bar & verified seals
 │   │   ├── Navbar.jsx                # Floating navigation pill with theme toggle
 │   │   ├── Layer1Advisory.jsx        # Business owner advisory & Udyam quick-loader
-│   │   ├── Layer2Optimization.jsx    # Knapsack subsidy optimizer & allocation table
+│   │   ├── Layer2Optimization.jsx    # Knapsack subsidy optimizer & PMEGP macro context
 │   │   ├── BenchmarkView.jsx         # ASUSE survey percentiles & state distribution
 │   │   ├── SchemeDirectory.jsx       # Searchable catalog of 30+ government schemes
 │   │   ├── SHAPWaterfall.jsx         # SHAP XAI visualizer
@@ -139,7 +152,8 @@ msme_platform/
 │   ├── data/
 │   │   ├── asuseRealBenchmarks.js    # MoSPI survey percentiles (P25-P90)
 │   │   ├── asuseUdyamBenchmarks.js   # Harmonized benchmarks & state counts
-│   │   ├── realDatasetMetrics.js     # Provenance metadata (523k ASUSE / 70k Udyam)
+│   │   ├── pmegpData.js              # PMEGP 175 records & national/state benchmarks
+│   │   ├── realDatasetMetrics.js     # Provenance metadata (ASUSE, Udyam, PMEGP)
 │   │   ├── realUdyamDirectory.js     # 60 real Udyam units for 1-click loading
 │   │   ├── sampleApplicants.js       # Real applicant queue for Layer 2 Knapsack
 │   │   └── schemes.js                # 30+ detailed Central/State schemes
@@ -147,8 +161,9 @@ msme_platform/
 │       ├── xgboostPredictor.js       # Decision-tree growth prediction logic
 │       ├── shapExplainer.js          # Marginal Shapley attribution calculator
 │       ├── semanticMatcher.js        # Scheme eligibility and keyword matcher
-│       ├── knapsackSolver.js         # Multiple-Choice Knapsack optimizer
+│       ├── knapsackSolver.js         # Multiple-Choice Knapsack optimizer with PMEGP context
 │       └── benchmarkEngine.js        # Survey percentile evaluator
+├── data/raw/                         # Local raw government CSVs (git-ignored)
 └── udyam_all_india.csv               # 70,929 real Udyam records (19.3 MB, git-ignored)
 ```
 
@@ -167,5 +182,5 @@ Copy this entire markdown file and paste it into ChatGPT with one of the followi
 ### Prompt 3: IEEE / Academic Paper Outline
 > *"Based on this dual-layer MSME advisory and subsidy optimization system, outline an academic research paper suitable for an IEEE/Springer conference, including the Abstract, Mathematical Formulation, Methodology, and Experimental Results comparing Knapsack vs. FCFS."*
 
-### Prompt 4: Integrating the 3rd Dataset (PMEGP Historical Sanctions)
-> *"I need to integrate my 3rd dataset: historical PMEGP subsidy disbursement records from the MSME Dashboard. Based on the attached project structure, propose how to structure this data and use it to calibrate the Knapsack solver's job creation multipliers."*
+### Prompt 4: Multi-Dataset Triangulation & Causal Guardrail Defense
+> *"In our project defense, examiners might ask why we integrated three datasets with different granularities (enterprise-level Udyam vs. survey-level ASUSE vs. state-level PMEGP macro records) and how we prevent data leakage or false causal claims. Give me a rigorous methodological defense justifying this multi-tier architecture."*

@@ -1,9 +1,10 @@
 import React, { useState, useMemo } from 'react';
 import { SAMPLE_APPLICANTS } from '../data/sampleApplicants';
 import { optimizeSubsidyBudget } from '../engine/knapsackSolver';
+import { PMEGP_NATIONAL_BENCHMARK, PMEGP_STATE_BENCHMARKS } from '../data/pmegpData';
 import { 
   Sliders, DollarSign, Users, TrendingUp, Award, CheckCircle2, XCircle, 
-  Sparkles, ShieldCheck, Scale, Zap, Info, Sprout
+  Sparkles, ShieldCheck, Scale, Zap, Info, Sprout, Landmark, Building2
 } from 'lucide-react';
 
 export default function Layer2Optimization() {
@@ -196,6 +197,101 @@ export default function Layer2Optimization() {
         </div>
       </div>
 
+      {/* PMEGP Macro Benchmark Context (Ministry of MSME / KVIC) */}
+      <div className="glass-panel organic-card-1" style={{ padding: '2rem', marginBottom: '2rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.25rem' }}>
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
+              <span className="badge badge-amber" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem' }}>
+                <Landmark size={13} /> Dataset 3 • Official Macro Benchmark
+              </span>
+              <h3 style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>
+                PMEGP Macro Benchmark Context (Ministry of MSME / KVIC)
+              </h3>
+            </div>
+            <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', margin: 0 }}>
+              State-wise programme performance across 35 States/UTs (2021-22 to 2024-25) via Data.gov.in
+            </p>
+          </div>
+          <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', background: 'var(--muted)', padding: '0.4rem 0.85rem', borderRadius: 'var(--radius-pill)', border: '1px solid var(--border)' }}>
+            35 States/UTs Analyzed • 175 Records
+          </div>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))', gap: '1.25rem', marginBottom: '1.25rem' }}>
+          {/* Metric 1 */}
+          <div style={{ background: 'var(--muted)', padding: '1.25rem 1.5rem', borderRadius: '1.5rem', border: '1.5px solid var(--border)' }}>
+            <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase' }}>
+              Total Assisted Units (National)
+            </div>
+            <div style={{ fontSize: '1.9rem', fontFamily: 'var(--font-serif)', fontWeight: 800, color: 'var(--primary)', margin: '0.3rem 0' }}>
+              {PMEGP_NATIONAL_BENCHMARK.totalProjectsAssisted.toLocaleString('en-IN')}
+            </div>
+            <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+              Historical assisted micro-units (FY22–FY25)
+            </div>
+          </div>
+
+          {/* Metric 2 */}
+          <div style={{ background: 'var(--muted)', padding: '1.25rem 1.5rem', borderRadius: '1.5rem', border: '1.5px solid var(--border)' }}>
+            <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase' }}>
+              Historical Employment Generated
+            </div>
+            <div style={{ fontSize: '1.9rem', fontFamily: 'var(--font-serif)', fontWeight: 800, color: 'var(--secondary)', margin: '0.3rem 0' }}>
+              {PMEGP_NATIONAL_BENCHMARK.totalEmploymentEstimated.toLocaleString('en-IN')}
+            </div>
+            <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+              Official estimated employment across India
+            </div>
+          </div>
+
+          {/* Metric 3 */}
+          <div style={{ background: 'var(--muted)', padding: '1.25rem 1.5rem', borderRadius: '1.5rem', border: '1.5px solid var(--border)' }}>
+            <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase' }}>
+              Historical Employment Intensity
+            </div>
+            <div style={{ fontSize: '1.9rem', fontFamily: 'var(--font-serif)', fontWeight: 800, color: 'var(--cyan-main)', margin: '0.3rem 0' }}>
+              ~{PMEGP_NATIONAL_BENCHMARK.nationalAvgEmploymentPerProject.toFixed(1)} <span style={{ fontSize: '0.85rem', fontWeight: 500, color: 'var(--text-muted)' }}>persons / unit</span>
+            </div>
+            <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+              Consistent reporting benchmark norm
+            </div>
+          </div>
+
+          {/* Metric 4 */}
+          <div style={{ background: 'var(--muted)', padding: '1.25rem 1.5rem', borderRadius: '1.5rem', border: '1.5px solid var(--border)' }}>
+            <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase' }}>
+              Training & Benchmark Period
+            </div>
+            <div style={{ fontSize: '1.9rem', fontFamily: 'var(--font-serif)', fontWeight: 800, color: 'var(--text-primary)', margin: '0.3rem 0' }}>
+              4 Years
+            </div>
+            <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+              FY22–FY25 (FY26 provisional excluded)
+            </div>
+          </div>
+        </div>
+
+        {/* Methodological Guidance Note */}
+        <div style={{
+          display: 'flex',
+          alignItems: 'flex-start',
+          gap: '0.75rem',
+          padding: '0.9rem 1.25rem',
+          background: 'rgba(93, 112, 82, 0.07)',
+          borderRadius: '1rem',
+          border: '1px solid var(--border)',
+          fontSize: '0.82rem',
+          color: 'var(--text-secondary)',
+          lineHeight: '1.45'
+        }}>
+          <Info size={16} color="var(--primary)" style={{ marginTop: '2px', flexShrink: 0 }} />
+          <div>
+            <strong>Methodological Guardrail:</strong> PMEGP data provides regional programme-level benchmarks. Individual applicant predictions are generated by XGBoost trained on enterprise operational data (ASUSE + Udyam). PMEGP figures reflect historical regional scheme performance and absorption capacity, not enterprise-level causal predictors.
+          </div>
+        </div>
+      </div>
+
       {/* Applicant Allocation Queue Table */}
       <div className="glass-panel organic-card-3" style={{ padding: '2rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
@@ -231,7 +327,7 @@ export default function Layer2Optimization() {
             <thead>
               <tr>
                 <th>Applicant Enterprise</th>
-                <th>Region</th>
+                <th>Region & State PMEGP Context</th>
                 <th>Growth Score</th>
                 <th>Requested Subsidy</th>
                 <th>Projected Revenue Yield</th>
@@ -248,6 +344,11 @@ export default function Layer2Optimization() {
                   </td>
                   <td>
                     <span className="badge badge-emerald">{app.district ? `${app.district}, ${app.state}` : (app.state || "India")}</span>
+                    {app.pmegpContext && app.pmegpContext.totalProjectsAssisted > 0 && (
+                      <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: '0.35rem' }}>
+                        PMEGP: {app.pmegpContext.totalProjectsAssisted.toLocaleString('en-IN')} units (~{app.pmegpContext.historicalAvgEmploymentPerProject} jobs/unit)
+                      </div>
+                    )}
                   </td>
                   <td>
                     <strong style={{ color: 'var(--primary)', fontFamily: 'var(--font-serif)', fontSize: '1.05rem' }}>
@@ -279,6 +380,11 @@ export default function Layer2Optimization() {
                   </td>
                   <td>
                     <span className="badge badge-amber">{app.district ? `${app.district}, ${app.state}` : (app.state || "India")}</span>
+                    {app.pmegpContext && app.pmegpContext.totalProjectsAssisted > 0 && (
+                      <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: '0.35rem' }}>
+                        PMEGP: {app.pmegpContext.totalProjectsAssisted.toLocaleString('en-IN')} units (~{app.pmegpContext.historicalAvgEmploymentPerProject} jobs/unit)
+                      </div>
+                    )}
                   </td>
                   <td>
                     <strong style={{ color: 'var(--text-muted)', fontFamily: 'var(--font-serif)' }}>

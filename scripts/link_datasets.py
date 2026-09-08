@@ -303,6 +303,25 @@ export const REAL_DATASET_METRICS = {{
     totalLiveRecords: {total_udyam_records},
     coverageStates: {len(state_counts)},
     topStates: {json.dumps(sorted([{"state": k, "count": v} for k, v in state_counts.items()], key=lambda x: -x["count"])[:10], indent=2)}
+  }},
+  pmegp: {{
+    source: "Ministry of MSME / Khadi & Village Industries Commission (KVIC)",
+    portal: "Data.gov.in",
+    file: "PMEGP_StateWise_Combined_2021-22_to_2025-26.csv",
+    recordCount: 175,
+    statesCovered: 35,
+    timeHorizon: "2021-22 to 2025-26 (5 FYs)",
+    granularity: "State-Year aggregates",
+    totalAssistedUnits: 301587,
+    totalEmployment: 2412696,
+    role: "Layer 2 Macro Benchmark Context (Regional subsidy absorption & employment norms)",
+    trainingEligibleYears: "2021-22, 2022-23, 2023-24, 2024-25",
+    provisionalYear: "2025-26 (as of 10-02-2026, partial year)",
+    dataIntegrityNotes: [
+      "FY 2025-26 excluded from training/benchmarks due to partial-year status.",
+      "FY 2024-25 state figures preserved as reported; reconciliation discrepancy with national dashboard documented.",
+      "Unit discrepancy in FY22/FY23 Margin Money (reported in Lakhs vs Crores) calibrated."
+    ]
   }}
 }};
 """
@@ -354,6 +373,20 @@ with open(os.path.join(SRC_DATA_DIR, "realUdyamDirectory.js"), "w", encoding="ut
     f.write(directory_code)
 print("Saved src/data/realUdyamDirectory.js")
 
+# -------------------------------------------------------------
+# 4. PROCESS REAL PMEGP 2021-22 TO 2025-26 HISTORICAL DATA
+# -------------------------------------------------------------
 print("\n" + "=" * 60)
-print("DATASET LINKING COMPLETE!")
+print("PROCESSING MoMSME/KVIC PMEGP DATASET (175 RECORDS, 35 STATES)")
 print("=" * 60)
+import sys
+scripts_dir = os.path.dirname(os.path.abspath(__file__))
+if scripts_dir not in sys.path:
+    sys.path.insert(0, scripts_dir)
+from process_pmegp import process_pmegp
+process_pmegp()
+
+print("\n" + "=" * 60)
+print("ALL 3 REAL GOVERNMENT DATASETS LINKED SUCCESSFULLY!")
+print("=" * 60)
+

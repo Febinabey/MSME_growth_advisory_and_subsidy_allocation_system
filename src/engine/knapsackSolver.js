@@ -1,4 +1,5 @@
 import { predictMSMEGrowth } from './xgboostPredictor';
+import { getPmegpStateContext, PMEGP_NATIONAL_BENCHMARK } from '../data/pmegpData';
 
 /**
  * Multiple-Choice Knapsack & Budget-Constrained Subsidy Optimization Solver
@@ -12,6 +13,7 @@ export function optimizeSubsidyBudget(applicants, availableBudgetINR, policyWeig
   // 1. Process each applicant to compute predictions & objective ROI value
   const processedApplicants = applicants.map(app => {
     const predictions = predictMSMEGrowth(app);
+    const pmegpContext = getPmegpStateContext(app.state);
     
     // Value function V_i = w_rev * (Projected Revenue Impact) + w_job * (Jobs * Value_per_job)
     const projectedRevenueUpliftINR = app.annualRevenue * (predictions.predictedRevenueGrowth / 100);
@@ -33,6 +35,7 @@ export function optimizeSubsidyBudget(applicants, availableBudgetINR, policyWeig
     return {
       ...app,
       predictions,
+      pmegpContext,
       projectedRevenueUpliftINR,
       predictedJobs: predictions.predictedJobs,
       cost,
@@ -127,6 +130,15 @@ export function optimizeSubsidyBudget(applicants, availableBudgetINR, policyWeig
       jobGainPercent,
       revenueGainPercent,
       roiMultiplier
+    },
+    pmegpSummary: {
+      datasetSource: 'Ministry of MSME / KVIC via Data.gov.in',
+      trainingPeriod: '2021-22 to 2024-25',
+      provisionalPeriod: '2025-26 (as of 10-02-2026)',
+      totalProjectsAssistedHistorical: PMEGP_NATIONAL_BENCHMARK.totalProjectsAssisted,
+      totalEmploymentGeneratedHistorical: PMEGP_NATIONAL_BENCHMARK.totalEmploymentEstimated,
+      averageEmploymentPerProjectHistorical: PMEGP_NATIONAL_BENCHMARK.nationalAvgEmploymentPerProject,
+      dataIntegrityNote: 'PMEGP figures reflect regional programme statistics, not individual enterprise performance.'
     }
   };
 }
