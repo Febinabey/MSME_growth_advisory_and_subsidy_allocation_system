@@ -32,3 +32,8 @@ dist-ssr
 *.csv
 download_udyam.py
 
+# Presentation and external report drafts
+PROJECT_STATUS_REPORT.md
+PRESENTATION_SLIDES_COMPLETE.md
+*SLIDES*.md
+*REPORT*.md
