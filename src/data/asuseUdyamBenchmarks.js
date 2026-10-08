@@ -7,10 +7,10 @@
  * 3. Reserve Bank of India (RBI) MSME Performance & Gazette Classification Guidelines
  */
 
-import { REAL_DATASET_METRICS } from './realDatasetMetrics';
-import { ASUSE_REAL_BENCHMARKS, UDYAM_GAZETTE_CLASSIFICATION_2025 } from './asuseRealBenchmarks';
+import { REAL_DATASET_METRICS } from './realDatasetMetrics.js';
+import { ASUSE_REAL_BENCHMARKS, UDYAM_GAZETTE_CLASSIFICATION_2025, UDYAM_GAZETTE_CLASSIFICATION_2020 } from './asuseRealBenchmarks.js';
 
-export { REAL_DATASET_METRICS, ASUSE_REAL_BENCHMARKS, UDYAM_GAZETTE_CLASSIFICATION_2025 };
+export { REAL_DATASET_METRICS, ASUSE_REAL_BENCHMARKS, UDYAM_GAZETTE_CLASSIFICATION_2025, UDYAM_GAZETTE_CLASSIFICATION_2020 };
 
 export const ASUSE_UDYAM_BENCHMARKS = {
   metadata: {
@@ -18,9 +18,10 @@ export const ASUSE_UDYAM_BENCHMARKS = {
     udyamDataVersion: "Official Udyam Open Data 2025/2026",
     totalSurveyUnits: "5,23,775 Surveyed Units (MoSPI ASUSE)",
     totalUdyamRecords: "70,929 Real Registered Units (data.gov.in)",
-    microThreshold: { investmentMax: 10000000, turnoverMax: 50000000 },    // ₹1 Cr Inv, ₹5 Cr Turnover
-    smallThreshold: { investmentMax: 100000000, turnoverMax: 500000000 },   // ₹10 Cr Inv, ₹50 Cr Turnover
-    mediumThreshold: { investmentMax: 500000000, turnoverMax: 2500000000 } // ₹50 Cr Inv, ₹250 Cr Turnover
+    // Gazette Notification S.O. 1364(E) (effective April 1, 2025):
+    microThreshold: { investmentMax: 25000000, turnoverMax: 100000000 },     // ₹2.5 Cr Inv, ₹10 Cr Turnover
+    smallThreshold: { investmentMax: 250000000, turnoverMax: 1000000000 },   // ₹25 Cr Inv, ₹100 Cr Turnover
+    mediumThreshold: { investmentMax: 1250000000, turnoverMax: 5000000000 } // ₹125 Cr Inv, ₹500 Cr Turnover
   },
 
   sectorBenchmarks: {

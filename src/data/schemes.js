@@ -47,7 +47,7 @@ export const GOVERNMENT_SCHEMES = [
     maxSubsidy: 500000, // ₹5 Lakhs
     subsidyPercentage: 80,
     minTurnover: 1000000,
-    maxTurnover: 500000000,
+    maxTurnover: 2500000000, // Up to Medium Enterprise ceiling (₹250 Cr)
     minEmployees: 3,
     maxEmployees: 500,
     eligibleSectors: ["Manufacturing", "Electronics", "Textiles", "Green Tech"],
@@ -67,10 +67,10 @@ export const GOVERNMENT_SCHEMES = [
     maxSubsidy: 20000000, // ₹2 Crore guarantee
     subsidyPercentage: 85,
     minTurnover: 5000000,
-    maxTurnover: 250000000,
+    maxTurnover: 2500000000, // Covers credit access across MSME tiers (up to ₹250 Cr)
     minEmployees: 2,
-    maxEmployees: 150,
-    eligibleSectors: ["Manufacturing", "Services", "IT Services", "Electronics"],
+    maxEmployees: 500,
+    eligibleSectors: ["Manufacturing", "Services", "IT Services", "Electronics", "Textiles", "Agro-processing", "Green Tech"],
     minTechLevel: 1,
     minGstScore: 65,
     description: "Enables collateral-free credit flow to Micro and Small enterprises up to ₹5 Crore with 85% credit guarantee coverage.",
@@ -87,7 +87,7 @@ export const GOVERNMENT_SCHEMES = [
     maxSubsidy: 4000000, // ₹40 Lakhs
     subsidyPercentage: 75,
     minTurnover: 5000000,
-    maxTurnover: 500000000,
+    maxTurnover: 2500000000, // Covers innovation across Micro, Small & Medium (up to ₹250 Cr)
     minEmployees: 5,
     maxEmployees: 300,
     eligibleSectors: ["Manufacturing", "Electronics", "IT Services", "Green Tech"],
@@ -127,9 +127,9 @@ export const GOVERNMENT_SCHEMES = [
     maxSubsidy: 7500000, // ₹75 Lakhs
     subsidyPercentage: 50,
     minTurnover: 10000000,
-    maxTurnover: 500000000,
+    maxTurnover: 2500000000, // Covers Industry 4.0 up to Medium scale (₹250 Cr)
     minEmployees: 10,
-    maxEmployees: 400,
+    maxEmployees: 500,
     eligibleSectors: ["Manufacturing", "Electronics", "Green Tech"],
     minTechLevel: 4,
     minGstScore: 80,
@@ -147,9 +147,9 @@ export const GOVERNMENT_SCHEMES = [
     maxSubsidy: 3000000, // ₹30 Lakhs
     subsidyPercentage: 60,
     minTurnover: 3000000,
-    maxTurnover: 500000000,
+    maxTurnover: 2500000000, // Sustainability across all MSME tiers (₹250 Cr)
     minEmployees: 3,
-    maxEmployees: 300,
+    maxEmployees: 500,
     eligibleSectors: ["Manufacturing", "Services", "Textiles", "Agro-processing", "Electronics", "Green Tech"],
     minTechLevel: 2,
     minGstScore: 50,
@@ -167,7 +167,7 @@ export const GOVERNMENT_SCHEMES = [
     maxSubsidy: 50000000, // ₹5 Crore per cluster
     subsidyPercentage: 90,
     minTurnover: 5000000,
-    maxTurnover: 500000000,
+    maxTurnover: 1000000000, // Up to Small Enterprise ceiling (₹100 Cr)
     minEmployees: 20,
     maxEmployees: 1000,
     eligibleSectors: ["Agro-processing", "Textiles", "Services"],
@@ -207,9 +207,9 @@ export const GOVERNMENT_SCHEMES = [
     maxSubsidy: 300000000, // ₹30 Crore max grant
     subsidyPercentage: 80,
     minTurnover: 10000000,
-    maxTurnover: 1000000000,
+    maxTurnover: 2500000000, // Common Facility Centers serving clusters up to Medium scale (₹250 Cr)
     minEmployees: 15,
-    maxEmployees: 500,
+    maxEmployees: 1000,
     eligibleSectors: ["Manufacturing", "Electronics", "Textiles", "Agro-processing"],
     minTechLevel: 2,
     minGstScore: 65,
@@ -227,9 +227,9 @@ export const GOVERNMENT_SCHEMES = [
     maxSubsidy: 150000, // ₹1.5 Lakhs per event
     subsidyPercentage: 80,
     minTurnover: 500000,
-    maxTurnover: 500000000,
+    maxTurnover: 2500000000, // Market access across all MSME tiers (₹250 Cr)
     minEmployees: 2,
-    maxEmployees: 200,
+    maxEmployees: 500,
     eligibleSectors: ["Manufacturing", "Services", "Textiles", "Electronics", "Agro-processing"],
     minTechLevel: 1,
     minGstScore: 50,
@@ -327,7 +327,7 @@ export const GOVERNMENT_SCHEMES = [
     maxSubsidy: 30000000, // ₹3 Crore capital investment subsidy
     subsidyPercentage: 15,
     minTurnover: 5000000,
-    maxTurnover: 500000000,
+    maxTurnover: 1000000000, // Up to Small Enterprise ceiling (₹100 Cr)
     minEmployees: 10,
     maxEmployees: 500,
     eligibleSectors: ["Textiles"],
@@ -367,9 +367,9 @@ export const GOVERNMENT_SCHEMES = [
     maxSubsidy: 2500000, // ₹25 Lakhs per delegation/event
     subsidyPercentage: 95,
     minTurnover: 10000000,
-    maxTurnover: 500000000,
+    maxTurnover: 2500000000, // Export delegation assistance across all MSME tiers (₹250 Cr)
     minEmployees: 5,
-    maxEmployees: 300,
+    maxEmployees: 500,
     eligibleSectors: ["Manufacturing", "Electronics", "IT Services", "Textiles", "Green Tech"],
     minTechLevel: 3,
     minGstScore: 80,
@@ -387,9 +387,9 @@ export const GOVERNMENT_SCHEMES = [
     maxSubsidy: 30000000, // ₹3 Crore soft loan
     subsidyPercentage: 15,
     minTurnover: 10000000,
-    maxTurnover: 500000000,
+    maxTurnover: 2500000000, // SIDBI financing across Micro, Small & Medium (₹250 Cr)
     minEmployees: 8,
-    maxEmployees: 300,
+    maxEmployees: 500,
     eligibleSectors: ["Manufacturing", "Electronics", "Green Tech"],
     minTechLevel: 3,
     minGstScore: 75,
@@ -427,7 +427,7 @@ export const GOVERNMENT_SCHEMES = [
     maxSubsidy: 360000, // ₹3.6 Lakhs per unit in SPV
     subsidyPercentage: 80,
     minTurnover: 5000000,
-    maxTurnover: 500000000,
+    maxTurnover: 1000000000, // Up to Small Enterprise ceiling (₹100 Cr)
     minEmployees: 5,
     maxEmployees: 300,
     eligibleSectors: ["Manufacturing", "Electronics", "Textiles"],
@@ -447,9 +447,9 @@ export const GOVERNMENT_SCHEMES = [
     maxSubsidy: 500000, // ₹5 Lakhs per international patent
     subsidyPercentage: 100,
     minTurnover: 1000000,
-    maxTurnover: 500000000,
+    maxTurnover: 2500000000, // IPR patent/GI reimbursement across all MSME tiers (₹250 Cr)
     minEmployees: 1,
-    maxEmployees: 200,
+    maxEmployees: 500,
     eligibleSectors: ["Manufacturing", "Electronics", "IT Services", "Green Tech"],
     minTechLevel: 2,
     minGstScore: 60,
@@ -467,7 +467,7 @@ export const GOVERNMENT_SCHEMES = [
     maxSubsidy: 15000000, // ₹1.5 Crore grant
     subsidyPercentage: 70,
     minTurnover: 10000000,
-    maxTurnover: 1000000000,
+    maxTurnover: 2500000000, // World Bank MSME flagship for Micro, Small & Medium (₹250 Cr)
     minEmployees: 10,
     maxEmployees: 500,
     eligibleSectors: ["Manufacturing", "Electronics", "Green Tech", "IT Services"],

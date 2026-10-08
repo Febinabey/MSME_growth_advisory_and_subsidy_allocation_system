@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { ASUSE_UDYAM_BENCHMARKS } from '../data/asuseUdyamBenchmarks';
 import { benchmarkMSME } from '../engine/benchmarkEngine';
+import { formatINR, getMSMETier } from '../utils/formatCurrency';
 import { Database, TrendingUp, ShieldCheck, Award, BarChart3, Users, DollarSign, Sprout } from 'lucide-react';
 
 const PRIMARY_SECTORS = [
@@ -24,6 +25,7 @@ export default function BenchmarkView() {
     gstScore: 85
   });
 
+  const currentTier = useMemo(() => getMSMETier(userMetrics.annualRevenue), [userMetrics.annualRevenue]);
   const benchmarkResult = benchmarkMSME({ ...userMetrics, sector: selectedSector });
   const sectorBenchmark = 
     ASUSE_UDYAM_BENCHMARKS.sectorBenchmarks[selectedSector] || 
@@ -92,16 +94,30 @@ export default function BenchmarkView() {
           </div>
 
           <div className="form-group">
-            <div className="form-label">
-              <span>Annual Turnover (₹)</span>
+            <div className="form-label" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.4rem' }}>
+              <span style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+                <span>Annual Turnover</span>
+                <span style={{
+                  fontSize: '0.68rem',
+                  fontWeight: 800,
+                  padding: '0.12rem 0.5rem',
+                  borderRadius: '999px',
+                  background: currentTier.bgColor,
+                  color: currentTier.color,
+                  border: `1px solid ${currentTier.borderColor}`,
+                  textTransform: 'uppercase'
+                }}>
+                  {currentTier.label}
+                </span>
+              </span>
               <strong style={{ color: 'var(--primary)', fontFamily: 'var(--font-serif)', fontSize: '1.05rem' }}>
-                ₹{(userMetrics.annualRevenue / 100000).toFixed(1)} Lakhs
+                {formatINR(userMetrics.annualRevenue, { showBoth: true })}
               </strong>
             </div>
             <input 
               type="range" 
               min="1000000" 
-              max="150000000" 
+              max="2500000000" 
               step="1000000" 
               value={userMetrics.annualRevenue} 
               onChange={(e) => setUserMetrics(prev => ({ ...prev, annualRevenue: parseFloat(e.target.value) }))} 
@@ -208,9 +224,9 @@ export default function BenchmarkView() {
                 <div style={{ color: 'var(--text-muted)', fontWeight: 700 }}>Your Enterprise</div>
                 <div style={{ color: 'var(--text-muted)', fontWeight: 700 }}>ASUSE National Avg</div>
 
-                <div>Annual Revenue</div>
-                <div style={{ fontWeight: 800, color: 'var(--text-primary)' }}>₹{(userMetrics.annualRevenue / 100000).toFixed(1)}L</div>
-                <div>₹{(((sectorBenchmark?.avgRevenue || 25000000)) / 100000).toFixed(1)}L</div>
+                <div>Annual Turnover</div>
+                <div style={{ fontWeight: 800, color: 'var(--text-primary)' }}>{formatINR(userMetrics.annualRevenue, { compact: true })}</div>
+                <div>{formatINR(sectorBenchmark?.avgRevenue || 25000000, { compact: true })}</div>
 
                 <div>Net Profit Margin</div>
                 <div style={{ fontWeight: 800, color: 'var(--primary)' }}>{userMetrics.profitMargin}%</div>

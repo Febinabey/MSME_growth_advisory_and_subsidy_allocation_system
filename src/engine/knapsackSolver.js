@@ -1,5 +1,5 @@
-import { predictMSMEGrowth } from './xgboostPredictor';
-import { getPmegpStateContext, PMEGP_NATIONAL_BENCHMARK } from '../data/pmegpData';
+import { predictMSMEGrowth } from './xgboostPredictor.js';
+import { getPmegpStateContext, PMEGP_NATIONAL_BENCHMARK } from '../data/pmegpData.js';
 
 /**
  * Multiple-Choice Knapsack & Budget-Constrained Subsidy Optimization Solver

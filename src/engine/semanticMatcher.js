@@ -1,4 +1,4 @@
-import { GOVERNMENT_SCHEMES } from '../data/schemes';
+import { GOVERNMENT_SCHEMES } from '../data/schemes.js';
 
 /**
  * Evaluates Scheme Eligibility & Semantic Compatibility Score
@@ -50,9 +50,15 @@ export function matchSchemesForMSME(metrics, requirementText = "") {
     semanticScore = Math.min(98, semanticScore);
 
     // 3. Recommended Subsidy Calculation for this MSME
+    // For operating enterprises, project scale is calibrated against turnover (up to 25% modernization capex).
+    // For greenfield startups (annualRevenue = 0 or < ₹10L), project scale is calibrated to standard PMEGP/MUDRA unit benchmark (₹10L - ₹25L).
+    const appraisedProjectCost = annualRevenue >= 1000000
+      ? annualRevenue * 0.25
+      : Math.min(2500000, scheme.maxSubsidy / (scheme.subsidyPercentage / 100));
+
     let recommendedSubsidyAmount = Math.min(
       scheme.maxSubsidy,
-      Math.round(annualRevenue * (scheme.subsidyPercentage / 100))
+      Math.max(100000, Math.round(appraisedProjectCost * (scheme.subsidyPercentage / 100)))
     );
 
     return {

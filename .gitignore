@@ -37,3 +37,8 @@ PROJECT_STATUS_REPORT.md
 PRESENTATION_SLIDES_COMPLETE.md
 *SLIDES*.md
 *REPORT*.md
+
+# Binaries and temporary data
+cloudflared.exe
+data/*.db-journal
+

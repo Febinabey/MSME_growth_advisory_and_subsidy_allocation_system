@@ -1,4 +1,4 @@
-import { ASUSE_UDYAM_BENCHMARKS } from '../data/asuseUdyamBenchmarks';
+import { ASUSE_UDYAM_BENCHMARKS } from '../data/asuseUdyamBenchmarks.js';
 
 /**
  * ASUSE & Udyam Benchmark Engine
@@ -38,12 +38,14 @@ export function benchmarkMSME(metrics) {
   const estimatedGvaPerWorker = Math.round((annualRevenue * (profitMargin / 100 + 0.15)) / Math.max(1, employees));
   const productivityIndex = parseFloat((estimatedGvaPerWorker / benchmark.avgGvaPerWorker).toFixed(2));
 
-  // 4. Enterprise Size Classification under April 2025/2026 Gazette Revision
+  // 4. Enterprise Size Classification under MSMED Act / Statutory MSME Framework
   let udyamCategory = "Micro Enterprise";
-  if (annualRevenue > 100000000 && annualRevenue <= 1000000000) {
-    udyamCategory = "Small Enterprise";
+  if (annualRevenue > 2500000000) {
+    udyamCategory = "Exceeds MSME Threshold (Large Enterprise - Ineligible)";
   } else if (annualRevenue > 1000000000) {
     udyamCategory = "Medium Enterprise";
+  } else if (annualRevenue > 100000000) {
+    udyamCategory = "Small Enterprise";
   }
 
   // 5. Credit Vulnerability Index

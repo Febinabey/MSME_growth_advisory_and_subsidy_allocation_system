@@ -1,5 +1,6 @@
 import React from 'react';
 import { X, Printer, Leaf, CheckCircle2, Sprout, ShieldCheck } from 'lucide-react';
+import { formatINR } from '../utils/formatCurrency';
 
 export default function ReportModal({ isOpen, onClose, msmeData, predictions, shapData, matchedSchemes }) {
   if (!isOpen) return null;
@@ -80,7 +81,7 @@ export default function ReportModal({ isOpen, onClose, msmeData, predictions, sh
             </div>
             <div>
               <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontFamily: 'var(--font-sans)', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 700 }}>Annual Revenue</div>
-              <div style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-primary)', fontFamily: 'var(--font-serif)' }}>₹{(msmeData.annualRevenue / 100000).toFixed(1)} Lakhs</div>
+              <div style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-primary)', fontFamily: 'var(--font-serif)' }}>{formatINR(msmeData.annualRevenue, { showBoth: true })}</div>
             </div>
             <div>
               <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontFamily: 'var(--font-sans)', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 700 }}>Workforce Scale</div>
@@ -103,7 +104,7 @@ export default function ReportModal({ isOpen, onClose, msmeData, predictions, sh
               <div className="organic-card-2" style={{ background: 'var(--bg-primary)', padding: '1rem', border: '1px solid var(--border-color)' }}>
                 <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontFamily: 'var(--font-sans)', textTransform: 'uppercase', letterSpacing: '0.03em', fontWeight: 700 }}>1-Yr Revenue Projection</div>
                 <div style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--secondary)', fontFamily: 'var(--font-serif)' }}>+{predictions.predictedRevenueGrowth}%</div>
-                <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>₹{(predictions.projectedRevenueAmount / 100000).toFixed(1)} Lakhs</div>
+                <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>{formatINR(predictions.projectedRevenueAmount)}</div>
               </div>
               <div className="organic-card-3" style={{ background: 'var(--bg-primary)', padding: '1rem', border: '1px solid var(--border-color)' }}>
                 <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontFamily: 'var(--font-sans)', textTransform: 'uppercase', letterSpacing: '0.03em', fontWeight: 700 }}>Job Creation Potential</div>
@@ -128,13 +129,13 @@ export default function ReportModal({ isOpen, onClose, msmeData, predictions, sh
                       {scheme.name}
                     </div>
                     <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginTop: '0.2rem' }}>
-                      {scheme.ministry} • Max Subsidy: ₹{(scheme.maxSubsidy / 100000).toFixed(1)} Lakhs ({scheme.subsidyPercentage}%)
+                      {scheme.ministry} • Max Subsidy: {formatINR(scheme.maxSubsidy)} ({scheme.subsidyPercentage}%)
                     </div>
                   </div>
                   <div style={{ textAlign: 'right' }}>
                     <span className="badge badge-emerald">Semantic Match {scheme.semanticScore}%</span>
                     <div style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--emerald-main)', marginTop: '0.25rem', fontFamily: 'var(--font-serif)' }}>
-                      Rec. Subsidy: ₹{(scheme.recommendedSubsidyAmount / 100000).toFixed(1)}L
+                      Rec. Subsidy: {formatINR(scheme.recommendedSubsidyAmount, { compact: true })}
                     </div>
                   </div>
                 </div>

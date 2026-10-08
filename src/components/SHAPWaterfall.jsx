@@ -19,7 +19,7 @@ export default function SHAPWaterfall({ shapData }) {
             <span className="badge badge-emerald" style={{ fontSize: '0.68rem' }}>Transparent XAI</span>
           </h3>
           <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: '0.2rem' }}>
-            Decomposition of marginal feature contributions ($\phi_i$) relative to baseline dataset expectation ({baseScore.toFixed(1)})
+            Decomposition of marginal feature contributions (φᵢ) relative to baseline dataset expectation ({baseScore.toFixed(1)})
           </p>
         </div>
 

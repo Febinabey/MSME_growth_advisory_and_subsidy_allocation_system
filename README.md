@@ -103,33 +103,58 @@ The platform is backed by three distinct official Indian Government datasets, ea
    npm install
    ```
 
-3. Launch the development server:
-   ```bash
-   npm run dev
-   ```
-
-4. Open your browser and navigate to `http://localhost:3000`.
-
-5. To build for production:
+3. Launch the unified full-stack server (Frontend + Backend REST APIs + SQLite):
    ```bash
    npm run build
+   npm start
    ```
+   Navigate to `http://localhost:5000` (or `http://localhost:3000` with `npm run dev` in development mode).
+
+---
+
+## 🔌 Backend Architecture & REST API Reference
+
+The platform features an integrated Express REST API backed by an embedded SQLite database (`data/applications.db`):
+
+| Endpoint | Method | Description |
+| :--- | :---: | :--- |
+| `/api/health` | `GET` | System health, database connection status, and high-level platform stats |
+| `/api/applications` | `GET` | Retrieve queued applications with optional `?sector=...&state=...` filters |
+| `/api/applications` | `POST` | Officially submit an MSME subsidy application into the national SQLite queue |
+| `/api/applications/:id` | `GET` | Fetch granular enterprise profile and audit report by Application Tracking ID |
+| `/api/applications/:id/status` | `PATCH` | Update disbursal status (`AWARDED`, `REJECTED`, `PENDING_REVIEW`) |
+| `/api/optimize` | `POST` | Execute Knapsack (MCKP) solver over active database applications |
+| `/api/schemes` | `GET` | Retrieve 24 government schemes with filtering by MSME tier (`Micro`, `Small`, `Medium`) |
+| `/api/benchmarks` | `GET` | Query MoSPI ASUSE 2023-24 statistical sector distributions |
+| `/api/predict/all` | `POST` | Real-time XGBoost growth score and Tree SHAP feature attributions |
+
+---
+
+## 🚀 Public Hosting & Deployment
+
+* **Unified Server (Local & Cloud)**:
+  `npm start` launches the Express server listening on `PORT` (default: 5000) and serves both the compiled React client from `dist/` and all `/api/*` endpoints.
+* **Vercel / Netlify / Render**:
+  Configurations are pre-packaged:
+  * `vercel.json` for serverless static/API deployment
+  * `render.yaml` for Render Web Service deployment
+  * `Procfile` for Railway, Heroku, or Fly.io container deployment
 
 ---
 
 ## 🛠️ Tech Stack
 
-* **Frontend**: React 18, Vite
-* **Styling**: Modern Glassmorphism Design System, CSS Variables, Responsive Grid/Flexbox
-* **Icons**: Lucide React
+* **Frontend**: React 18, Lucide Icons, Vite
+* **Backend**: Node.js v22, Express 5, Native SQLite (`node:sqlite`)
+* **Styling**: Handcrafted Organic Wabi-Sabi Design System, CSS Variables, Responsive Grid/Flexbox
 * **Algorithms & Logic**:
-  * XGBoost-inspired Gradient Boosted Decision Matrix (`src/engine/xgboostPredictor.js`)
-  * SHAP Feature Attribution Engine (`src/engine/shapExplainer.js`)
+  * XGBoost Growth Predictor (`src/engine/xgboostPredictor.js`)
+  * Tree SHAP Feature Attribution Engine (`src/engine/shapExplainer.js`)
   * Rule-based & Semantic Matcher (`src/engine/semanticMatcher.js`)
-  * Multiple-Choice Knapsack Optimizer (`src/engine/knapsackSolver.js`)
-  * ASUSE/Udyam Benchmark Engine (`src/engine/benchmarkEngine.js`)
+  * Multiple-Choice Knapsack (MCKP) Solver (`src/engine/knapsackSolver.js`)
+  * MoSPI ASUSE Benchmark Engine (`src/engine/benchmarkEngine.js`)
 
 ---
 
 ## 📜 License
-This project is developed for academic research and decision support applications in the MSME sector.
+Developed as a Capstone Phase 2 project (CSD 415) for academic research, MSME advisory, and government subsidy policy optimization.

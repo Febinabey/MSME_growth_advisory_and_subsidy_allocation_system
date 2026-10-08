@@ -5,9 +5,10 @@ import { matchSchemesForMSME } from '../engine/semanticMatcher';
 import { REAL_UDYAM_DIRECTORY } from '../data/realUdyamDirectory';
 import SHAPWaterfall from './SHAPWaterfall';
 import ReportModal from './ReportModal';
+import { formatINR, getMSMETier } from '../utils/formatCurrency';
 import { 
   Building2, TrendingUp, Users, DollarSign, Cpu, Award, 
-  Sparkles, CheckCircle2, AlertTriangle, FileText, ArrowRight, RefreshCw, Sliders, Sprout, Leaf, ShieldCheck, MapPin
+  Sparkles, CheckCircle2, AlertTriangle, FileText, ArrowRight, RefreshCw, Sliders, Sprout, Leaf, ShieldCheck, MapPin, Send
 } from 'lucide-react';
 
 export default function Layer1Advisory() {
@@ -32,11 +33,57 @@ export default function Layer1Advisory() {
 
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [activeTabSection, setActiveTabSection] = useState('recommendations'); // recommendations | shap | whatif
+  const [submissionStatus, setSubmissionStatus] = useState(null); // null | { loading, success, app, error }
+
+  // Current Statutory MSME Tier under Gazette Notification S.O. 1364(E)
+  const currentTier = useMemo(() => getMSMETier(formData.annualRevenue), [formData.annualRevenue]);
 
   // 2. Run Predictions & Calculations in Real-Time
   const predictions = useMemo(() => predictMSMEGrowth(formData), [formData]);
   const shapData = useMemo(() => computeSHAPValues(formData), [formData]);
   const matchedSchemes = useMemo(() => matchSchemesForMSME(formData, formData.requirementText), [formData]);
+
+  const handleOfficialSubmit = async () => {
+    try {
+      setSubmissionStatus({ loading: true, success: false, app: null, error: null });
+      const topScheme = matchedSchemes.find(s => s.isEligible) || matchedSchemes[0];
+      const payload = {
+        name: formData.enterpriseName,
+        enterpriseName: formData.enterpriseName,
+        state: formData.state,
+        district: formData.district,
+        pincode: formData.pincode || '',
+        sector: formData.sector,
+        annualRevenue: formData.annualRevenue,
+        revenueGrowthRate: formData.revenueGrowthRate,
+        employees: formData.employees,
+        debtRatio: formData.debtRatio,
+        profitMargin: formData.profitMargin,
+        techLevel: formData.techLevel,
+        gstScore: formData.gstScore,
+        exportShare: formData.exportShare,
+        requestedScheme: topScheme ? topScheme.name : 'PMEGP Subsidy',
+        requestedSubsidy: topScheme ? topScheme.recommendedSubsidyAmount : 1000000,
+        growthScore: predictions.growthScore,
+        growthTier: predictions.tier,
+        predictedJobs: predictions.predictedJobs,
+        projectedRevenue: predictions.projectedRevenueAmount
+      };
+
+      const res = await fetch('/api/applications', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data.error || 'Failed to submit application');
+      }
+      setSubmissionStatus({ loading: false, success: true, app: data.data, error: null });
+    } catch (err) {
+      setSubmissionStatus({ loading: false, success: false, app: null, error: err.message });
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value, type } = e.target;
@@ -104,10 +151,65 @@ export default function Layer1Advisory() {
             </p>
           </div>
 
-          <button onClick={() => setIsReportModalOpen(true)} className="btn btn-primary">
-            <FileText size={17} /> Generate Executive Audit
-          </button>
+          <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', flexWrap: 'wrap' }}>
+            <button onClick={() => setIsReportModalOpen(true)} className="btn btn-secondary">
+              <FileText size={17} /> Executive Audit
+            </button>
+            <button 
+              onClick={handleOfficialSubmit} 
+              className="btn btn-primary" 
+              disabled={submissionStatus?.loading}
+              style={{ display: 'inline-flex', alignItems: 'center', gap: '0.45rem' }}
+            >
+              <Send size={16} /> {submissionStatus?.loading ? 'Submitting to Queue...' : 'Submit to National Queue'}
+            </button>
+          </div>
         </div>
+
+        {/* Live Submission Feedback Alert */}
+        {submissionStatus?.success && (
+          <div style={{
+            marginTop: '1.25rem',
+            padding: '1rem 1.4rem',
+            background: 'rgba(93, 112, 82, 0.15)',
+            borderRadius: '1.25rem',
+            border: '1.5px solid var(--primary)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            flexWrap: 'wrap',
+            gap: '1rem'
+          }}>
+            <div>
+              <div style={{ fontWeight: 800, color: 'var(--primary)', display: 'flex', alignItems: 'center', gap: '0.45rem', fontSize: '0.95rem' }}>
+                <CheckCircle2 size={18} /> Official Application Registered Successfully!
+              </div>
+              <div style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', marginTop: '0.2rem' }}>
+                Tracking ID: <strong style={{ color: 'var(--text-primary)' }}>{submissionStatus.app?.id}</strong> • Scheme: <strong>{submissionStatus.app?.requested_scheme || submissionStatus.app?.requestedScheme}</strong> • Subsidy: <strong>{formatINR(submissionStatus.app?.requested_subsidy || submissionStatus.app?.requestedSubsidy)}</strong>
+              </div>
+              <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.15rem' }}>
+                Status: <span className="badge badge-emerald" style={{ fontSize: '0.68rem' }}>QUEUED FOR LAYER 2 KNAPSACK OPTIMIZATION</span> • Stored in SQLite Database
+              </div>
+            </div>
+            <button onClick={() => setSubmissionStatus(null)} className="btn btn-secondary" style={{ fontSize: '0.75rem', padding: '0.35rem 0.8rem' }}>
+              Dismiss
+            </button>
+          </div>
+        )}
+
+        {submissionStatus?.error && (
+          <div style={{
+            marginTop: '1.25rem',
+            padding: '1rem 1.4rem',
+            background: 'rgba(220, 38, 38, 0.12)',
+            borderRadius: '1.25rem',
+            border: '1.5px solid rgba(220, 38, 38, 0.4)',
+            color: '#dc2626',
+            fontSize: '0.85rem'
+          }}>
+            <strong>Submission Error:</strong> {submissionStatus.error}
+          </div>
+        )}
       </div>
 
       <div className="grid-1-2">
@@ -170,24 +272,75 @@ export default function Layer1Advisory() {
               </select>
             </div>
 
-            {/* Annual Revenue */}
+            {/* Annual Revenue (Turnover) */}
             <div className="form-group">
-              <div className="form-label">
-                <span>Annual Revenue (₹)</span>
+              <div className="form-label" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.4rem' }}>
+                <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <span>Annual Turnover</span>
+                  <span style={{
+                    fontSize: '0.68rem',
+                    fontWeight: 800,
+                    padding: '0.15rem 0.55rem',
+                    borderRadius: '999px',
+                    background: currentTier.bgColor,
+                    color: currentTier.color,
+                    border: `1px solid ${currentTier.borderColor}`,
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.03em'
+                  }}>
+                    {currentTier.label} ({currentTier.range})
+                  </span>
+                </span>
                 <strong style={{ color: 'var(--primary)', fontFamily: 'var(--font-serif)', fontSize: '1.05rem' }}>
-                  ₹{(formData.annualRevenue / 100000).toFixed(1)} Lakhs
+                  {formatINR(formData.annualRevenue, { showBoth: true })}
                 </strong>
               </div>
               <input 
                 type="range" 
                 name="annualRevenue" 
                 min="1000000" 
-                max="250000000" 
+                max="2500000000" 
                 step="1000000" 
                 value={formData.annualRevenue} 
                 onChange={handleChange} 
                 className="slider-input" 
               />
+              {/* Quick tier presets tailored exclusively to Micro, Small, and Medium MSMEs */}
+              <div style={{ display: 'flex', gap: '0.35rem', marginTop: '0.45rem', flexWrap: 'wrap' }}>
+                {[
+                  { label: '₹25L Micro', val: 2500000 },
+                  { label: '₹1Cr Micro', val: 10000000 },
+                  { label: '₹5Cr Micro', val: 50000000 },
+                  { label: '₹10Cr Micro Max', val: 100000000 },
+                  { label: '₹25Cr Small', val: 250000000 },
+                  { label: '₹50Cr Small', val: 500000000 },
+                  { label: '₹100Cr Small Max', val: 1000000000 },
+                  { label: '₹250Cr Medium Max', val: 2500000000 },
+                ].map((preset) => (
+                  <button
+                    key={preset.val}
+                    type="button"
+                    onClick={() => setFormData(prev => ({ ...prev, annualRevenue: preset.val }))}
+                    style={{
+                      fontSize: '0.67rem',
+                      padding: '0.18rem 0.45rem',
+                      borderRadius: 'var(--radius-sm)',
+                      border: formData.annualRevenue === preset.val ? '1.5px solid var(--primary)' : '1px solid var(--border)',
+                      background: formData.annualRevenue === preset.val ? 'rgba(20, 83, 45, 0.12)' : 'var(--muted)',
+                      color: formData.annualRevenue === preset.val ? 'var(--primary)' : 'var(--text-secondary)',
+                      cursor: 'pointer',
+                      fontWeight: formData.annualRevenue === preset.val ? 700 : 500
+                    }}
+                  >
+                    {preset.label}
+                  </button>
+                ))}
+              </div>
+              {!currentTier.isMSME && (
+                <div style={{ color: '#dc2626', fontSize: '0.74rem', marginTop: '0.4rem', fontWeight: 600 }}>
+                  ⚠️ {currentTier.description}
+                </div>
+              )}
             </div>
 
             {/* Revenue Growth Rate & Profit Margin */}
@@ -344,7 +497,7 @@ export default function Layer1Advisory() {
                 <div style={{ fontSize: '2.4rem', fontFamily: 'var(--font-serif)', fontWeight: 800, color: 'var(--primary)', margin: '0.2rem 0' }}>
                   +{predictions.predictedRevenueGrowth}%
                 </div>
-                <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>₹{(predictions.projectedRevenueAmount / 100000).toFixed(1)} Lakhs Est.</div>
+                <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>{formatINR(predictions.projectedRevenueAmount)} Est.</div>
               </div>
 
               {/* Card 3: Job Potential */}
@@ -422,7 +575,7 @@ export default function Layer1Advisory() {
                     <div style={{ textAlign: 'right' }}>
                       <div style={{ fontSize: '0.74rem', color: 'var(--text-muted)' }}>Max Scheme Assistance</div>
                       <div style={{ fontSize: '1.25rem', fontFamily: 'var(--font-serif)', fontWeight: 800, color: 'var(--primary)' }}>
-                        ₹{(scheme.maxSubsidy / 100000).toFixed(1)} Lakhs
+                        {formatINR(scheme.maxSubsidy)}
                       </div>
                       <div style={{ fontSize: '0.74rem', color: 'var(--text-secondary)' }}>up to {scheme.subsidyPercentage}% subsidy</div>
                     </div>
@@ -434,7 +587,7 @@ export default function Layer1Advisory() {
 
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'var(--muted)', padding: '0.75rem 1.25rem', borderRadius: 'var(--radius-pill)', fontSize: '0.82rem', flexWrap: 'wrap', gap: '0.5rem' }}>
                     <div>
-                      <strong>Recommended Allocation:</strong> ₹{(scheme.recommendedSubsidyAmount / 100000).toFixed(1)} Lakhs
+                      <strong>Recommended Allocation:</strong> {formatINR(scheme.recommendedSubsidyAmount)}
                     </div>
                     <div>
                       <strong>Eligibility Checks Met:</strong> {scheme.passedChecksCount}/5
@@ -461,7 +614,7 @@ export default function Layer1Advisory() {
                 Simulate how strategic operational and technological upgrades immediately enhance enterprise creditworthiness and unlock targeted government grants.
               </p>
 
-              <div className="grid-2">
+              <div className="grid-3">
                 <div style={{ background: 'var(--muted)', padding: '1.5rem', borderRadius: '2rem', border: '1.5px solid var(--border)' }}>
                   <h4 style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '0.5rem' }}>
                     Scenario A: Boost GST Compliance to 98%
@@ -470,19 +623,31 @@ export default function Layer1Advisory() {
                     Improves formal compliance rating, unlocks CGTMSE credit guarantee limits, and lowers credit risk penalty.
                   </p>
                   <button onClick={() => setFormData(prev => ({ ...prev, gstScore: 98 }))} className="btn btn-secondary" style={{ width: '100%', fontSize: '0.85rem' }}>
-                    Apply Scenario (+GST Score)
+                    Apply (+GST 98%)
                   </button>
                 </div>
 
                 <div style={{ background: 'var(--muted)', padding: '1.5rem', borderRadius: '2rem', border: '1.5px solid var(--border)' }}>
                   <h4 style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '0.5rem' }}>
-                    Scenario B: Adopt Industry 4.0 & Automation
+                    Scenario B: Adopt Industry 4.0
                   </h4>
                   <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
                     Unlocks SAMERTH technology co-funding grants and expands projected 1-year revenue yield by ~6.5%.
                   </p>
                   <button onClick={() => setFormData(prev => ({ ...prev, techLevel: 5 }))} className="btn btn-emerald" style={{ width: '100%', fontSize: '0.85rem' }}>
-                    Apply Scenario (Tech Level 5)
+                    Apply (Tech Level 5)
+                  </button>
+                </div>
+
+                <div style={{ background: 'var(--muted)', padding: '1.5rem', borderRadius: '2rem', border: '1.5px solid var(--border)' }}>
+                  <h4 style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '0.5rem' }}>
+                    Scenario C: Reset to Baseline
+                  </h4>
+                  <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
+                    Restores standard operating parameters (GST Score 85, Tech Level 3, Debt Ratio 25%).
+                  </p>
+                  <button onClick={() => setFormData(prev => ({ ...prev, gstScore: 85, techLevel: 3, debtRatio: 0.25 }))} className="btn btn-secondary" style={{ width: '100%', fontSize: '0.85rem' }}>
+                    <RefreshCw size={14} style={{ marginRight: '6px' }} /> Reset Parameters
                   </button>
                 </div>
               </div>

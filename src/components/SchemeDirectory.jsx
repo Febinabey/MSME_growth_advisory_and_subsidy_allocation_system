@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { GOVERNMENT_SCHEMES } from '../data/schemes';
-import { Search, Filter, BookOpen, ExternalLink, ShieldCheck, CheckCircle2, Sprout } from 'lucide-react';
+import { Search, Filter, BookOpen, ExternalLink, ShieldCheck, CheckCircle2, Sprout, Building2 } from 'lucide-react';
+import { formatINR } from '../utils/formatCurrency';
 
 export default function SchemeDirectory() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [selectedTier, setSelectedTier] = useState('All');
 
   const categories = ['All', ...new Set(GOVERNMENT_SCHEMES.map(s => s.category))];
 
@@ -15,7 +17,16 @@ export default function SchemeDirectory() {
     
     const matchesCategory = selectedCategory === 'All' || scheme.category === selectedCategory;
 
-    return matchesSearch && matchesCategory;
+    let matchesTier = true;
+    if (selectedTier === 'Micro') {
+      matchesTier = scheme.minTurnover <= 100000000;
+    } else if (selectedTier === 'Small') {
+      matchesTier = scheme.maxTurnover >= 100000000 && scheme.minTurnover <= 1000000000;
+    } else if (selectedTier === 'Medium') {
+      matchesTier = scheme.maxTurnover >= 1000000000;
+    }
+
+    return matchesSearch && matchesCategory && matchesTier;
   });
 
   return (
@@ -42,7 +53,7 @@ export default function SchemeDirectory() {
 
           <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', flexWrap: 'wrap' }}>
             {/* Search Input */}
-            <div style={{ position: 'relative', width: '280px' }}>
+            <div style={{ position: 'relative', width: '260px' }}>
               <Search size={17} color="var(--text-muted)" style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)' }} />
               <input 
                 type="text" 
@@ -59,7 +70,7 @@ export default function SchemeDirectory() {
               value={selectedCategory} 
               onChange={(e) => setSelectedCategory(e.target.value)} 
               className="form-select"
-              style={{ width: '200px', fontSize: '0.88rem' }}
+              style={{ width: '180px', fontSize: '0.88rem' }}
             >
               {categories.map(cat => (
                 <option key={cat} value={cat}>{cat}</option>
@@ -67,33 +78,70 @@ export default function SchemeDirectory() {
             </select>
           </div>
         </div>
+
+        {/* Statutory MSME Tier Filter Pills */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '1.25rem', flexWrap: 'wrap' }}>
+          <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-muted)' }}>Filter by MSME Tier:</span>
+          {[
+            { label: 'All Tiers (24 Schemes)', val: 'All' },
+            { label: 'Micro Enterprises (≤ ₹10 Cr)', val: 'Micro' },
+            { label: 'Small Enterprises (≤ ₹100 Cr)', val: 'Small' },
+            { label: 'Medium Enterprises (≤ ₹250 Cr)', val: 'Medium' }
+          ].map(tier => (
+            <button
+              key={tier.val}
+              type="button"
+              onClick={() => setSelectedTier(tier.val)}
+              className={`btn ${selectedTier === tier.val ? 'btn-primary' : 'btn-secondary'}`}
+              style={{ fontSize: '0.78rem', padding: '0.35rem 0.85rem' }}
+            >
+              {tier.label}
+            </button>
+          ))}
+          <span style={{ marginLeft: 'auto', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+            Showing <strong>{filteredSchemes.length}</strong> schemes
+          </span>
+        </div>
       </div>
 
       {/* Schemes Grid */}
       <div className="grid-2">
-        {filteredSchemes.map((scheme, idx) => (
-          <div key={scheme.id} className="glass-panel" style={{
-            padding: '2rem',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'space-between',
-            borderRadius: idx % 2 === 0 ? '2.5rem 1.5rem 2rem 1.75rem' : '1.5rem 2.5rem 1.75rem 2.25rem'
-          }}>
-            <div>
-              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.75rem' }}>
-                <div>
-                  <span className="badge badge-emerald" style={{ marginBottom: '0.4rem' }}>{scheme.category}</span>
-                  <h3 style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>{scheme.name}</h3>
-                  <div style={{ fontSize: '0.82rem', color: 'var(--text-muted)', marginTop: '0.2rem' }}>{scheme.ministry}</div>
-                </div>
+        {filteredSchemes.map((scheme, idx) => {
+          const isMicro = scheme.minTurnover <= 100000000;
+          const isSmall = scheme.maxTurnover >= 100000000;
+          const isMedium = scheme.maxTurnover >= 1000000000;
+          const tierBadge = isMedium ? "Micro • Small • Medium" : isSmall ? "Micro • Small" : "Micro Only";
 
-                <div style={{ textAlign: 'right', background: 'var(--muted)', padding: '0.5rem 1.15rem', borderRadius: 'var(--radius-pill)', border: '1px solid var(--border)' }}>
-                  <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700 }}>Max Assistance</div>
-                  <div style={{ fontSize: '1.25rem', fontFamily: 'var(--font-serif)', fontWeight: 800, color: 'var(--primary)' }}>
-                    ₹{(scheme.maxSubsidy / 100000).toFixed(1)} Lakhs
+          return (
+            <div key={scheme.id} className="glass-panel" style={{
+              padding: '2rem',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              borderRadius: idx % 2 === 0 ? '2.5rem 1.5rem 2rem 1.75rem' : '1.5rem 2.5rem 1.75rem 2.25rem'
+            }}>
+              <div>
+                <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.75rem' }}>
+                  <div>
+                    <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap', marginBottom: '0.4rem' }}>
+                      <span className="badge badge-emerald">{scheme.category}</span>
+                      <span className="badge badge-purple" style={{ fontSize: '0.68rem' }}>{tierBadge}</span>
+                    </div>
+                    <h3 style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>{scheme.name}</h3>
+                    <div style={{ fontSize: '0.82rem', color: 'var(--text-muted)', marginTop: '0.2rem' }}>{scheme.ministry}</div>
+                  </div>
+
+                  <div style={{ textAlign: 'right', background: 'var(--muted)', padding: '0.5rem 1.15rem', borderRadius: 'var(--radius-pill)', border: '1px solid var(--border)' }}>
+                    <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700 }}>Max Assistance</div>
+                    <div style={{ fontSize: '1.25rem', fontFamily: 'var(--font-serif)', fontWeight: 800, color: 'var(--primary)' }}>
+                      {formatINR(scheme.maxSubsidy)}
+                    </div>
                   </div>
                 </div>
-              </div>
+
+                <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginBottom: '0.85rem' }}>
+                  <strong>Eligible Turnover:</strong> {formatINR(scheme.minTurnover)} – {formatINR(scheme.maxTurnover)}
+                </div>
 
               <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', marginBottom: '1.25rem', lineHeight: 1.55 }}>
                 {scheme.description}
@@ -131,9 +179,9 @@ export default function SchemeDirectory() {
                 <strong>Processing:</strong> ~{scheme.processingDays} Days
               </div>
             </div>
-
           </div>
-        ))}
+        );
+      })}
       </div>
 
     </div>

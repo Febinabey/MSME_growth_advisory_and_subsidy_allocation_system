@@ -1,11 +1,12 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { SAMPLE_APPLICANTS } from '../data/sampleApplicants';
 import { optimizeSubsidyBudget } from '../engine/knapsackSolver';
 import { PMEGP_NATIONAL_BENCHMARK, PMEGP_STATE_BENCHMARKS } from '../data/pmegpData';
 import { 
   Sliders, DollarSign, Users, TrendingUp, Award, CheckCircle2, XCircle, 
-  Sparkles, ShieldCheck, Scale, Zap, Info, Sprout, Landmark, Building2
+  Sparkles, ShieldCheck, Scale, Zap, Info, Sprout, Landmark, Building2, AlertCircle, Database, RefreshCw
 } from 'lucide-react';
+import { formatINR } from '../utils/formatCurrency';
 
 export default function Layer2Optimization() {
   // 1. Policy & Budget Configuration State
@@ -17,11 +18,58 @@ export default function Layer2Optimization() {
   });
   const [selectedSectorFilter, setSelectedSectorFilter] = useState("All");
 
+  // Live Database Applicants State (Syncs with backend SQLite database)
+  const [dbApplicants, setDbApplicants] = useState(SAMPLE_APPLICANTS);
+  const [isLiveFromDb, setIsLiveFromDb] = useState(false);
+  const [isLoadingDb, setIsLoadingDb] = useState(false);
+
+  const fetchLiveApplications = () => {
+    setIsLoadingDb(true);
+    fetch('/api/applications')
+      .then(res => res.json())
+      .then(data => {
+        if (data.success && data.data && data.data.length > 0) {
+          const mapped = data.data.map(app => ({
+            id: app.id,
+            name: app.name || app.enterprise_name,
+            enterpriseName: app.enterprise_name || app.name,
+            state: app.state,
+            district: app.district,
+            pincode: app.pincode,
+            sector: app.sector,
+            annualRevenue: Number(app.annual_revenue) || 0,
+            revenueGrowthRate: Number(app.revenue_growth_rate) || 15,
+            employees: Number(app.employees) || 10,
+            debtRatio: Number(app.debt_ratio) || 0.25,
+            profitMargin: Number(app.profit_margin) || 12,
+            techLevel: Number(app.tech_level) || 3,
+            gstScore: Number(app.gst_score) || 75,
+            exportShare: Number(app.export_share) || 0,
+            requestedScheme: app.requested_scheme || 'PMEGP Subsidy',
+            requestedSubsidy: Number(app.requested_subsidy) || 1000000,
+            status: app.status
+          }));
+          setDbApplicants(mapped);
+          setIsLiveFromDb(true);
+        }
+      })
+      .catch(() => {
+        setIsLiveFromDb(false);
+      })
+      .finally(() => {
+        setIsLoadingDb(false);
+      });
+  };
+
+  useEffect(() => {
+    fetchLiveApplications();
+  }, []);
+
   // 2. Filter Applicants & Run Knapsack Solver
   const filteredApplicants = useMemo(() => {
-    if (selectedSectorFilter === "All") return SAMPLE_APPLICANTS;
-    return SAMPLE_APPLICANTS.filter(a => a.sector === selectedSectorFilter);
-  }, [selectedSectorFilter]);
+    if (selectedSectorFilter === "All") return dbApplicants;
+    return dbApplicants.filter(a => a.sector === selectedSectorFilter);
+  }, [dbApplicants, selectedSectorFilter]);
 
   const optimizationResults = useMemo(() => {
     return optimizeSubsidyBudget(filteredApplicants, budgetINR, policyWeights);
@@ -53,16 +101,46 @@ export default function Layer2Optimization() {
             </p>
           </div>
 
-          <div style={{
-            background: 'var(--muted)',
-            padding: '0.75rem 1.5rem',
-            borderRadius: 'var(--radius-pill)',
-            border: '1px solid var(--border)',
-            textAlign: 'right'
-          }}>
-            <div style={{ fontSize: '0.74rem', color: 'var(--text-muted)', fontWeight: 800, textTransform: 'uppercase' }}>AI Yield Multiplier vs FCFS</div>
-            <div style={{ fontSize: '1.6rem', fontFamily: 'var(--font-serif)', fontWeight: 800, color: 'var(--primary)' }}>
-              {gains.roiMultiplier}x Yield
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', flexWrap: 'wrap' }}>
+            <div style={{
+              background: 'var(--muted)',
+              padding: '0.65rem 1.25rem',
+              borderRadius: 'var(--radius-pill)',
+              border: '1px solid var(--border)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem'
+            }}>
+              {isLiveFromDb ? (
+                <span className="badge badge-emerald" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.72rem' }}>
+                  <Database size={13} /> Live SQLite Queue ({dbApplicants.length} Units)
+                </span>
+              ) : (
+                <span className="badge badge-amber" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.72rem' }}>
+                  Preset Queue ({dbApplicants.length} Units)
+                </span>
+              )}
+              <button 
+                onClick={fetchLiveApplications} 
+                className="btn btn-secondary" 
+                style={{ padding: '0.25rem 0.6rem', fontSize: '0.72rem', display: 'inline-flex', alignItems: 'center', gap: '0.3rem' }}
+                title="Refresh live applicants from database"
+              >
+                <RefreshCw size={12} /> Sync
+              </button>
+            </div>
+
+            <div style={{
+              background: 'var(--muted)',
+              padding: '0.75rem 1.5rem',
+              borderRadius: 'var(--radius-pill)',
+              border: '1px solid var(--border)',
+              textAlign: 'right'
+            }}>
+              <div style={{ fontSize: '0.74rem', color: 'var(--text-muted)', fontWeight: 800, textTransform: 'uppercase' }}>AI Yield Multiplier vs FCFS</div>
+              <div style={{ fontSize: '1.6rem', fontFamily: 'var(--font-serif)', fontWeight: 800, color: 'var(--primary)' }}>
+                {gains.roiMultiplier}x Yield
+              </div>
             </div>
           </div>
         </div>
@@ -187,14 +265,34 @@ export default function Layer2Optimization() {
               <span className="badge badge-cyan">{aiAllocation.budgetUtilizationPercent}% Disbursed</span>
             </div>
             <div style={{ fontSize: '2.2rem', fontFamily: 'var(--font-serif)', fontWeight: 800, color: 'var(--cyan-main)', margin: '0.3rem 0' }}>
-              ₹{(aiAllocation.totalBudgetSpentINR / 10000000).toFixed(2)} Cr
+              {formatINR(aiAllocation.totalBudgetSpentINR)}
             </div>
             <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
-              Remaining Unallocated: ₹{((budgetINR - aiAllocation.totalBudgetSpentINR) / 100000).toFixed(1)} Lakhs.
+              Remaining Unallocated: {formatINR(budgetINR - aiAllocation.totalBudgetSpentINR)}.
             </div>
           </div>
 
         </div>
+
+        {budgetINR >= 74400000 && (
+          <div style={{
+            marginTop: '1.25rem',
+            padding: '0.9rem 1.25rem',
+            background: 'rgba(193, 140, 93, 0.12)',
+            borderRadius: '1rem',
+            border: '1.5px solid rgba(193, 140, 93, 0.35)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.75rem',
+            fontSize: '0.82rem',
+            color: 'var(--text-secondary)'
+          }}>
+            <AlertCircle size={17} color="var(--secondary)" style={{ flexShrink: 0 }} />
+            <div>
+              <strong>Applicant Pool Saturation Reached:</strong> Total subsidy requested across all 20 sample enterprises is {formatINR(74400000)}. At or above this threshold, 100% of applicants receive funding under both algorithms. The AI Knapsack solver exhibits maximum algorithmic impact under fiscal scarcity (&lt; ₹7.44 Cr), creating up to <strong>+75.4% more jobs</strong> and <strong>1.77x ROI</strong>.
+            </div>
+          </div>
+        )}
       </div>
 
       {/* PMEGP Macro Benchmark Context (Ministry of MSME / KVIC) */}
@@ -356,10 +454,10 @@ export default function Layer2Optimization() {
                     </strong>
                   </td>
                   <td>
-                    ₹{(app.cost / 100000).toFixed(1)} Lakhs
+                    {formatINR(app.cost)}
                   </td>
                   <td>
-                    <span style={{ color: 'var(--primary)', fontWeight: 700 }}>+₹{(app.projectedRevenueUpliftINR / 100000).toFixed(1)} Lakhs</span>
+                    <span style={{ color: 'var(--primary)', fontWeight: 700 }}>+{formatINR(app.projectedRevenueUpliftINR)}</span>
                   </td>
                   <td>
                     <span style={{ color: 'var(--secondary)', fontWeight: 800 }}>+{app.predictedJobs} Jobs</span>
@@ -392,10 +490,10 @@ export default function Layer2Optimization() {
                     </strong>
                   </td>
                   <td>
-                    ₹{(app.cost / 100000).toFixed(1)} Lakhs
+                    {formatINR(app.cost)}
                   </td>
                   <td>
-                    <span>+₹{(app.projectedRevenueUpliftINR / 100000).toFixed(1)} Lakhs</span>
+                    <span>+{formatINR(app.projectedRevenueUpliftINR)}</span>
                   </td>
                   <td>
                     <span>+{app.predictedJobs} Jobs</span>

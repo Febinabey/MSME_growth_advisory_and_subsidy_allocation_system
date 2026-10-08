@@ -91,6 +91,23 @@ export const ASUSE_REAL_BENCHMARKS = {
 };
 
 export const UDYAM_GAZETTE_CLASSIFICATION_2025 = {
+  // Gazette Notification S.O. 1364(E) (Effective April 1, 2025)
+  Micro: {
+    maxInvestment: 25000000,    // <= 2.5 Crore
+    maxTurnover: 100000000      // <= 10 Crore
+  },
+  Small: {
+    maxInvestment: 250000000,   // <= 25 Crore
+    maxTurnover: 1000000000     // <= 100 Crore
+  },
+  Medium: {
+    maxInvestment: 1250000000,  // <= 125 Crore
+    maxTurnover: 5000000000     // <= 500 Crore
+  }
+};
+
+export const UDYAM_GAZETTE_CLASSIFICATION_2020 = {
+  // Gazette Notification S.O. 2119(E) (July 1, 2020 – March 31, 2025)
   Micro: {
     maxInvestment: 10000000,    // <= 1 Crore
     maxTurnover: 50000000       // <= 5 Crore
@@ -104,3 +121,4 @@ export const UDYAM_GAZETTE_CLASSIFICATION_2025 = {
     maxTurnover: 2500000000     // <= 250 Crore
   }
 };
+
