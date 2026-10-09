@@ -21,9 +21,9 @@ export default function SchemeDirectory() {
     if (selectedTier === 'Micro') {
       matchesTier = scheme.minTurnover <= 100000000;
     } else if (selectedTier === 'Small') {
-      matchesTier = scheme.maxTurnover >= 100000000 && scheme.minTurnover <= 1000000000;
+      matchesTier = scheme.minTurnover <= 1000000000 && scheme.maxTurnover >= 100000000;
     } else if (selectedTier === 'Medium') {
-      matchesTier = scheme.maxTurnover >= 1000000000;
+      matchesTier = scheme.minTurnover <= 2500000000 && scheme.maxTurnover >= 1000000000;
     }
 
     return matchesSearch && matchesCategory && matchesTier;

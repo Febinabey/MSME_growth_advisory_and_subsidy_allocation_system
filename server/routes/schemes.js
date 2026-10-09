@@ -18,9 +18,9 @@ router.get('/', (req, res) => {
       if (tier === 'Micro') {
         schemes = schemes.filter(s => s.minTurnover <= 100000000);
       } else if (tier === 'Small') {
-        schemes = schemes.filter(s => s.maxTurnover >= 100000000 && s.minTurnover <= 1000000000);
+        schemes = schemes.filter(s => s.minTurnover <= 1000000000 && s.maxTurnover >= 100000000);
       } else if (tier === 'Medium') {
-        schemes = schemes.filter(s => s.maxTurnover >= 1000000000);
+        schemes = schemes.filter(s => s.minTurnover <= 2500000000 && s.maxTurnover >= 1000000000);
       }
     }
 
@@ -36,6 +36,7 @@ router.get('/', (req, res) => {
     res.json({
       success: true,
       count: schemes.length,
+      total: schemes.length,
       data: schemes
     });
   } catch (error) {

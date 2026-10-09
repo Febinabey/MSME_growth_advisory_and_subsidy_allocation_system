@@ -157,11 +157,12 @@ export default function Layer1Advisory() {
             </button>
             <button 
               onClick={handleOfficialSubmit} 
-              className="btn btn-primary" 
-              disabled={submissionStatus?.loading}
-              style={{ display: 'inline-flex', alignItems: 'center', gap: '0.45rem' }}
+              className={`btn ${currentTier.isMSME ? 'btn-primary' : 'btn-secondary'}`}
+              disabled={submissionStatus?.loading || !currentTier.isMSME}
+              title={!currentTier.isMSME ? 'Large enterprises (> ₹250 Cr) are legally barred from MSME subsidy queues' : 'Submit official application to national database'}
+              style={{ display: 'inline-flex', alignItems: 'center', gap: '0.45rem', opacity: !currentTier.isMSME ? 0.6 : 1 }}
             >
-              <Send size={16} /> {submissionStatus?.loading ? 'Submitting to Queue...' : 'Submit to National Queue'}
+              <Send size={16} /> {submissionStatus?.loading ? 'Submitting to Queue...' : !currentTier.isMSME ? 'Ineligible (> ₹250 Cr)' : 'Submit to National Queue'}
             </button>
           </div>
         </div>

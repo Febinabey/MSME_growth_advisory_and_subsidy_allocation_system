@@ -16,6 +16,30 @@ router.get('/', (req, res) => {
   }
 });
 
+// GET /api/benchmarks/sectors - Get sector benchmarks map
+router.get('/sectors', (req, res) => {
+  try {
+    res.json({
+      success: true,
+      data: ASUSE_UDYAM_BENCHMARKS.sectorBenchmarks
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// GET /api/benchmarks/metadata - Get benchmark metadata
+router.get('/metadata', (req, res) => {
+  try {
+    res.json({
+      success: true,
+      data: ASUSE_UDYAM_BENCHMARKS.metadata
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 // POST /api/benchmarks/evaluate - Evaluate enterprise against national benchmarks
 router.post('/evaluate', (req, res) => {
   try {

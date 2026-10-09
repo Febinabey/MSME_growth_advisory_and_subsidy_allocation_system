@@ -147,11 +147,41 @@ export default function ReportModal({ isOpen, onClose, msmeData, predictions, sh
           <div className="organic-card-2" style={{ background: 'var(--emerald-light)', padding: '1.25rem', border: '1px solid var(--border-color)' }}>
             <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.05rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               <Leaf size={18} color="var(--emerald-main)" />
-              3. Key Value Driver Analysis
+              3. Transparent Value Driver Analysis (Tree SHAP)
             </h3>
-            <p style={{ fontSize: '0.84rem', color: 'var(--text-secondary)', lineHeight: 1.7, fontFamily: 'var(--font-sans)' }}>
-              SHAP feature decomposition shows that historical revenue momentum and GST compliance score contribute positively, while debt ratio places a slight drag on credit scoring. The model weighs recent growth trajectory most heavily in determining subsidy eligibility and recommended allocation amounts.
-            </p>
+            {shapData && shapData.shapContributions ? (
+              <div>
+                <p style={{ fontSize: '0.84rem', color: 'var(--text-secondary)', marginBottom: '0.75rem', lineHeight: 1.5 }}>
+                  Explainable AI (Tree SHAP) feature decomposition relative to MoSPI ASUSE baseline expectation ({shapData.baseScore ? shapData.baseScore.toFixed(1) : '50.0'}):
+                </p>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '0.6rem' }}>
+                  {shapData.shapContributions.map((item, idx) => (
+                    <div key={idx} style={{
+                      fontSize: '0.78rem',
+                      background: 'rgba(255,255,255,0.7)',
+                      padding: '0.45rem 0.75rem',
+                      borderRadius: 'var(--radius-sm)',
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      border: '1px solid rgba(0,0,0,0.06)'
+                    }}>
+                      <span><strong>{item.feature}:</strong> {item.value}</span>
+                      <span style={{
+                        fontWeight: 700,
+                        color: item.shapValue >= 0 ? 'var(--emerald-main)' : 'var(--rose-main)'
+                      }}>
+                        {item.shapValue >= 0 ? `+${item.shapValue}` : item.shapValue}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <p style={{ fontSize: '0.84rem', color: 'var(--text-secondary)', lineHeight: 1.7, fontFamily: 'var(--font-sans)' }}>
+                SHAP feature decomposition shows that historical revenue momentum and GST compliance score contribute positively, while debt ratio places a slight drag on credit scoring.
+              </p>
+            )}
           </div>
 
         </div>

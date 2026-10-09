@@ -7,13 +7,17 @@ const router = express.Router();
 // POST /api/optimize - Execute Multiple-Choice Knapsack optimization
 router.post('/', (req, res) => {
   try {
-    const { 
-      budgetINR = 25000000, 
-      policyWeights = { jobWeight: 0.5, revenueWeight: 0.5, greenBonus: 0.2 },
-      sectorFilter = 'All',
-      stateFilter = 'All',
-      applyDecisions = false
-    } = req.body;
+    const body = req.body || {};
+    const budget = Number(body.budgetINR || body.budget || 25000000);
+    const weightsInput = body.policyWeights || body.weights || {};
+    const policyWeights = {
+      revenueWeight: Number(weightsInput.revenueWeight ?? weightsInput.alpha ?? body.alpha ?? 0.5),
+      jobWeight: Number(weightsInput.jobWeight ?? weightsInput.beta ?? body.beta ?? 0.5),
+      greenBonus: Number(weightsInput.greenBonus ?? weightsInput.gamma ?? body.gamma ?? 0.2)
+    };
+    const sectorFilter = body.sectorFilter || 'All';
+    const stateFilter = body.stateFilter || 'All';
+    const applyDecisions = Boolean(body.applyDecisions);
 
     // Fetch active applications from database
     const rawApplications = getAllApplications({
@@ -51,7 +55,7 @@ router.post('/', (req, res) => {
 
     const optimizationResult = optimizeSubsidyBudget(
       normalizedApplicants,
-      Number(budgetINR),
+      budget,
       policyWeights
     );
 

@@ -102,7 +102,7 @@ export const UDYAM_GAZETTE_CLASSIFICATION_2025 = {
   },
   Medium: {
     maxInvestment: 1250000000,  // <= 125 Crore
-    maxTurnover: 5000000000     // <= 500 Crore
+    maxTurnover: 2500000000     // <= 250 Crore (Statutory MSME Ceiling)
   }
 };
 

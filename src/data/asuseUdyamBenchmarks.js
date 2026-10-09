@@ -21,7 +21,7 @@ export const ASUSE_UDYAM_BENCHMARKS = {
     // Gazette Notification S.O. 1364(E) (effective April 1, 2025):
     microThreshold: { investmentMax: 25000000, turnoverMax: 100000000 },     // ₹2.5 Cr Inv, ₹10 Cr Turnover
     smallThreshold: { investmentMax: 250000000, turnoverMax: 1000000000 },   // ₹25 Cr Inv, ₹100 Cr Turnover
-    mediumThreshold: { investmentMax: 1250000000, turnoverMax: 5000000000 } // ₹125 Cr Inv, ₹500 Cr Turnover
+    mediumThreshold: { investmentMax: 1250000000, turnoverMax: 2500000000 } // ₹125 Cr Inv, ₹250 Cr Turnover (Statutory Ceiling)
   },
 
   sectorBenchmarks: {

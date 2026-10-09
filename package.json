@@ -8,7 +8,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "start": "node server/index.js",
-    "server": "node server/index.js"
+    "server": "node server/index.js",
+    "test": "node scripts/comprehensive_platform_test.mjs && node scripts/comprehensive_factcheck_and_stress_test.mjs && node scripts/test_all_endpoints.mjs"
   },
   "dependencies": {
     "cors": "^2.8.6",
