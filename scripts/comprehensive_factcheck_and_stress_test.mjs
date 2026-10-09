@@ -121,6 +121,7 @@ ARCHETYPES.forEach(arch => {
   assert(pred.predictedJobs >= 1, `${arch.name}: predicted new jobs >= 1 (${pred.predictedJobs})`);
   assert(shap.shapContributions.length === 8, `${arch.name}: exactly 8 SHAP feature attributions computed`);
   assert(shap.finalCalculatedScore >= 10 && shap.finalCalculatedScore <= 99, `${arch.name}: SHAP final score in [10, 99] (${shap.finalCalculatedScore})`);
+  assert(shap.finalCalculatedScore === pred.growthScore, `${arch.name}: SHAP score strictly equals predicted growth score (${shap.finalCalculatedScore} === ${pred.growthScore})`);
 });
 
 

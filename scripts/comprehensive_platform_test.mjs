@@ -1,4 +1,4 @@
-﻿import { formatINR, getMSMETier, MIN_MSME_TURNOVER, MAX_MSME_TURNOVER } from '../src/utils/formatCurrency.js';
+import { formatINR, getMSMETier, MIN_MSME_TURNOVER, MAX_MSME_TURNOVER } from '../src/utils/formatCurrency.js';
 import { benchmarkMSME } from '../src/engine/benchmarkEngine.js';
 import { predictMSMEGrowth } from '../src/engine/xgboostPredictor.js';
 import { computeSHAPValues } from '../src/engine/shapExplainer.js';
@@ -89,6 +89,7 @@ testEnterprises.forEach(ent => {
   const shap = computeSHAPValues(ent);
   assert(shap.shapContributions && shap.shapContributions.length >= 6, `${ent.name}: computed SHAP contributions (${shap.shapContributions.length} contributions)`);
   assert(shap.finalCalculatedScore >= 10 && shap.finalCalculatedScore <= 99, `${ent.name}: SHAP final score in [10, 99] (${shap.finalCalculatedScore})`);
+  assert(shap.finalCalculatedScore === pred.growthScore, `${ent.name}: SHAP final score strictly matches model growth score (${shap.finalCalculatedScore} === ${pred.growthScore})`);
 });
 
 // 4. Semantic Scheme Matcher
