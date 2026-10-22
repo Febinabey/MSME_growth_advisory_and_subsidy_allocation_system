@@ -176,6 +176,19 @@ export default function Layer1Advisory() {
 
           <form onSubmit={(e) => e.preventDefault()}>
             
+            {/* Enterprise Name */}
+            <div className="form-group">
+              <label className="form-label">Enterprise Name</label>
+              <input 
+                type="text" 
+                name="enterpriseName" 
+                value={formData.enterpriseName} 
+                onChange={handleChange} 
+                className="form-input" 
+                placeholder="Enterprise Name"
+              />
+            </div>
+
             {/* Sector */}
             <div className="form-group">
               <label className="form-label">Enterprise Sector</label>
@@ -361,6 +374,24 @@ export default function Layer1Advisory() {
               </div>
             </div>
 
+            {/* Export Revenue Share */}
+            <div className="form-group">
+              <div className="form-label">
+                <span>Export Revenue Share</span>
+                <strong style={{ color: 'var(--cyan-main)' }}>{formData.exportShare}%</strong>
+              </div>
+              <input 
+                type="number" 
+                name="exportShare" 
+                min="0" 
+                max="100" 
+                value={formData.exportShare} 
+                onChange={handleChange} 
+                className="form-input" 
+                placeholder="0"
+              />
+            </div>
+
             {/* Operational Needs Text */}
             <div className="form-group">
               <label className="form-label">Business Needs & Technology Upgradation Intent</label>
@@ -382,15 +413,64 @@ export default function Layer1Advisory() {
           
           {/* Growth Prediction Score Cards */}
           <div className="glass-panel organic-card-2" style={{ padding: '2rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
-              <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                <Sparkles size={20} color="var(--secondary)" />
-                Predictive Growth Indicators
-              </h3>
-              <span className={`badge badge-${predictions.tierColor}`}>
-                {predictions.tier}
-              </span>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem', flexWrap: 'wrap', gap: '0.75rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', flexWrap: 'wrap' }}>
+                <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: 'var(--text-primary)', margin: 0, display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                  <Sparkles size={20} color="var(--secondary)" />
+                  Predictive Growth Indicators
+                </h3>
+                <span className={`badge badge-${predictions.tierColor}`}>
+                  {predictions.tier}
+                </span>
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+                <button
+                  type="button"
+                  onClick={() => setIsReportModalOpen(true)}
+                  className="btn btn-secondary"
+                  style={{ fontSize: '0.78rem', padding: '0.35rem 0.85rem', display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}
+                  title="Generate & print official executive audit dossier"
+                >
+                  <FileText size={14} /> Executive Audit Dossier
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleOfficialSubmit}
+                  disabled={submissionStatus?.loading}
+                  className="btn btn-primary"
+                  style={{ fontSize: '0.78rem', padding: '0.35rem 0.85rem', display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}
+                  title="Submit this enterprise to the Layer 2 Knapsack allocation queue"
+                >
+                  {submissionStatus?.loading ? (
+                    'Submitting...'
+                  ) : submissionStatus?.success ? (
+                    <>
+                      <CheckCircle2 size={14} /> Registered ({submissionStatus.app?.id})
+                    </>
+                  ) : (
+                    <>
+                      <Send size={13} /> Submit to Queue
+                    </>
+                  )}
+                </button>
+              </div>
             </div>
+
+            {submissionStatus?.error && (
+              <div style={{
+                marginBottom: '1rem',
+                padding: '0.6rem 1rem',
+                background: 'rgba(220, 38, 38, 0.1)',
+                border: '1px solid rgba(220, 38, 38, 0.3)',
+                borderRadius: 'var(--radius-sm)',
+                fontSize: '0.78rem',
+                color: '#dc2626'
+              }}>
+                ⚠️ {submissionStatus.error}
+              </div>
+            )}
 
             <div className="grid-3">
               {/* Card 1: Score */}

@@ -31,37 +31,33 @@ export default function SchemeDirectory() {
 
   return (
     <div>
-      {/* Header Banner */}
-      <div className="glass-panel organic-card-1" style={{
-        padding: '2rem 2.5rem',
-        marginBottom: '2rem',
-        background: 'linear-gradient(135deg, rgba(93, 112, 82, 0.08) 0%, rgba(193, 140, 93, 0.08) 100%)',
-        border: '1.5px solid var(--border)'
+      {/* Streamlined Filter & Search Toolbar */}
+      <div className="glass-panel" style={{
+        padding: '1.25rem 1.75rem',
+        marginBottom: '1.75rem',
+        borderRadius: 'var(--radius-lg)',
+        border: '1px solid var(--border)'
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1.25rem' }}>
-          <div>
-            <span className="badge badge-emerald" style={{ marginBottom: '0.4rem' }}>
-              <Sprout size={13} /> Official Central & State Repository
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem', marginBottom: '1rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <BookOpen size={18} color="var(--primary)" />
+            <span style={{ fontSize: '1rem', fontWeight: 800, color: 'var(--text-primary)' }}>
+              Scheme Catalog & Eligibility Filter
             </span>
-            <h2 style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>
-              Indian MSME Government Scheme Knowledge Directory
-            </h2>
-            <p style={{ fontSize: '0.92rem', color: 'var(--text-secondary)', margin: 0 }}>
-              Comprehensive database of verified MSME government financial assistance, credit guarantees, and green incentives.
-            </p>
+            <span className="badge badge-emerald" style={{ fontSize: '0.68rem' }}>24 Central & State Schemes</span>
           </div>
 
           <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', flexWrap: 'wrap' }}>
             {/* Search Input */}
-            <div style={{ position: 'relative', width: '260px' }}>
-              <Search size={17} color="var(--text-muted)" style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)' }} />
+            <div style={{ position: 'relative', width: '280px' }}>
+              <Search size={16} color="var(--text-muted)" style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)' }} />
               <input 
                 type="text" 
-                placeholder="Search schemes or keywords..." 
+                placeholder="Search scheme name, keywords..." 
                 value={searchTerm} 
                 onChange={(e) => setSearchTerm(e.target.value)} 
                 className="form-input"
-                style={{ paddingLeft: '2.6rem', fontSize: '0.88rem' }}
+                style={{ paddingLeft: '2.5rem', fontSize: '0.85rem' }}
               />
             </div>
 
@@ -70,7 +66,7 @@ export default function SchemeDirectory() {
               value={selectedCategory} 
               onChange={(e) => setSelectedCategory(e.target.value)} 
               className="form-select"
-              style={{ width: '180px', fontSize: '0.88rem' }}
+              style={{ width: '180px', fontSize: '0.85rem' }}
             >
               {categories.map(cat => (
                 <option key={cat} value={cat}>{cat}</option>
@@ -80,26 +76,26 @@ export default function SchemeDirectory() {
         </div>
 
         {/* Statutory MSME Tier Filter Pills */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '1.25rem', flexWrap: 'wrap' }}>
-          <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-muted)' }}>Filter by MSME Tier:</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+          <span style={{ fontSize: '0.78rem', fontWeight: 700, color: 'var(--text-muted)' }}>Filter by MSME Tier:</span>
           {[
-            { label: 'All Tiers (24 Schemes)', val: 'All' },
-            { label: 'Micro Enterprises (≤ ₹10 Cr)', val: 'Micro' },
-            { label: 'Small Enterprises (≤ ₹100 Cr)', val: 'Small' },
-            { label: 'Medium Enterprises (≤ ₹250 Cr)', val: 'Medium' }
+            { label: 'All Tiers', val: 'All' },
+            { label: 'Micro (≤ ₹10 Cr)', val: 'Micro' },
+            { label: 'Small (≤ ₹100 Cr)', val: 'Small' },
+            { label: 'Medium (≤ ₹250 Cr)', val: 'Medium' }
           ].map(tier => (
             <button
               key={tier.val}
               type="button"
               onClick={() => setSelectedTier(tier.val)}
               className={`btn ${selectedTier === tier.val ? 'btn-primary' : 'btn-secondary'}`}
-              style={{ fontSize: '0.78rem', padding: '0.35rem 0.85rem' }}
+              style={{ fontSize: '0.75rem', padding: '0.3rem 0.75rem' }}
             >
               {tier.label}
             </button>
           ))}
-          <span style={{ marginLeft: 'auto', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-            Showing <strong>{filteredSchemes.length}</strong> schemes
+          <span style={{ marginLeft: 'auto', fontSize: '0.78rem', color: 'var(--text-muted)' }}>
+            Showing <strong>{filteredSchemes.length}</strong> of {GOVERNMENT_SCHEMES.length} schemes
           </span>
         </div>
       </div>

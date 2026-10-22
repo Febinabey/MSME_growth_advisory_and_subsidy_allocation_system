@@ -71,6 +71,10 @@ export default function Layer2Optimization() {
     return dbApplicants.filter(a => a.sector === selectedSectorFilter);
   }, [dbApplicants, selectedSectorFilter]);
 
+  const totalRequestedSubsidy = useMemo(() => {
+    return filteredApplicants.reduce((sum, a) => sum + (Number(a.requestedSubsidy) || 0), 0);
+  }, [filteredApplicants]);
+
   const optimizationResults = useMemo(() => {
     return optimizeSubsidyBudget(filteredApplicants, budgetINR, policyWeights);
   }, [filteredApplicants, budgetINR, policyWeights]);
@@ -79,70 +83,50 @@ export default function Layer2Optimization() {
 
   return (
     <div>
-      {/* Header Banner */}
-      <div className="glass-panel organic-card-1" style={{
-        padding: '2rem 2.5rem',
-        marginBottom: '2rem',
-        background: 'linear-gradient(135deg, rgba(93, 112, 82, 0.09) 0%, rgba(193, 140, 93, 0.08) 100%)',
-        border: '1.5px solid var(--border)'
+      {/* Top Controls Toolbar: Database Status & AI Yield Multiplier */}
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        flexWrap: 'wrap',
+        gap: '1rem',
+        marginBottom: '1.5rem',
+        background: 'var(--muted)',
+        padding: '0.85rem 1.5rem',
+        borderRadius: 'var(--radius-pill)',
+        border: '1px solid var(--border)'
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1.25rem' }}>
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '0.4rem' }}>
-              <span className="badge badge-emerald">
-                <Sprout size={13} /> Layer 2 Engine
-              </span>
-              <h2 style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>
-                Government Policy & Subsidy Optimization Engine
-              </h2>
-            </div>
-            <p style={{ fontSize: '0.92rem', color: 'var(--text-secondary)', margin: 0 }}>
-              Multiple-Choice Knapsack (MCKP) Solver maximizing economic ROI & employment creation under finite government budget ceilings.
-            </p>
-          </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
+          <span style={{ fontSize: '0.85rem', fontWeight: 800, color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <Scale size={16} color="var(--primary)" />
+            Knapsack Subsidy Allocator
+          </span>
+          {isLiveFromDb ? (
+            <span className="badge badge-emerald" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.72rem' }}>
+              <Database size={12} /> Live SQLite Queue ({dbApplicants.length} Units)
+            </span>
+          ) : (
+            <span className="badge badge-amber" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.72rem' }}>
+              Preset Queue ({dbApplicants.length} Units)
+            </span>
+          )}
+          <button 
+            onClick={fetchLiveApplications} 
+            className="btn btn-secondary" 
+            style={{ padding: '0.25rem 0.65rem', fontSize: '0.72rem', display: 'inline-flex', alignItems: 'center', gap: '0.3rem' }}
+            title="Refresh live applicants from database"
+          >
+            <RefreshCw size={12} /> Sync Database
+          </button>
+        </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', flexWrap: 'wrap' }}>
-            <div style={{
-              background: 'var(--muted)',
-              padding: '0.65rem 1.25rem',
-              borderRadius: 'var(--radius-pill)',
-              border: '1px solid var(--border)',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.5rem'
-            }}>
-              {isLiveFromDb ? (
-                <span className="badge badge-emerald" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.72rem' }}>
-                  <Database size={13} /> Live SQLite Queue ({dbApplicants.length} Units)
-                </span>
-              ) : (
-                <span className="badge badge-amber" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.72rem' }}>
-                  Preset Queue ({dbApplicants.length} Units)
-                </span>
-              )}
-              <button 
-                onClick={fetchLiveApplications} 
-                className="btn btn-secondary" 
-                style={{ padding: '0.25rem 0.6rem', fontSize: '0.72rem', display: 'inline-flex', alignItems: 'center', gap: '0.3rem' }}
-                title="Refresh live applicants from database"
-              >
-                <RefreshCw size={12} /> Sync
-              </button>
-            </div>
-
-            <div style={{
-              background: 'var(--muted)',
-              padding: '0.75rem 1.5rem',
-              borderRadius: 'var(--radius-pill)',
-              border: '1px solid var(--border)',
-              textAlign: 'right'
-            }}>
-              <div style={{ fontSize: '0.74rem', color: 'var(--text-muted)', fontWeight: 800, textTransform: 'uppercase' }}>AI Yield Multiplier vs FCFS</div>
-              <div style={{ fontSize: '1.6rem', fontFamily: 'var(--font-serif)', fontWeight: 800, color: 'var(--primary)' }}>
-                {gains.roiMultiplier}x Yield
-              </div>
-            </div>
-          </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase' }}>
+            AI Yield Multiplier:
+          </span>
+          <span className="badge badge-emerald" style={{ fontSize: '0.9rem', fontWeight: 800, padding: '0.25rem 0.75rem' }}>
+            {gains.roiMultiplier}x vs FCFS
+          </span>
         </div>
       </div>
 
@@ -274,7 +258,7 @@ export default function Layer2Optimization() {
 
         </div>
 
-        {budgetINR >= 74400000 && (
+        {budgetINR >= totalRequestedSubsidy && totalRequestedSubsidy > 0 && (
           <div style={{
             marginTop: '1.25rem',
             padding: '0.9rem 1.25rem',
@@ -289,7 +273,7 @@ export default function Layer2Optimization() {
           }}>
             <AlertCircle size={17} color="var(--secondary)" style={{ flexShrink: 0 }} />
             <div>
-              <strong>Applicant Pool Saturation Reached:</strong> Total subsidy requested across all 20 sample enterprises is {formatINR(74400000)}. At or above this threshold, 100% of applicants receive funding under both algorithms. The AI Knapsack solver exhibits maximum algorithmic impact under fiscal scarcity (&lt; ₹7.44 Cr), creating up to <strong>+75.4% more jobs</strong> and <strong>1.77x ROI</strong>.
+              <strong>Applicant Pool Saturation Reached:</strong> Total subsidy requested across all {filteredApplicants.length} enterprises in this queue is {formatINR(totalRequestedSubsidy)}. At or above this threshold, 100% of applicants receive funding under both algorithms. The AI Knapsack solver exhibits maximum algorithmic impact under fiscal scarcity (&lt; {formatINR(totalRequestedSubsidy)}), optimizing marginal value density and creating additional verified jobs.
             </div>
           </div>
         )}

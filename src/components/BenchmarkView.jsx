@@ -35,38 +35,28 @@ export default function BenchmarkView() {
 
   return (
     <div>
-      {/* Banner */}
-      <div className="glass-panel organic-card-1" style={{
-        padding: '2rem 2.5rem',
-        marginBottom: '2rem',
-        background: 'linear-gradient(135deg, rgba(93, 112, 82, 0.09) 0%, rgba(74, 107, 108, 0.08) 100%)',
-        border: '1.5px solid var(--border)'
+      {/* Compact Top Bar */}
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        flexWrap: 'wrap',
+        gap: '1rem',
+        marginBottom: '1.5rem',
+        background: 'var(--muted)',
+        padding: '0.85rem 1.5rem',
+        borderRadius: 'var(--radius-pill)',
+        border: '1px solid var(--border)'
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1.25rem' }}>
-          <div>
-            <span className="badge badge-emerald" style={{ marginBottom: '0.4rem' }}>
-              <Sprout size={13} /> Official Survey Intelligence
-            </span>
-            <h2 style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>
-              MoSPI ASUSE 2023-24 & Udyam National Sector Benchmarks
-            </h2>
-            <p style={{ fontSize: '0.92rem', color: 'var(--text-secondary)', margin: 0 }}>
-              Benchmarking individual enterprise indicators against 6.5 Crore Indian MSME survey observations published by MoSPI and Ministry of MSME.
-            </p>
-          </div>
-
-          <div style={{
-            background: 'var(--muted)',
-            padding: '0.75rem 1.5rem',
-            borderRadius: 'var(--radius-pill)',
-            border: '1px solid var(--border)',
-            textAlign: 'right'
-          }}>
-            <div style={{ fontSize: '0.74rem', color: 'var(--text-muted)', fontWeight: 800, textTransform: 'uppercase' }}>Survey Period</div>
-            <div style={{ fontSize: '1.05rem', fontFamily: 'var(--font-serif)', fontWeight: 700, color: 'var(--primary)' }}>
-              {ASUSE_UDYAM_BENCHMARKS.metadata.asuseSurveyPeriod}
-            </div>
-          </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+          <Database size={16} color="var(--primary)" />
+          <span style={{ fontSize: '0.88rem', fontWeight: 800, color: 'var(--text-primary)' }}>
+            MoSPI ASUSE 2023-24 & Udyam National Sector Benchmarks
+          </span>
+          <span className="badge badge-emerald" style={{ fontSize: '0.68rem' }}>6.5 Cr Survey Norms</span>
+        </div>
+        <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
+          Survey Period: <strong style={{ color: 'var(--primary)' }}>{ASUSE_UDYAM_BENCHMARKS.metadata.asuseSurveyPeriod}</strong>
         </div>
       </div>
 

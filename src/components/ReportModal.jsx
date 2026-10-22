@@ -65,6 +65,42 @@ export default function ReportModal({ isOpen, onClose, msmeData, predictions, sh
 
         {/* Audit Report Content */}
         <div id="printable-report">
+          {/* Enterprise Identity Header */}
+          <div style={{
+            background: 'var(--muted)',
+            padding: '1rem 1.25rem',
+            borderRadius: 'var(--radius-md)',
+            border: '1.5px solid var(--border)',
+            marginBottom: '1.25rem',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            flexWrap: 'wrap',
+            gap: '0.75rem'
+          }}>
+            <div>
+              <div style={{ fontSize: '0.72rem', color: 'var(--primary)', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                Evaluated Enterprise
+              </div>
+              <div style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--text-primary)', fontFamily: 'var(--font-serif)' }}>
+                {msmeData.enterpriseName || 'MSME Enterprise'}
+              </div>
+              <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: '0.2rem' }}>
+                {msmeData.district ? `${msmeData.district}, ` : ''}{msmeData.state || 'India'}
+                {msmeData.pincode ? ` • PIN: ${msmeData.pincode}` : ''}
+              </div>
+            </div>
+
+            <div style={{ textAlign: 'right' }}>
+              <span className="badge badge-emerald" style={{ fontSize: '0.75rem' }}>
+                {msmeData.sector}
+              </span>
+              <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: '0.3rem' }}>
+                Evaluated: {new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
+              </div>
+            </div>
+          </div>
+
           {/* Company Overview */}
           <div className="organic-card-2" style={{
             background: 'var(--bg-primary)',
