@@ -7,48 +7,117 @@ import { getPmegpStateContext, PMEGP_NATIONAL_BENCHMARK } from '../data/pmegpDat
  * Objective: Maximize total economic ROI + Job Creation Impact
  * Subject to: Sum(Subsidy_i) <= Government_Budget
  * 
+ * Uses Min-Max Standardized Multi-Objective Density:
+ * - S_job = (JobIntensity_i - min) / (max - min)
+ * - S_rev = (RevenueROI_i - min) / (max - min)
+ * - Density_i = (w_job * S_job + w_rev * S_rev) * (1 + GreenBonus)
+ * 
  * Compares AI Knapsack Allocation against First-Come-First-Served (FCFS) Baseline.
  */
-export function optimizeSubsidyBudget(applicants, availableBudgetINR, policyWeights = { jobWeight: 0.5, revenueWeight: 0.5, greenBonus: 0.2 }) {
-  // 1. Process each applicant to compute predictions & objective ROI value
+export function optimizeSubsidyBudget(applicants, availableBudgetINR, policyWeights = { jobWeight: 0.5, revenueWeight: 0.5, greenBonus: 0.0 }) {
+  if (!applicants || applicants.length === 0) {
+    return {
+      availableBudgetINR,
+      aiAllocation: {
+        awardedList: [],
+        rejectedList: [],
+        totalBudgetSpentINR: 0,
+        budgetUtilizationPercent: 0,
+        totalJobsCreated: 0,
+        totalRevenueUpliftINR: 0,
+        totalObjectiveScore: 0
+      },
+      baselineFCFS: {
+        awardedList: [],
+        totalBudgetSpentINR: 0,
+        budgetUtilizationPercent: 0,
+        totalJobsCreated: 0,
+        totalRevenueUpliftINR: 0,
+        totalObjectiveScore: 0
+      },
+      gains: {
+        jobGainPercent: 0,
+        revenueGainPercent: 0,
+        roiMultiplier: 1.0
+      },
+      pmegpSummary: {
+        datasetSource: 'Ministry of MSME / KVIC via Data.gov.in',
+        trainingPeriod: '2021-22 to 2024-25',
+        provisionalPeriod: '2025-26 (as of 10-02-2026)',
+        totalProjectsAssistedHistorical: PMEGP_NATIONAL_BENCHMARK.totalProjectsAssisted,
+        totalEmploymentGeneratedHistorical: PMEGP_NATIONAL_BENCHMARK.totalEmploymentEstimated,
+        averageEmploymentPerProjectHistorical: PMEGP_NATIONAL_BENCHMARK.nationalAvgEmploymentPerProject,
+        dataIntegrityNote: 'PMEGP figures reflect regional programme statistics, not individual enterprise performance.'
+      }
+    };
+  }
+
+  // 1. Process each applicant to compute predictions & economic yields
   const processedApplicants = applicants.map(app => {
-    const predictions = predictMSMEGrowth(app);
+    const cost = Math.max(100000, Number(app.requestedSubsidy || app.requested_subsidy) || 1000000);
+    const predictions = predictMSMEGrowth({
+      ...app,
+      requestedSubsidy: cost
+    });
     const pmegpContext = getPmegpStateContext(app.state);
     
-    // Value function V_i = w_rev * (Projected Revenue Impact) + w_job * (Jobs * Value_per_job)
-    const projectedRevenueUpliftINR = app.annualRevenue * (predictions.predictedRevenueGrowth / 100);
-    const valuePerJobINR = 800000; // ₹8 Lakhs economic value per job created
-    
-    let objectiveValue = 
-      (policyWeights.revenueWeight * (projectedRevenueUpliftINR / 100000)) + 
-      (policyWeights.jobWeight * (predictions.predictedJobs * (valuePerJobINR / 100000)));
+    const annualRevenue = Number(app.annualRevenue || app.annual_revenue) || 0;
+    const projectedRevenueUpliftINR = annualRevenue * (predictions.predictedRevenueGrowth / 100);
+    const predictedJobs = predictions.predictedJobs;
 
-    // Apply Green Sector bonus if enabled
-    if (app.sector === "Green Tech" || app.sector === "Agro-processing") {
-      objectiveValue *= (1 + policyWeights.greenBonus);
-    }
-
-    // Value density: ROI per Rupee of requested subsidy
-    const cost = Math.max(100000, app.requestedSubsidy);
-    const density = objectiveValue / (cost / 100000);
+    // Unit-level marginal efficiency metrics
+    const jobIntensity = predictedJobs / (cost / 100000); // Employment addition per Lakh subsidy
+    const revROI = projectedRevenueUpliftINR / cost;      // Revenue uplift per rupee subsidy
 
     return {
       ...app,
       predictions,
       pmegpContext,
       projectedRevenueUpliftINR,
-      predictedJobs: predictions.predictedJobs,
+      predictedJobs,
       cost,
-      objectiveValue,
-      density
+      jobIntensity,
+      revROI
+    };
+  });
+
+  // 2. Standardize multi-objective scores across the applicant cohort (Min-Max Scaling)
+  const minJob = Math.min(...processedApplicants.map(p => p.jobIntensity));
+  const maxJob = Math.max(...processedApplicants.map(p => p.jobIntensity));
+  const minRev = Math.min(...processedApplicants.map(p => p.revROI));
+  const maxRev = Math.max(...processedApplicants.map(p => p.revROI));
+
+  const jobRange = (maxJob - minJob) || 1;
+  const revRange = (maxRev - minRev) || 1;
+
+  const jobWeight = Number(policyWeights.jobWeight ?? 0.5);
+  const revenueWeight = Number(policyWeights.revenueWeight ?? 0.5);
+  const greenBonus = Number(policyWeights.greenBonus ?? 0.0);
+
+  const scoredApplicants = processedApplicants.map(app => {
+    const sJob = (app.jobIntensity - minJob) / jobRange;
+    const sRev = (app.revROI - minRev) / revRange;
+
+    // Apply Green Sector bonus if enabled
+    const isGreen = app.sector === "Green Tech" || app.sector === "Agro-processing" || app.sector === "Manufacturing - Food & Agro";
+    const greenMultiplier = isGreen ? (1 + greenBonus) : 1.0;
+
+    const baseDensity = (jobWeight * sJob) + (revenueWeight * sRev);
+    const density = (baseDensity + 0.05) * greenMultiplier;
+    const objectiveValue = density * (app.cost / 100000);
+
+    return {
+      ...app,
+      density,
+      objectiveValue
     };
   });
 
   // -------------------------------------------------------------
-  // ALGORITHM A: AI Knapsack Optimization (Greedy Density + DP)
+  // ALGORITHM A: AI Knapsack Optimization (Greedy Density)
   // -------------------------------------------------------------
   // Sort candidates by Value Density (highest economic yield per subsidy rupee)
-  const aiSorted = [...processedApplicants].sort((a, b) => b.density - a.density);
+  const aiSorted = [...scoredApplicants].sort((a, b) => b.density - a.density);
   
   let aiRemainingBudget = availableBudgetINR;
   const aiAwardedList = [];
@@ -83,7 +152,7 @@ export function optimizeSubsidyBudget(applicants, availableBudgetINR, policyWeig
   let fcfsTotalBudgetSpentINR = 0;
   let fcfsTotalObjectiveScore = 0;
 
-  for (const item of processedApplicants) {
+  for (const item of scoredApplicants) {
     if (item.cost <= fcfsRemainingBudget) {
       fcfsRemainingBudget -= item.cost;
       fcfsTotalBudgetSpentINR += item.cost;

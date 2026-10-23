@@ -1,4 +1,5 @@
 import assert from 'node:assert';
+import { db } from '../server/db.js';
 
 const BASE_URL = 'http://localhost:5000';
 
@@ -52,6 +53,8 @@ async function runApiAudit() {
   assert.strictEqual(submitData.success, true);
   assert.ok(submitData.data.id.startsWith('APP-'));
   console.log('  ✓ PASS: Successfully registered application with ID:', submitData.data.id);
+  // Clean up registered test application to maintain clean database queue
+  db.prepare('DELETE FROM applications WHERE id = ?').run(submitData.data.id);
 
   // 4. Ineligible Large Enterprise Submission (> ₹250 Cr)
   console.log('\n4. Testing POST /api/applications (Ineligible Large Corporate > ₹250 Cr)...');

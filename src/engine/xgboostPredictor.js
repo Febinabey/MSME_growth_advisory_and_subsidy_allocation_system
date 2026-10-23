@@ -43,9 +43,34 @@ export function predictMSMEGrowth(metrics) {
   const predictedRevenueGrowth = parseFloat((revenueGrowthRate * 0.4 + growthScore * 0.25 + techLevel * 2).toFixed(1));
 
   // Predict Job Creation Potential
-  // Larger teams & higher growth score create more new jobs
-  const baseJobMultiplier = growthScore >= 75 ? 0.25 : growthScore >= 50 ? 0.15 : 0.05;
-  const predictedJobs = Math.max(1, Math.round(employees * baseJobMultiplier + (annualRevenue / 10000000) * 0.8));
+  // Sector employment elasticity (MoSPI ASUSE 2023-24 & KVIC PMEGP benchmarks)
+  let sectorJobMult = 1.0;
+  const sLower = (sector || '').toLowerCase();
+  if (sLower.includes('textile') || sLower.includes('apparel') || sLower.includes('handloom') || sLower.includes('craft') || sLower.includes('garment')) {
+    sectorJobMult = 2.4; // High labor elasticity
+  } else if (sLower.includes('food') || sLower.includes('agro')) {
+    sectorJobMult = 1.8; // Rural agro-processing labor elasticity
+  } else if (sLower.includes('trade') || sLower.includes('retail') || sLower.includes('service') || sLower.includes('tour') || sLower.includes('transport') || sLower.includes('logistics')) {
+    sectorJobMult = 1.1; // Moderate service multiplier
+  } else if (sLower.includes('metal') || sLower.includes('engineering') || sLower.includes('construction')) {
+    sectorJobMult = 0.65; // Capital & automated machinery intensive
+  } else if (sLower.includes('green') || sLower.includes('solar') || sLower.includes('clean') || sLower.includes('pharma') || sLower.includes('tech')) {
+    sectorJobMult = 0.75; // Tech capital intensive
+  }
+
+  const growthFactor = growthScore >= 75 ? 0.35 : growthScore >= 50 ? 0.22 : 0.12;
+  const workforceGrowth = employees * growthFactor * sectorJobMult;
+
+  // Capital subsidy enablement: micro units generate jobs efficiently for modest subsidy (PMEGP benchmark ~8 jobs/unit)
+  const subsidyLakhs = (Number(metrics.requestedSubsidy || metrics.requested_subsidy) || 1000000) / 100000;
+  const subsidyJobRate = (sLower.includes('textile') || sLower.includes('food') || sLower.includes('agro') || sLower.includes('craft'))
+    ? 0.45
+    : (sLower.includes('trade') || sLower.includes('retail') || sLower.includes('service') || sLower.includes('logistics'))
+    ? 0.25
+    : 0.15;
+
+  const subsidyJobs = subsidyLakhs * subsidyJobRate;
+  const predictedJobs = Math.max(1, Math.round(workforceGrowth + subsidyJobs));
 
   // Projected 1-Year Revenue Amount
   const projectedRevenueAmount = Math.round(annualRevenue * (1 + predictedRevenueGrowth / 100));

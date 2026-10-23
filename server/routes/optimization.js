@@ -13,7 +13,7 @@ router.post('/', (req, res) => {
     const policyWeights = {
       revenueWeight: Number(weightsInput.revenueWeight ?? weightsInput.alpha ?? body.alpha ?? 0.5),
       jobWeight: Number(weightsInput.jobWeight ?? weightsInput.beta ?? body.beta ?? 0.5),
-      greenBonus: Number(weightsInput.greenBonus ?? weightsInput.gamma ?? body.gamma ?? 0.2)
+      greenBonus: Number(weightsInput.greenBonus ?? weightsInput.gamma ?? body.gamma ?? 0.0)
     };
     const sectorFilter = body.sectorFilter || 'All';
     const stateFilter = body.stateFilter || 'All';

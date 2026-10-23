@@ -12,7 +12,7 @@ export default function Layer2Optimization() {
   const [policyWeights, setPolicyWeights] = useState({
     jobWeight: 0.5,
     revenueWeight: 0.5,
-    greenBonus: 0.2
+    greenBonus: 0.0
   });
   const [selectedSectorFilter, setSelectedSectorFilter] = useState("All");
 
@@ -129,7 +129,7 @@ export default function Layer2Optimization() {
       </div>
 
       {/* Control Panel: Budget & Policy Weights */}
-      <div className="grid-3" style={{ marginBottom: '2rem' }}>
+      <div className="grid-2" style={{ marginBottom: '2rem' }}>
         
         {/* Card 1: Available Government Budget Slider */}
         <div className="glass-panel organic-card-2" style={{ padding: '1.75rem' }}>
@@ -180,25 +180,6 @@ export default function Layer2Optimization() {
             <span>Balanced (50/50)</span>
             <span>Prioritize Revenue (90/10)</span>
           </div>
-        </div>
-
-        {/* Card 3: Green Sector Incentive Bonus */}
-        <div className="glass-panel organic-card-1" style={{ padding: '1.75rem' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
-            <label className="form-label" style={{ margin: 0 }}>Green Sector Weighting Bonus</label>
-            <strong style={{ color: 'var(--primary)', fontSize: '1.1rem', fontFamily: 'var(--font-serif)' }}>
-              +{(policyWeights.greenBonus * 100).toFixed(0)}% Boost
-            </strong>
-          </div>
-          <select 
-            value={policyWeights.greenBonus} 
-            onChange={(e) => setPolicyWeights(prev => ({ ...prev, greenBonus: parseFloat(e.target.value) }))} 
-            className="form-select"
-          >
-            <option value={0.0}>Standard Neutral Evaluation (0%)</option>
-            <option value={0.15}>Clean Energy Priority (+15%)</option>
-            <option value={0.30}>Aggressive Net-Zero Mandate (+30%)</option>
-          </select>
         </div>
 
       </div>
