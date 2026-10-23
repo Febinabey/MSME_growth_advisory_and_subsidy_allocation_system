@@ -6,10 +6,7 @@ import { REAL_UDYAM_DIRECTORY } from '../data/realUdyamDirectory';
 import SHAPWaterfall from './SHAPWaterfall';
 import ReportModal from './ReportModal';
 import { formatINR, getMSMETier } from '../utils/formatCurrency';
-import { 
-  Building2, TrendingUp, Users, DollarSign, Cpu, Award, 
-  Sparkles, CheckCircle2, AlertTriangle, FileText, ArrowRight, RefreshCw, Sliders, Sprout, Leaf, ShieldCheck, MapPin
-} from 'lucide-react';
+import { Building2, Award, Sparkles, FileText, Leaf } from 'lucide-react';
 
 export default function Layer1Advisory() {
   const [selectedUdyamId, setSelectedUdyamId] = useState('');
@@ -32,7 +29,7 @@ export default function Layer1Advisory() {
   });
 
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
-  const [activeTabSection, setActiveTabSection] = useState('recommendations'); // recommendations | shap | whatif
+  const [activeTabSection, setActiveTabSection] = useState('recommendations'); // recommendations | shap
 
   // Current Statutory MSME Tier under Gazette Notification S.O. 1364(E)
   const currentTier = useMemo(() => getMSMETier(formData.annualRevenue), [formData.annualRevenue]);
@@ -431,13 +428,6 @@ export default function Layer1Advisory() {
             >
               <Leaf size={16} /> SHAP Feature Diagnostics
             </button>
-            <button 
-              onClick={() => setActiveTabSection('whatif')} 
-              className={`btn ${activeTabSection === 'whatif' ? 'btn-primary' : 'btn-secondary'}`}
-              style={{ fontSize: '0.85rem', padding: '0.55rem 1.25rem', border: 'none' }}
-            >
-              <Sliders size={16} /> What-If Simulator
-            </button>
           </div>
 
           {/* Section A: Scheme Recommendations */}
@@ -496,57 +486,6 @@ export default function Layer1Advisory() {
           {/* Section B: SHAP Diagnostics */}
           {activeTabSection === 'shap' && (
             <SHAPWaterfall shapData={shapData} />
-          )}
-
-          {/* Section C: What-If Simulator */}
-          {activeTabSection === 'whatif' && (
-            <div className="glass-panel organic-card-1" style={{ padding: '2rem' }}>
-              <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                <Sliders size={20} color="var(--secondary)" />
-                Scenario Optimization Simulator
-              </h3>
-              <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', marginBottom: '1.5rem' }}>
-                Simulate how strategic operational and technological upgrades immediately enhance enterprise creditworthiness and unlock targeted government grants.
-              </p>
-
-              <div className="grid-3">
-                <div style={{ background: 'var(--muted)', padding: '1.5rem', borderRadius: '2rem', border: '1.5px solid var(--border)' }}>
-                  <h4 style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '0.5rem' }}>
-                    Scenario A: Boost GST Compliance to 98%
-                  </h4>
-                  <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
-                    Improves formal compliance rating, unlocks CGTMSE credit guarantee limits, and lowers credit risk penalty.
-                  </p>
-                  <button onClick={() => setFormData(prev => ({ ...prev, gstScore: 98 }))} className="btn btn-secondary" style={{ width: '100%', fontSize: '0.85rem' }}>
-                    Apply (+GST 98%)
-                  </button>
-                </div>
-
-                <div style={{ background: 'var(--muted)', padding: '1.5rem', borderRadius: '2rem', border: '1.5px solid var(--border)' }}>
-                  <h4 style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '0.5rem' }}>
-                    Scenario B: Adopt Industry 4.0
-                  </h4>
-                  <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
-                    Unlocks SAMERTH technology co-funding grants and expands projected 1-year revenue yield by ~6.5%.
-                  </p>
-                  <button onClick={() => setFormData(prev => ({ ...prev, techLevel: 5 }))} className="btn btn-emerald" style={{ width: '100%', fontSize: '0.85rem' }}>
-                    Apply (Tech Level 5)
-                  </button>
-                </div>
-
-                <div style={{ background: 'var(--muted)', padding: '1.5rem', borderRadius: '2rem', border: '1.5px solid var(--border)' }}>
-                  <h4 style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '0.5rem' }}>
-                    Scenario C: Reset to Baseline
-                  </h4>
-                  <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
-                    Restores standard operating parameters (GST Score 85, Tech Level 3, Debt Ratio 25%).
-                  </p>
-                  <button onClick={() => setFormData(prev => ({ ...prev, gstScore: 85, techLevel: 3, debtRatio: 0.25 }))} className="btn btn-secondary" style={{ width: '100%', fontSize: '0.85rem' }}>
-                    <RefreshCw size={14} style={{ marginRight: '6px' }} /> Reset Parameters
-                  </button>
-                </div>
-              </div>
-            </div>
           )}
 
         </div>
