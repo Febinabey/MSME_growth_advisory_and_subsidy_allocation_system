@@ -507,3 +507,147 @@ textarea.form-input {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--text-muted);
 }
+
+
+/* ==========================================================================
+   REPORT MODAL & PDF EXPORT STYLES
+   ========================================================================== */
+
+.report-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(44, 44, 36, 0.65);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 2rem;
+  overflow-y: auto;
+}
+
+.report-modal-dialog {
+  width: 100%;
+  max-width: 880px;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: var(--bg-secondary);
+  padding: 2.5rem;
+  position: relative;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-float);
+  margin: auto;
+}
+
+/* Print / PDF Generation Styles */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 12mm 15mm;
+  }
+
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+
+  html, body {
+    background: #FFFFFF !important;
+    color: #1A1A1A !important;
+    font-size: 10pt !important;
+    line-height: 1.4 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+  }
+
+  /* Force crisp publication light theme during print even in dark mode */
+  :root, [data-theme="dark"] {
+    --bg-primary: #FFFFFF !important;
+    --bg-secondary: #FFFFFF !important;
+    --bg-card: #FAFAF7 !important;
+    --foreground: #1A1A1A !important;
+    --text-primary: #1A1A1A !important;
+    --text-secondary: #3D3D35 !important;
+    --text-muted: #66665E !important;
+    --border: #DED8CF !important;
+    --border-color: #DED8CF !important;
+    --muted: #F5F2EB !important;
+    --emerald-light: #EEF2EB !important;
+    --emerald-main: #3F5236 !important;
+    --secondary: #A06839 !important;
+  }
+
+  /* Hide background elements, navigation bar, interactive forms, and buttons */
+  header,
+  footer,
+  nav,
+  .no-print,
+  button {
+    display: none !important;
+  }
+
+  .app-container {
+    padding: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    margin: 0 !important;
+  }
+
+  /* Modal Unclip: Remove fixed positioning & scroll limits to flow across all pages */
+  .report-modal-overlay {
+    position: static !important;
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+    background: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    display: block !important;
+    z-index: auto !important;
+  }
+
+  .report-modal-dialog {
+    position: static !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+    background: #FFFFFF !important;
+    box-shadow: none !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Prevent card pagination splits */
+  .report-avoid-break,
+  .organic-card-1,
+  .organic-card-2,
+  .organic-card-3 {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  .print-only-meta {
+    display: block !important;
+  }
+}

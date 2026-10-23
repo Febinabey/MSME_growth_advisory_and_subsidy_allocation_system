@@ -83,7 +83,8 @@ export default function Layer1Advisory() {
 
   return (
     <div>
-      <div className="grid-1-2">
+      <div className="no-print">
+        <div className="grid-1-2">
         
         {/* Left Column: MSME Data Entry Form */}
         <div className="glass-panel organic-card-3" style={{ padding: '2rem' }}>
@@ -490,6 +491,7 @@ export default function Layer1Advisory() {
 
         </div>
 
+      </div>
       </div>
 
       {/* Printable Report Modal */}
