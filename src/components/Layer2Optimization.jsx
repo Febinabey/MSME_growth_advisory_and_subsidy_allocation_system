@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { SAMPLE_APPLICANTS } from '../data/sampleApplicants';
 import { optimizeSubsidyBudget } from '../engine/knapsackSolver';
 import { 
-  Sliders, CheckCircle2, XCircle, Scale, Zap, AlertCircle, Database, RefreshCw
+  CheckCircle2, XCircle, Zap, AlertCircle
 } from 'lucide-react';
 import { formatINR } from '../utils/formatCurrency';
 
@@ -18,11 +18,8 @@ export default function Layer2Optimization() {
 
   // Live Database Applicants State (Syncs with backend SQLite database)
   const [dbApplicants, setDbApplicants] = useState(SAMPLE_APPLICANTS);
-  const [isLiveFromDb, setIsLiveFromDb] = useState(false);
-  const [isLoadingDb, setIsLoadingDb] = useState(false);
 
   const fetchLiveApplications = () => {
-    setIsLoadingDb(true);
     fetch('/api/applications')
       .then(res => res.json())
       .then(data => {
@@ -48,14 +45,10 @@ export default function Layer2Optimization() {
             status: app.status
           }));
           setDbApplicants(mapped);
-          setIsLiveFromDb(true);
         }
       })
       .catch(() => {
-        setIsLiveFromDb(false);
-      })
-      .finally(() => {
-        setIsLoadingDb(false);
+        // Fallback to SAMPLE_APPLICANTS if offline
       });
   };
 
@@ -81,53 +74,6 @@ export default function Layer2Optimization() {
 
   return (
     <div>
-      {/* Top Controls Toolbar: Database Status & AI Yield Multiplier */}
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        flexWrap: 'wrap',
-        gap: '1rem',
-        marginBottom: '1.5rem',
-        background: 'var(--muted)',
-        padding: '0.85rem 1.5rem',
-        borderRadius: 'var(--radius-pill)',
-        border: '1px solid var(--border)'
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
-          <span style={{ fontSize: '0.85rem', fontWeight: 800, color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <Scale size={16} color="var(--primary)" />
-            Knapsack Subsidy Allocator
-          </span>
-          {isLiveFromDb ? (
-            <span className="badge badge-emerald" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.72rem' }}>
-              <Database size={12} /> Live SQLite Queue ({dbApplicants.length} Units)
-            </span>
-          ) : (
-            <span className="badge badge-amber" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.72rem' }}>
-              Preset Queue ({dbApplicants.length} Units)
-            </span>
-          )}
-          <button 
-            onClick={fetchLiveApplications} 
-            className="btn btn-secondary" 
-            style={{ padding: '0.25rem 0.65rem', fontSize: '0.72rem', display: 'inline-flex', alignItems: 'center', gap: '0.3rem' }}
-            title="Refresh live applicants from database"
-          >
-            <RefreshCw size={12} /> Sync Database
-          </button>
-        </div>
-
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase' }}>
-            AI Yield Multiplier:
-          </span>
-          <span className="badge badge-emerald" style={{ fontSize: '0.9rem', fontWeight: 800, padding: '0.25rem 0.75rem' }}>
-            {gains.roiMultiplier}x vs FCFS
-          </span>
-        </div>
-      </div>
-
       {/* Control Panel: Budget & Policy Weights */}
       <div className="grid-2" style={{ marginBottom: '2rem' }}>
         
