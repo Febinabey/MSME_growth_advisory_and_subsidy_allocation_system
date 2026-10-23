@@ -8,7 +8,7 @@ import ReportModal from './ReportModal';
 import { formatINR, getMSMETier } from '../utils/formatCurrency';
 import { 
   Building2, TrendingUp, Users, DollarSign, Cpu, Award, 
-  Sparkles, CheckCircle2, AlertTriangle, FileText, ArrowRight, RefreshCw, Sliders, Sprout, Leaf, ShieldCheck, MapPin, Send
+  Sparkles, CheckCircle2, AlertTriangle, FileText, ArrowRight, RefreshCw, Sliders, Sprout, Leaf, ShieldCheck, MapPin
 } from 'lucide-react';
 
 export default function Layer1Advisory() {
@@ -33,7 +33,6 @@ export default function Layer1Advisory() {
 
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [activeTabSection, setActiveTabSection] = useState('recommendations'); // recommendations | shap | whatif
-  const [submissionStatus, setSubmissionStatus] = useState(null); // null | { loading, success, app, error }
 
   // Current Statutory MSME Tier under Gazette Notification S.O. 1364(E)
   const currentTier = useMemo(() => getMSMETier(formData.annualRevenue), [formData.annualRevenue]);
@@ -42,48 +41,6 @@ export default function Layer1Advisory() {
   const predictions = useMemo(() => predictMSMEGrowth(formData), [formData]);
   const shapData = useMemo(() => computeSHAPValues(formData), [formData]);
   const matchedSchemes = useMemo(() => matchSchemesForMSME(formData, formData.requirementText), [formData]);
-
-  const handleOfficialSubmit = async () => {
-    try {
-      setSubmissionStatus({ loading: true, success: false, app: null, error: null });
-      const topScheme = matchedSchemes.find(s => s.isEligible) || matchedSchemes[0];
-      const payload = {
-        name: formData.enterpriseName,
-        enterpriseName: formData.enterpriseName,
-        state: formData.state,
-        district: formData.district,
-        pincode: formData.pincode || '',
-        sector: formData.sector,
-        annualRevenue: formData.annualRevenue,
-        revenueGrowthRate: formData.revenueGrowthRate,
-        employees: formData.employees,
-        debtRatio: formData.debtRatio,
-        profitMargin: formData.profitMargin,
-        techLevel: formData.techLevel,
-        gstScore: formData.gstScore,
-        exportShare: formData.exportShare,
-        requestedScheme: topScheme ? topScheme.name : 'PMEGP Subsidy',
-        requestedSubsidy: topScheme ? topScheme.recommendedSubsidyAmount : 1000000,
-        growthScore: predictions.growthScore,
-        growthTier: predictions.tier,
-        predictedJobs: predictions.predictedJobs,
-        projectedRevenue: predictions.projectedRevenueAmount
-      };
-
-      const res = await fetch('/api/applications', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-      const data = await res.json();
-      if (!res.ok || !data.success) {
-        throw new Error(data.error || 'Failed to submit application');
-      }
-      setSubmissionStatus({ loading: false, success: true, app: data.data, error: null });
-    } catch (err) {
-      setSubmissionStatus({ loading: false, success: false, app: null, error: err.message });
-    }
-  };
 
   const handleChange = (e) => {
     const { name, value, type } = e.target;
@@ -424,53 +381,18 @@ export default function Layer1Advisory() {
                 </span>
               </div>
 
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+              <div>
                 <button
                   type="button"
                   onClick={() => setIsReportModalOpen(true)}
                   className="btn btn-secondary"
-                  style={{ fontSize: '0.78rem', padding: '0.35rem 0.85rem', display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}
+                  style={{ fontSize: '0.82rem', padding: '0.45rem 1rem', display: 'inline-flex', alignItems: 'center', gap: '0.45rem' }}
                   title="Generate & print official executive audit dossier"
                 >
-                  <FileText size={14} /> Executive Audit Dossier
-                </button>
-
-                <button
-                  type="button"
-                  onClick={handleOfficialSubmit}
-                  disabled={submissionStatus?.loading}
-                  className="btn btn-primary"
-                  style={{ fontSize: '0.78rem', padding: '0.35rem 0.85rem', display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}
-                  title="Submit this enterprise to the Layer 2 Knapsack allocation queue"
-                >
-                  {submissionStatus?.loading ? (
-                    'Submitting...'
-                  ) : submissionStatus?.success ? (
-                    <>
-                      <CheckCircle2 size={14} /> Registered ({submissionStatus.app?.id})
-                    </>
-                  ) : (
-                    <>
-                      <Send size={13} /> Submit to Queue
-                    </>
-                  )}
+                  <FileText size={15} color="var(--primary)" /> Executive Audit Dossier
                 </button>
               </div>
             </div>
-
-            {submissionStatus?.error && (
-              <div style={{
-                marginBottom: '1rem',
-                padding: '0.6rem 1rem',
-                background: 'rgba(220, 38, 38, 0.1)',
-                border: '1px solid rgba(220, 38, 38, 0.3)',
-                borderRadius: 'var(--radius-sm)',
-                fontSize: '0.78rem',
-                color: '#dc2626'
-              }}>
-                ⚠️ {submissionStatus.error}
-              </div>
-            )}
 
             <div className="grid-3">
               {/* Card 1: Score */}
