@@ -144,23 +144,11 @@ export default function SchemeDirectory() {
               </p>
 
               {/* Eligible Sectors */}
-              <div style={{ marginBottom: '1rem' }}>
+              <div style={{ marginBottom: '1.25rem' }}>
                 <div style={{ fontSize: '0.78rem', fontWeight: 700, color: 'var(--text-muted)', marginBottom: '0.4rem' }}>Eligible Sectors:</div>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem' }}>
                   {scheme.eligibleSectors.map(sec => (
                     <span key={sec} className="badge badge-cyan" style={{ fontSize: '0.72rem' }}>{sec}</span>
-                  ))}
-                </div>
-              </div>
-
-              {/* Semantic Keywords */}
-              <div style={{ marginBottom: '1.25rem' }}>
-                <div style={{ fontSize: '0.78rem', fontWeight: 700, color: 'var(--text-muted)', marginBottom: '0.4rem' }}>Semantic Match Keywords:</div>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem' }}>
-                  {scheme.semanticKeywords.map(kw => (
-                    <span key={kw} style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', background: 'var(--muted)', padding: '0.25rem 0.65rem', borderRadius: 'var(--radius-pill)', border: '1px solid var(--border)' }}>
-                      #{kw}
-                    </span>
                   ))}
                 </div>
               </div>

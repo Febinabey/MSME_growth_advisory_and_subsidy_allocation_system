@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowUpRight, ArrowDownRight, Info, Leaf } from 'lucide-react';
+import { ArrowUpRight, ArrowDownRight, Leaf } from 'lucide-react';
 
 export default function SHAPWaterfall({ shapData }) {
   if (!shapData) return null;
@@ -100,22 +100,6 @@ export default function SHAPWaterfall({ shapData }) {
             </div>
           );
         })}
-      </div>
-
-      <div style={{
-        marginTop: '1.5rem',
-        padding: '0.85rem 1.25rem',
-        background: 'var(--accent-light)',
-        border: '1.5px solid var(--border)',
-        borderRadius: 'var(--radius-md)',
-        fontSize: '0.82rem',
-        color: 'var(--text-secondary)',
-        display: 'flex',
-        alignItems: 'center',
-        gap: '0.65rem'
-      }}>
-        <Info size={18} color="var(--primary)" />
-        <span><strong>Audit Notice:</strong> SHAP values provide exact mathematical decomposition of feature attributions, verifying non-discrimination and compliance with Reserve Bank of India (RBI) MSME underwriting benchmarks.</span>
       </div>
     </div>
   );

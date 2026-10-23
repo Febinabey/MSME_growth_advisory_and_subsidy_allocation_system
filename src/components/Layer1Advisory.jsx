@@ -95,40 +95,21 @@ export default function Layer1Advisory() {
             Enterprise Profile Data
           </h3>
 
-          {/* Quick-Import from Real Udyam Registry */}
-          <div style={{
-            background: 'var(--muted)',
-            padding: '1rem 1.25rem',
-            borderRadius: 'var(--radius-md)',
-            marginBottom: '1.5rem',
-            border: '1.5px solid var(--border)'
-          }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-              <span style={{ fontSize: '0.78rem', fontWeight: 800, textTransform: 'uppercase', color: 'var(--primary)', letterSpacing: '0.04em', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                <ShieldCheck size={14} color="var(--primary)" />
-                Load Real Udyam Unit (70k Dataset)
-              </span>
-              <span className="badge badge-emerald" style={{ fontSize: '0.68rem' }}>Live Udyam Data</span>
-            </div>
+          {/* Quick-Import from Registered MSME Directory */}
+          <div style={{ marginBottom: '1.25rem' }}>
+            <label className="form-label" style={{ fontSize: '0.78rem' }}>Preload Registered Enterprise Profile</label>
             <select 
               className="form-select"
               value={selectedUdyamId}
               onChange={(e) => handleUdyamSelect(e.target.value)}
             >
-              <option value="">-- Choose a Registered MSME Across India --</option>
+              <option value="">-- Custom Profile (or choose sample MSME) --</option>
               {REAL_UDYAM_DIRECTORY.map((unit) => (
                 <option key={unit.id} value={unit.id}>
                   {unit.enterpriseName} ({unit.state} • {unit.district})
                 </option>
               ))}
             </select>
-            {currentUnit && (
-              <div style={{ marginTop: '0.65rem', fontSize: '0.74rem', color: 'var(--text-secondary)', background: 'rgba(255,255,255,0.6)', padding: '0.5rem 0.75rem', borderRadius: 'var(--radius-sm)' }}>
-                <div style={{ fontWeight: 700, color: 'var(--primary)' }}>NIC Activity ({currentUnit.nicCode}):</div>
-                <div>{currentUnit.nicActivity}</div>
-                <div style={{ marginTop: '0.2rem', color: 'var(--text-muted)' }}>Reg Date: {currentUnit.registrationDate} • Pincode: {currentUnit.pincode}</div>
-              </div>
-            )}
           </div>
 
           <form onSubmit={(e) => e.preventDefault()}>
@@ -192,25 +173,20 @@ export default function Layer1Advisory() {
                 onChange={handleChange} 
                 className="slider-input" 
               />
-              {/* Quick tier presets tailored exclusively to Micro, Small, and Medium MSMEs */}
-              <div style={{ display: 'flex', gap: '0.35rem', marginTop: '0.45rem', flexWrap: 'wrap' }}>
+              {/* Quick tier presets */}
+              <div style={{ display: 'flex', gap: '0.4rem', marginTop: '0.45rem', flexWrap: 'wrap' }}>
                 {[
-                  { label: '₹25L Micro', val: 2500000 },
-                  { label: '₹1Cr Micro', val: 10000000 },
-                  { label: '₹5Cr Micro', val: 50000000 },
-                  { label: '₹10Cr Micro Max', val: 100000000 },
-                  { label: '₹25Cr Small', val: 250000000 },
-                  { label: '₹50Cr Small', val: 500000000 },
-                  { label: '₹100Cr Small Max', val: 1000000000 },
-                  { label: '₹250Cr Medium Max', val: 2500000000 },
+                  { label: 'Micro (₹1 Cr)', val: 10000000 },
+                  { label: 'Small (₹25 Cr)', val: 250000000 },
+                  { label: 'Medium (₹100 Cr)', val: 1000000000 }
                 ].map((preset) => (
                   <button
                     key={preset.val}
                     type="button"
                     onClick={() => setFormData(prev => ({ ...prev, annualRevenue: preset.val }))}
                     style={{
-                      fontSize: '0.67rem',
-                      padding: '0.18rem 0.45rem',
+                      fontSize: '0.72rem',
+                      padding: '0.2rem 0.6rem',
                       borderRadius: 'var(--radius-sm)',
                       border: formData.annualRevenue === preset.val ? '1.5px solid var(--primary)' : '1px solid var(--border)',
                       background: formData.annualRevenue === preset.val ? 'rgba(20, 83, 45, 0.12)' : 'var(--muted)',

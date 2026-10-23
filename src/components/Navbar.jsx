@@ -1,6 +1,5 @@
 import React from 'react';
-import { Building2, Sliders, BookOpen, Sun, Moon, ShieldCheck, Database, Sprout } from 'lucide-react';
-import OfficialHeader from './OfficialHeader';
+import { Building2, Sliders, BookOpen, Sun, Moon, Database, Sprout } from 'lucide-react';
 
 export default function Navbar({ activeTab, setActiveTab, theme, toggleTheme }) {
   return (
@@ -13,34 +12,29 @@ export default function Navbar({ activeTab, setActiveTab, theme, toggleTheme }) 
       backdropFilter: 'blur(16px)',
       boxShadow: 'var(--shadow-sm)'
     }}>
-      {/* Official Top Bar */}
-      <OfficialHeader />
-
-      <div className="app-container" style={{ padding: '0.9rem 2.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
+      <div className="app-container" style={{ padding: '0.85rem 2rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
         
-        {/* Brand Logo with Organic Rounded Shape */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.95rem' }}>
+        {/* Brand Logo */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
           <div style={{
-            width: '46px',
-            height: '46px',
-            borderRadius: '60% 40% 30% 70% / 60% 30% 70% 40%',
+            width: '42px',
+            height: '42px',
+            borderRadius: 'var(--radius-md)',
             background: 'var(--primary)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             color: '#FFFFFF',
-            boxShadow: '0 6px 20px -3px rgba(93, 112, 82, 0.4)',
-            transition: 'transform 0.4s ease'
+            boxShadow: '0 4px 14px rgba(93, 112, 82, 0.35)'
           }}>
-            <Sprout size={24} />
+            <Sprout size={22} />
           </div>
           <div>
-            <h1 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.02em', display: 'flex', alignItems: 'center', gap: '0.5rem', margin: 0 }}>
+            <h1 style={{ fontSize: '1.15rem', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.02em', margin: 0 }}>
               MSME Growth & Subsidy Engine
-              <span className="badge badge-emerald" style={{ fontSize: '0.68rem' }}>Dual-Layer AI</span>
             </h1>
-            <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', margin: 0 }}>
-              Tactile Decision Support & Budget-Constrained Optimization Platform
+            <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', margin: 0 }}>
+              AI Growth Advisory & Knapsack Subsidy Allocation
             </p>
           </div>
         </div>
@@ -92,39 +86,23 @@ export default function Navbar({ activeTab, setActiveTab, theme, toggleTheme }) 
           </button>
         </nav>
 
-        {/* Actions & Theme Pill Toggle */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.4rem',
-            fontSize: '0.78rem',
-            fontWeight: 700,
-            color: 'var(--primary)',
-            background: 'var(--emerald-light)',
-            padding: '0.4rem 0.95rem',
-            borderRadius: 'var(--radius-pill)',
-            border: '1px solid rgba(93, 112, 82, 0.25)'
-          }}>
-            <ShieldCheck size={14} />
-            <span>SHAP & Knapsack Live</span>
-          </div>
-
+        {/* Theme Pill Toggle */}
+        <div style={{ display: 'flex', alignItems: 'center' }}>
           <button
             onClick={toggleTheme}
             className="btn btn-secondary"
             style={{
               padding: '0',
               borderRadius: '50%',
-              width: '42px',
-              height: '42px',
+              width: '40px',
+              height: '40px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center'
             }}
-            title="Toggle Earth Light / Forest Dark Palette"
+            title="Toggle Light / Dark Mode"
           >
-            {theme === 'dark' ? <Sun size={19} color="#DCA776" /> : <Moon size={19} color="#5D7052" />}
+            {theme === 'dark' ? <Sun size={18} color="#DCA776" /> : <Moon size={18} color="#5D7052" />}
           </button>
         </div>
 
