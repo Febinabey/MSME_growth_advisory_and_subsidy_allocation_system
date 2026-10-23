@@ -253,7 +253,7 @@ export default function ReportModal({ isOpen, onClose, msmeData, predictions, sh
 
           {/* Section 5: Transparent Value Driver Analysis (Tree SHAP) */}
           <div className="report-avoid-break" style={{
-            background: 'var(--emerald-light)',
+            background: 'var(--muted)',
             padding: '1.25rem',
             border: '1.5px solid var(--border-color)',
             borderRadius: 'var(--radius-md)',
@@ -271,18 +271,26 @@ export default function ReportModal({ isOpen, onClose, msmeData, predictions, sh
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '0.65rem' }}>
                   {shapData.shapContributions.map((item, idx) => (
                     <div key={idx} style={{
-                      fontSize: '0.78rem',
-                      background: 'rgba(255, 255, 255, 0.85)',
-                      padding: '0.5rem 0.85rem',
+                      fontSize: '0.82rem',
+                      background: 'var(--bg-secondary)',
+                      padding: '0.65rem 0.95rem',
                       borderRadius: 'var(--radius-sm)',
                       display: 'flex',
                       justifyContent: 'space-between',
                       alignItems: 'center',
-                      border: '1px solid rgba(0, 0, 0, 0.08)'
+                      border: '1px solid var(--border-color)',
+                      color: 'var(--text-primary)',
+                      boxShadow: 'var(--shadow-sm)'
                     }}>
-                      <span><strong>{item.feature}:</strong> {item.value}</span>
+                      <span style={{ color: 'var(--text-primary)' }}>
+                        <strong style={{ color: 'var(--text-primary)' }}>{item.feature}:</strong>{' '}
+                        <span style={{ color: 'var(--text-secondary)' }}>{item.value}</span>
+                      </span>
                       <span style={{
-                        fontWeight: 700,
+                        fontWeight: 800,
+                        fontFamily: 'var(--font-mono)',
+                        fontSize: '0.85rem',
+                        marginLeft: '0.5rem',
                         color: item.shapValue >= 0 ? 'var(--emerald-main)' : 'var(--rose-main)'
                       }}>
                         {item.shapValue >= 0 ? `+${item.shapValue}` : item.shapValue}
