@@ -1,13 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Leaf } from 'lucide-react';
 import Navbar from './components/Navbar';
 import Layer1Advisory from './components/Layer1Advisory';
 import Layer2Optimization from './components/Layer2Optimization';
-import BenchmarkView from './components/BenchmarkView';
-import SchemeDirectory from './components/SchemeDirectory';
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState('layer1'); // layer1 | layer2 | benchmarks | schemes
+  const [activeTab, setActiveTab] = useState('layer1'); // layer1 | layer2
   const [theme, setTheme] = useState('light');
 
   useEffect(() => {
@@ -30,8 +27,6 @@ export default function App() {
       <main className="app-container" style={{ flex: 1 }}>
         {activeTab === 'layer1' && <Layer1Advisory />}
         {activeTab === 'layer2' && <Layer2Optimization />}
-        {activeTab === 'benchmarks' && <BenchmarkView />}
-        {activeTab === 'schemes' && <SchemeDirectory />}
       </main>
 
       <footer style={{ 

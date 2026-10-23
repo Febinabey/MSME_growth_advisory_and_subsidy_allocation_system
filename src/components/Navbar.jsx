@@ -1,5 +1,5 @@
 import React from 'react';
-import { Building2, Sliders, BookOpen, Sun, Moon, Database, Sprout } from 'lucide-react';
+import { Building2, Sliders, Sun, Moon, Sprout } from 'lucide-react';
 
 export default function Navbar({ activeTab, setActiveTab, theme, toggleTheme }) {
   return (
@@ -46,8 +46,7 @@ export default function Navbar({ activeTab, setActiveTab, theme, toggleTheme }) 
           background: 'var(--muted)',
           padding: '0.35rem',
           borderRadius: 'var(--radius-pill)',
-          border: '1px solid var(--border)',
-          flexWrap: 'wrap'
+          border: '1px solid var(--border)'
         }}>
           <button
             onClick={() => setActiveTab('layer1')}
@@ -65,24 +64,6 @@ export default function Navbar({ activeTab, setActiveTab, theme, toggleTheme }) 
           >
             <Sliders size={16} />
             Layer 2: Optimization
-          </button>
-
-          <button
-            onClick={() => setActiveTab('benchmarks')}
-            className={`btn ${activeTab === 'benchmarks' ? 'btn-primary' : 'btn-secondary'}`}
-            style={{ fontSize: '0.85rem', padding: '0.55rem 1.15rem', border: 'none' }}
-          >
-            <Database size={16} />
-            ASUSE Benchmarks
-          </button>
-
-          <button
-            onClick={() => setActiveTab('schemes')}
-            className={`btn ${activeTab === 'schemes' ? 'btn-primary' : 'btn-secondary'}`}
-            style={{ fontSize: '0.85rem', padding: '0.55rem 1.15rem', border: 'none' }}
-          >
-            <BookOpen size={16} />
-            Scheme Catalog
           </button>
         </nav>
 
