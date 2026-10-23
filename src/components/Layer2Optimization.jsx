@@ -168,17 +168,17 @@ export default function Layer2Optimization() {
             min="0.1" 
             max="0.9" 
             step="0.1" 
-            value={policyWeights.jobWeight} 
+            value={policyWeights.revenueWeight} 
             onChange={(e) => {
-              const jW = parseFloat(e.target.value);
-              setPolicyWeights(prev => ({ ...prev, jobWeight: jW, revenueWeight: parseFloat((1 - jW).toFixed(1)) }));
+              const rW = parseFloat(e.target.value);
+              setPolicyWeights(prev => ({ ...prev, revenueWeight: rW, jobWeight: parseFloat((1 - rW).toFixed(1)) }));
             }} 
             className="slider-input" 
           />
           <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.6rem' }}>
-            <span>Prioritize Jobs</span>
-            <span>Balanced</span>
-            <span>Prioritize Revenue</span>
+            <span>Prioritize Jobs (10/90)</span>
+            <span>Balanced (50/50)</span>
+            <span>Prioritize Revenue (90/10)</span>
           </div>
         </div>
 
