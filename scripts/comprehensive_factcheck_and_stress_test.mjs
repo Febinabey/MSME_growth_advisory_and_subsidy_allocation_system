@@ -183,6 +183,21 @@ const largeResults = matchSchemesForMSME({
 const largeEligible = largeResults.filter(s => s.isEligible);
 assert(largeEligible.length === 0, 'Large Enterprise (> ₹250 Cr) has 0 eligible schemes (strictly blocked by law)');
 
+// Test 4E: Large Enterprise via Plant & Machinery (> ₹125 Cr - S.O. 1364(E) Composite Breach)
+const largeMachineryResults = matchSchemesForMSME({
+  annualRevenue: 500000000, // ₹50 Cr (otherwise valid for Small/Medium MSME)
+  machineryInvestment: 1500000000, // ₹150 Cr (> ₹125 Cr ceiling)
+  employees: 100,
+  sector: 'Manufacturing',
+  techLevel: 4,
+  gstScore: 85
+}, 'machinery upgrade');
+
+const largeMachineryEligible = largeMachineryResults.filter(s => s.isEligible);
+assert(largeMachineryEligible.length === 0, 'Enterprise exceeding ₹125 Cr Plant & Machinery has 0 eligible schemes (S.O. 1364(E) composite breach)');
+assert(largeMachineryResults.every(s => s.recommendedSubsidyAmount === 0), 'Enterprise exceeding ₹125 Cr Plant & Machinery receives ₹0 subsidy');
+
+
 
 // -------------------------------------------------------------
 // SUITE 5: KNAPSACK SOLVER & BUDGET SCARCITY MULTIPLIER

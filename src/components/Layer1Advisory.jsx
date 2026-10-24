@@ -58,9 +58,10 @@ export default function Layer1Advisory() {
   };
 
   const handleUdyamSelect = (unitId) => {
+    setSelectedUdyamId(unitId);
+    if (!unitId) return;
     const unit = REAL_UDYAM_DIRECTORY.find(u => u.id === unitId);
     if (!unit) return;
-    setSelectedUdyamId(unitId);
 
     // Map sector to standard options
     let mappedSec = "Manufacturing";
@@ -179,7 +180,7 @@ export default function Layer1Advisory() {
                 type="range" 
                 name="annualRevenue" 
                 min="1000000" 
-                max="2500000000" 
+                max="3000000000" 
                 step="1000000" 
                 value={formData.annualRevenue} 
                 onChange={handleChange} 
@@ -190,7 +191,8 @@ export default function Layer1Advisory() {
                 {[
                   { label: 'Micro (₹1 Cr)', val: 10000000 },
                   { label: 'Small (₹25 Cr)', val: 250000000 },
-                  { label: 'Medium (₹100 Cr)', val: 1000000000 }
+                  { label: 'Medium (₹100 Cr)', val: 1000000000 },
+                  { label: 'Large (₹300 Cr)', val: 3000000000 }
                 ].map((preset) => (
                   <button
                     key={preset.val}
@@ -228,7 +230,7 @@ export default function Layer1Advisory() {
                 type="range" 
                 name="machineryInvestment" 
                 min="500000" 
-                max="1250000000" 
+                max="1500000000" 
                 step="500000" 
                 value={formData.machineryInvestment} 
                 onChange={handleChange} 
@@ -239,7 +241,8 @@ export default function Layer1Advisory() {
                 {[
                   { label: 'Micro (₹50 L)', val: 5000000 },
                   { label: 'Small (₹10 Cr)', val: 100000000 },
-                  { label: 'Medium (₹50 Cr)', val: 500000000 }
+                  { label: 'Medium (₹50 Cr)', val: 500000000 },
+                  { label: 'Large (₹150 Cr)', val: 1500000000 }
                 ].map((preset) => (
                   <button
                     key={preset.val}
@@ -466,6 +469,29 @@ export default function Layer1Advisory() {
               </div>
             </div>
           </div>
+
+          {/* Statutory Exclusion Banner for Non-MSME / Large Enterprise */}
+          {!currentTier.isMSME && (
+            <div style={{
+              padding: '1.25rem 1.5rem',
+              borderRadius: '1.25rem',
+              background: 'rgba(239, 68, 68, 0.1)',
+              border: '1.5px solid var(--rose-main)',
+              display: 'flex',
+              alignItems: 'flex-start',
+              gap: '0.85rem'
+            }}>
+              <ShieldAlert size={24} color="var(--rose-main)" style={{ flexShrink: 0, marginTop: '2px' }} />
+              <div>
+                <h4 style={{ margin: 0, color: 'var(--rose-main)', fontSize: '0.95rem', fontWeight: 800 }}>
+                  Statutory Non-MSME Notice (Gazette S.O. 2119(E) & S.O. 1364(E))
+                </h4>
+                <p style={{ margin: '0.35rem 0 0', fontSize: '0.82rem', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
+                  This enterprise profile breaches statutory MSME ceilings (Turnover &gt; ₹250 Crore or Investment in Plant & Machinery &gt; ₹125 Crore) and is legally classified as a <strong>Large Enterprise</strong>. Under Government of India regulations, Large Enterprises are strictly excluded from Central Government MSME development schemes, margin money subsidies, and interest subventions.
+                </p>
+              </div>
+            </div>
+          )}
 
           {/* Section Selector Tab Pills */}
           <div style={{

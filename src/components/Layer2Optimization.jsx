@@ -56,10 +56,24 @@ export default function Layer2Optimization() {
     fetchLiveApplications();
   }, []);
 
+  // Dynamic priority sectors aggregated from applicants
+  const availableSectors = useMemo(() => {
+    const set = new Set();
+    dbApplicants.forEach(a => {
+      if (a.sector && a.sector.trim()) {
+        set.add(a.sector.trim());
+      }
+    });
+    return ["All", ...Array.from(set).sort()];
+  }, [dbApplicants]);
+
   // 2. Filter Applicants & Run Knapsack Solver
   const filteredApplicants = useMemo(() => {
     if (selectedSectorFilter === "All") return dbApplicants;
-    return dbApplicants.filter(a => a.sector === selectedSectorFilter);
+    return dbApplicants.filter(a => {
+      if (!a.sector) return false;
+      return a.sector === selectedSectorFilter || a.sector.toLowerCase().includes(selectedSectorFilter.toLowerCase());
+    });
   }, [dbApplicants, selectedSectorFilter]);
 
   const totalRequestedSubsidy = useMemo(() => {
@@ -225,15 +239,12 @@ export default function Layer2Optimization() {
             value={selectedSectorFilter} 
             onChange={(e) => setSelectedSectorFilter(e.target.value)} 
             className="form-select"
-            style={{ width: '220px' }}
+            style={{ width: '280px' }}
           >
-            <option value="All">All Priority Sectors</option>
-            <option value="Manufacturing">Manufacturing</option>
-            <option value="Agro-processing">Agro-processing</option>
-            <option value="IT Services">IT Services</option>
-            <option value="Textiles">Textiles</option>
-            <option value="Green Tech">Green Tech</option>
-            <option value="Electronics">Electronics</option>
+            <option value="All">All Priority Sectors ({dbApplicants.length})</option>
+            {availableSectors.filter(s => s !== "All").map((sec) => (
+              <option key={sec} value={sec}>{sec}</option>
+            ))}
           </select>
         </div>
 
@@ -252,67 +263,93 @@ export default function Layer2Optimization() {
               </tr>
             </thead>
             <tbody>
-              {aiAllocation.awardedList.map((app) => (
-                <tr key={app.id}>
-                  <td>
-                    <div style={{ fontWeight: 800, color: 'var(--text-primary)' }}>{app.name}</div>
-                    <div style={{ fontSize: '0.76rem', color: 'var(--text-muted)' }}>{app.id} • {app.requestedScheme}</div>
-                  </td>
-                  <td>
-                    <span className="badge badge-emerald">{app.district ? `${app.district}, ${app.state}` : (app.state || "India")}</span>
-                  </td>
-                  <td>
-                    <strong style={{ color: 'var(--primary)', fontFamily: 'var(--font-serif)', fontSize: '1.05rem' }}>
-                      {app.predictions.growthScore} / 100
-                    </strong>
-                  </td>
-                  <td>
-                    {formatINR(app.cost)}
-                  </td>
-                  <td>
-                    <span style={{ color: 'var(--primary)', fontWeight: 700 }}>+{formatINR(app.projectedRevenueUpliftINR)}</span>
-                  </td>
-                  <td>
-                    <span style={{ color: 'var(--secondary)', fontWeight: 800 }}>+{app.predictedJobs} Jobs</span>
-                  </td>
-                  <td>
-                    <span className="badge badge-emerald" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
-                      <CheckCircle2 size={14} /> Awarded Subsidy
-                    </span>
+              {filteredApplicants.length === 0 ? (
+                <tr>
+                  <td colSpan={7} style={{ textAlign: 'center', padding: '3.5rem 1.5rem', color: 'var(--text-muted)' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.75rem' }}>
+                      <AlertCircle size={32} color="var(--secondary)" />
+                      <div style={{ fontSize: '1.05rem', fontWeight: 700, color: 'var(--text-primary)' }}>
+                        No applicant units found in "{selectedSectorFilter}"
+                      </div>
+                      <div style={{ fontSize: '0.82rem', maxWidth: '440px', lineHeight: 1.5 }}>
+                        There are currently no registered MSME units in the queue matching this specific sector filter. You can select another sector or reset to view all units.
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setSelectedSectorFilter("All")}
+                        className="btn btn-secondary"
+                        style={{ marginTop: '0.5rem', fontSize: '0.8rem', padding: '0.4rem 1.1rem' }}
+                      >
+                        Reset to All Priority Sectors
+                      </button>
+                    </div>
                   </td>
                 </tr>
-              ))}
+              ) : (
+                <>
+                  {aiAllocation.awardedList.map((app) => (
+                    <tr key={app.id}>
+                      <td>
+                        <div style={{ fontWeight: 800, color: 'var(--text-primary)' }}>{app.name}</div>
+                        <div style={{ fontSize: '0.76rem', color: 'var(--text-muted)' }}>{app.id} • {app.requestedScheme}</div>
+                      </td>
+                      <td>
+                        <span className="badge badge-emerald">{app.district ? `${app.district}, ${app.state}` : (app.state || "India")}</span>
+                      </td>
+                      <td>
+                        <strong style={{ color: 'var(--primary)', fontFamily: 'var(--font-serif)', fontSize: '1.05rem' }}>
+                          {app.predictions.growthScore} / 100
+                        </strong>
+                      </td>
+                      <td>
+                        {formatINR(app.cost)}
+                      </td>
+                      <td>
+                        <span style={{ color: 'var(--primary)', fontWeight: 700 }}>+{formatINR(app.projectedRevenueUpliftINR)}</span>
+                      </td>
+                      <td>
+                        <span style={{ color: 'var(--secondary)', fontWeight: 800 }}>+{app.predictedJobs} Jobs</span>
+                      </td>
+                      <td>
+                        <span className="badge badge-emerald" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
+                          <CheckCircle2 size={14} /> Awarded Subsidy
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
 
-              {aiAllocation.rejectedList.map((app) => (
-                <tr key={app.id} style={{ opacity: 0.75 }}>
-                  <td>
-                    <div style={{ fontWeight: 800, color: 'var(--text-primary)' }}>{app.name}</div>
-                    <div style={{ fontSize: '0.76rem', color: 'var(--text-muted)' }}>{app.id} • {app.requestedScheme}</div>
-                  </td>
-                  <td>
-                    <span className="badge badge-amber">{app.district ? `${app.district}, ${app.state}` : (app.state || "India")}</span>
-                  </td>
-                  <td>
-                    <strong style={{ color: 'var(--text-muted)', fontFamily: 'var(--font-serif)' }}>
-                      {app.predictions.growthScore} / 100
-                    </strong>
-                  </td>
-                  <td>
-                    {formatINR(app.cost)}
-                  </td>
-                  <td>
-                    <span>+{formatINR(app.projectedRevenueUpliftINR)}</span>
-                  </td>
-                  <td>
-                    <span>+{app.predictedJobs} Jobs</span>
-                  </td>
-                  <td>
-                    <span className="badge badge-rose" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
-                      <XCircle size={14} /> Waitlisted (Budget Scarcity)
-                    </span>
-                  </td>
-                </tr>
-              ))}
+                  {aiAllocation.rejectedList.map((app) => (
+                    <tr key={app.id} style={{ opacity: 0.75 }}>
+                      <td>
+                        <div style={{ fontWeight: 800, color: 'var(--text-primary)' }}>{app.name}</div>
+                        <div style={{ fontSize: '0.76rem', color: 'var(--text-muted)' }}>{app.id} • {app.requestedScheme}</div>
+                      </td>
+                      <td>
+                        <span className="badge badge-amber">{app.district ? `${app.district}, ${app.state}` : (app.state || "India")}</span>
+                      </td>
+                      <td>
+                        <strong style={{ color: 'var(--text-muted)', fontFamily: 'var(--font-serif)' }}>
+                          {app.predictions.growthScore} / 100
+                        </strong>
+                      </td>
+                      <td>
+                        {formatINR(app.cost)}
+                      </td>
+                      <td>
+                        <span>+{formatINR(app.projectedRevenueUpliftINR)}</span>
+                      </td>
+                      <td>
+                        <span>+{app.predictedJobs} Jobs</span>
+                      </td>
+                      <td>
+                        <span className="badge badge-rose" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
+                          <XCircle size={14} /> Waitlisted (Budget Scarcity)
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </>
+              )}
             </tbody>
           </table>
         </div>
