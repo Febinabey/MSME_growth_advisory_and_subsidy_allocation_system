@@ -182,7 +182,7 @@ export function optimizeSubsidyBudget(applicants, availableBudgetINR, policyWeig
       awardedList: aiAwardedList,
       rejectedList: aiRejectedList,
       totalBudgetSpentINR: aiTotalBudgetSpentINR,
-      budgetUtilizationPercent: parseFloat(((aiTotalBudgetSpentINR / availableBudgetINR) * 100).toFixed(1)),
+      budgetUtilizationPercent: availableBudgetINR > 0 ? parseFloat(((aiTotalBudgetSpentINR / availableBudgetINR) * 100).toFixed(1)) : 0,
       totalJobsCreated: aiTotalJobsCreated,
       totalRevenueUpliftINR: aiTotalRevenueUpliftINR,
       totalObjectiveScore: parseFloat(aiTotalObjectiveScore.toFixed(1))
@@ -190,7 +190,7 @@ export function optimizeSubsidyBudget(applicants, availableBudgetINR, policyWeig
     baselineFCFS: {
       awardedList: fcfsAwardedList,
       totalBudgetSpentINR: fcfsTotalBudgetSpentINR,
-      budgetUtilizationPercent: parseFloat(((fcfsTotalBudgetSpentINR / availableBudgetINR) * 100).toFixed(1)),
+      budgetUtilizationPercent: availableBudgetINR > 0 ? parseFloat(((fcfsTotalBudgetSpentINR / availableBudgetINR) * 100).toFixed(1)) : 0,
       totalJobsCreated: fcfsTotalJobsCreated,
       totalRevenueUpliftINR: fcfsTotalRevenueUpliftINR,
       totalObjectiveScore: parseFloat(fcfsTotalObjectiveScore.toFixed(1))

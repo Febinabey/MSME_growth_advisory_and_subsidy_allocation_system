@@ -1,4 +1,5 @@
 import { ASUSE_UDYAM_BENCHMARKS } from '../data/asuseUdyamBenchmarks.js';
+import { MAX_MSME_TURNOVER, MAX_MSME_INVESTMENT } from '../utils/formatCurrency.js';
 
 /**
  * ASUSE & Udyam Benchmark Engine
@@ -7,6 +8,7 @@ import { ASUSE_UDYAM_BENCHMARKS } from '../data/asuseUdyamBenchmarks.js';
  * - Profit Margin Percentile
  * - Productivity (GVA per worker index)
  * - Credit Gap Risk Index
+ * - Gazette Composite Enterprise Tier
  */
 export function benchmarkMSME(metrics) {
   const {
@@ -17,6 +19,8 @@ export function benchmarkMSME(metrics) {
     gstScore = 80,
     sector = "Manufacturing"
   } = metrics;
+
+  const machineryInvestment = Number(metrics.machineryInvestment || metrics.investmentPlantMachinery) || 0;
 
   const benchmark = 
     ASUSE_UDYAM_BENCHMARKS.sectorBenchmarks[sector] || 
@@ -38,13 +42,13 @@ export function benchmarkMSME(metrics) {
   const estimatedGvaPerWorker = Math.round((annualRevenue * (profitMargin / 100 + 0.15)) / Math.max(1, employees));
   const productivityIndex = parseFloat((estimatedGvaPerWorker / benchmark.avgGvaPerWorker).toFixed(2));
 
-  // 4. Enterprise Size Classification under MSMED Act / Statutory MSME Framework
+  // 4. Enterprise Size Classification under Gazette Composite Framework (S.O. 2119(E))
   let udyamCategory = "Micro Enterprise";
-  if (annualRevenue > 2500000000) {
+  if (annualRevenue > MAX_MSME_TURNOVER || machineryInvestment > MAX_MSME_INVESTMENT) {
     udyamCategory = "Exceeds MSME Threshold (Large Enterprise - Ineligible)";
-  } else if (annualRevenue > 1000000000) {
+  } else if (annualRevenue > 1000000000 || machineryInvestment > 250000000) {
     udyamCategory = "Medium Enterprise";
-  } else if (annualRevenue > 100000000) {
+  } else if (annualRevenue > 100000000 || machineryInvestment > 25000000) {
     udyamCategory = "Small Enterprise";
   }
 

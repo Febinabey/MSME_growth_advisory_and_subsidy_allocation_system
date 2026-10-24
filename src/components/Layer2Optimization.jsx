@@ -66,6 +66,10 @@ export default function Layer2Optimization() {
     return filteredApplicants.reduce((sum, a) => sum + (Number(a.requestedSubsidy) || 0), 0);
   }, [filteredApplicants]);
 
+  const maxBudgetBound = useMemo(() => {
+    return Math.max(100000000, Math.ceil(totalRequestedSubsidy / 10000000) * 10000000);
+  }, [totalRequestedSubsidy]);
+
   const optimizationResults = useMemo(() => {
     return optimizeSubsidyBudget(filteredApplicants, budgetINR, policyWeights);
   }, [filteredApplicants, budgetINR, policyWeights]);
@@ -80,7 +84,7 @@ export default function Layer2Optimization() {
         {/* Card 1: Available Government Budget Slider */}
         <div className="glass-panel organic-card-2" style={{ padding: '1.75rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
-            <label className="form-label" style={{ margin: 0 }}>Available Subsidy Budget</label>
+            <label className="form-label" style={{ margin: 0 }}>Available Subsidy Fiscal Envelope</label>
             <strong style={{ color: 'var(--primary)', fontFamily: 'var(--font-serif)', fontSize: '1.3rem', fontWeight: 800 }}>
               ₹{(budgetINR / 10000000).toFixed(2)} Crore
             </strong>
@@ -88,7 +92,7 @@ export default function Layer2Optimization() {
           <input 
             type="range" 
             min="5000000" 
-            max="100000000" 
+            max={maxBudgetBound} 
             step="2500000" 
             value={budgetINR} 
             onChange={(e) => setBudgetINR(parseFloat(e.target.value))} 
@@ -97,7 +101,7 @@ export default function Layer2Optimization() {
           <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.6rem' }}>
             <span>₹50 Lakhs</span>
             <span>₹5 Crore</span>
-            <span>₹10 Crore</span>
+            <span>₹{(maxBudgetBound / 10000000).toFixed(0)} Crore</span>
           </div>
         </div>
 
@@ -122,9 +126,9 @@ export default function Layer2Optimization() {
             className="slider-input" 
           />
           <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.6rem' }}>
-            <span>Prioritize Jobs (10/90)</span>
-            <span>Balanced (50/50)</span>
-            <span>Prioritize Revenue (90/10)</span>
+            <span>Prioritize Employment (90/10)</span>
+            <span>Balanced Policy (50/50)</span>
+            <span>Prioritize Revenue (10/90)</span>
           </div>
         </div>
 
@@ -212,7 +216,7 @@ export default function Layer2Optimization() {
               State & District Applicant Queue & AI Subsidy Award Log
             </h3>
             <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-              Showing {filteredApplicants.length} applicants ranked by AI Marginal Value Density score.
+              Showing {filteredApplicants.length} verified registered MSME units ranked by AI Marginal Value Density score.
             </p>
           </div>
 
@@ -280,7 +284,7 @@ export default function Layer2Optimization() {
               ))}
 
               {aiAllocation.rejectedList.map((app) => (
-                <tr key={app.id} style={{ opacity: 0.65 }}>
+                <tr key={app.id} style={{ opacity: 0.75 }}>
                   <td>
                     <div style={{ fontWeight: 800, color: 'var(--text-primary)' }}>{app.name}</div>
                     <div style={{ fontSize: '0.76rem', color: 'var(--text-muted)' }}>{app.id} • {app.requestedScheme}</div>
@@ -304,7 +308,7 @@ export default function Layer2Optimization() {
                   </td>
                   <td>
                     <span className="badge badge-rose" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
-                      <XCircle size={14} /> Budget Ceiling
+                      <XCircle size={14} /> Waitlisted (Budget Scarcity)
                     </span>
                   </td>
                 </tr>

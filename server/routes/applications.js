@@ -53,9 +53,10 @@ router.post('/', (req, res) => {
     }
 
     const annualRevenue = Number(body.annualRevenue) || 0;
-    const tier = getMSMETier(annualRevenue);
+    const machineryInvestment = Number(body.machineryInvestment || body.investmentPlantMachinery) || 0;
+    const tier = getMSMETier(annualRevenue, machineryInvestment);
 
-    // Statutory MSME check: Exceeding statutory ceiling (> ₹250 Cr) cannot apply for MSME subsidies
+    // Statutory MSME check: Exceeding statutory ceiling (> ₹250 Cr Turnover or > ₹125 Cr Inv) cannot apply for MSME subsidies
     if (!tier.isMSME) {
       return res.status(403).json({
         success: false,
@@ -66,6 +67,7 @@ router.post('/', (req, res) => {
     // Run XGBoost prediction if predictions not passed
     const predictions = predictMSMEGrowth({
       annualRevenue,
+      machineryInvestment,
       revenueGrowthRate: Number(body.revenueGrowthRate) || 15,
       employees: Number(body.employees) || 10,
       debtRatio: Number(body.debtRatio) || 0.25,

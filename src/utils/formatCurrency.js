@@ -1,7 +1,13 @@
 /**
  * Indian Rupee & MSME Statutory Classification Utility
  * Formats currency dynamically according to standard Indian numbering conventions
- * and categorizes enterprises under Gazette Notification S.O. 1364(E) (effective April 1, 2025).
+ * and categorizes enterprises under Gazette Notifications S.O. 2119(E) & S.O. 1364(E).
+ * 
+ * Composite Criteria Framework:
+ * - Micro: Investment in Plant & Machinery <= ₹2.5 Cr AND Turnover <= ₹10 Cr
+ * - Small: Investment in Plant & Machinery <= ₹25 Cr AND Turnover <= ₹100 Cr
+ * - Medium: Investment in Plant & Machinery <= ₹125 Cr AND Turnover <= ₹250 Cr
+ * - Large: Exceeds either Medium ceiling (Ineligible for MSME schemes)
  */
 
 export function formatINR(amount, options = {}) {
@@ -31,18 +37,20 @@ export function formatINR(amount, options = {}) {
 }
 
 export const MIN_MSME_TURNOVER = 1000000;      // ₹10 Lakhs
-export const MAX_MSME_TURNOVER = 2500000000;   // ₹250 Crore (Statutory MSME Ceiling)
+export const MAX_MSME_TURNOVER = 2500000000;   // ₹250 Crore (Statutory MSME Turnover Ceiling)
+export const MAX_MSME_INVESTMENT = 1250000000; // ₹125 Crore (Statutory MSME Investment Ceiling)
 
 /**
- * Returns the statutory MSME category under MSMED Act and Gazette Classification:
- * - Micro: Annual Turnover <= ₹10 Cr
- * - Small: Annual Turnover > ₹10 Cr and <= ₹100 Cr
- * - Medium: Annual Turnover > ₹100 Cr and <= ₹250 Cr (Statutory MSME Ceiling)
- * - Large: Annual Turnover > ₹250 Cr (Non-MSME / Ineligible for MSME schemes)
+ * Returns the statutory MSME category under MSMED Act and Gazette Composite Classification.
+ * If either Turnover or Investment crosses a tier's ceiling, the enterprise is placed
+ * in the next higher category (Para 2(1) of Gazette Notification S.O. 2119(E)).
  */
-export function getMSMETier(annualRevenue) {
+export function getMSMETier(annualRevenue, machineryInvestment = 0) {
   const rev = Number(annualRevenue) || 0;
-  if (rev > MAX_MSME_TURNOVER) {
+  const inv = Number(machineryInvestment) || 0;
+
+  // Composite check: Breaching either limit disqualifies enterprise from MSME tier
+  if (rev > MAX_MSME_TURNOVER || inv > MAX_MSME_INVESTMENT) {
     return {
       tier: 'Large',
       label: 'Large Enterprise (Non-MSME)',
@@ -50,12 +58,12 @@ export function getMSMETier(annualRevenue) {
       bgColor: 'rgba(220, 38, 38, 0.12)',
       borderColor: 'rgba(220, 38, 38, 0.35)',
       badgeClass: 'badge-rose',
-      range: '> ₹250 Cr',
+      range: '> ₹250 Cr Turnover / > ₹125 Cr Inv',
       isMSME: false,
-      description: 'Exceeds statutory MSME threshold (> ₹250 Cr) — Ineligible for MSME schemes'
+      description: 'Exceeds statutory MSME threshold (> ₹250 Cr Turnover or > ₹125 Cr Investment) — Ineligible for MSME schemes'
     };
   }
-  if (rev > 1000000000) {
+  if (rev > 1000000000 || inv > 250000000) {
     return {
       tier: 'Medium',
       label: 'Medium Enterprise',
@@ -63,12 +71,12 @@ export function getMSMETier(annualRevenue) {
       bgColor: 'rgba(124, 58, 237, 0.12)',
       borderColor: 'rgba(124, 58, 237, 0.35)',
       badgeClass: 'badge-purple',
-      range: '₹100 Cr – ₹250 Cr',
+      range: '₹100 Cr – ₹250 Cr Turnover / ₹25 Cr – ₹125 Cr Inv',
       isMSME: true,
       description: 'Medium Enterprise (Upper MSME statutory tier)'
     };
   }
-  if (rev > 100000000) {
+  if (rev > 100000000 || inv > 25000000) {
     return {
       tier: 'Small',
       label: 'Small Enterprise',
@@ -76,7 +84,7 @@ export function getMSMETier(annualRevenue) {
       bgColor: 'rgba(37, 99, 235, 0.12)',
       borderColor: 'rgba(37, 99, 235, 0.35)',
       badgeClass: 'badge-blue',
-      range: '₹10 Cr – ₹100 Cr',
+      range: '₹10 Cr – ₹100 Cr Turnover / ₹2.5 Cr – ₹25 Cr Inv',
       isMSME: true,
       description: 'Small Enterprise'
     };
@@ -88,7 +96,7 @@ export function getMSMETier(annualRevenue) {
     bgColor: 'rgba(5, 150, 105, 0.12)',
     borderColor: 'rgba(5, 150, 105, 0.35)',
     badgeClass: 'badge-emerald',
-    range: '≤ ₹10 Cr',
+    range: '≤ ₹10 Cr Turnover & ≤ ₹2.5 Cr Inv',
     isMSME: true,
     description: 'Micro Enterprise'
   };

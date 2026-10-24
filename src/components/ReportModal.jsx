@@ -1,6 +1,6 @@
 import React from 'react';
 import { X, Printer, Leaf, CheckCircle2, Sprout, ShieldCheck, Award, FileText } from 'lucide-react';
-import { formatINR } from '../utils/formatCurrency';
+import { formatINR, getMSMETier } from '../utils/formatCurrency';
 
 export default function ReportModal({ isOpen, onClose, msmeData, predictions, shapData, matchedSchemes }) {
   if (!isOpen) return null;
@@ -16,6 +16,7 @@ export default function ReportModal({ isOpen, onClose, msmeData, predictions, sh
   });
 
   const auditId = `MSME-AUDIT-${msmeData.id ? msmeData.id.slice(-6).toUpperCase() : Date.now().toString().slice(-6)}`;
+  const enterpriseTier = getMSMETier(msmeData.annualRevenue, msmeData.machineryInvestment);
 
   return (
     <div className="report-modal-overlay">
@@ -47,7 +48,7 @@ export default function ReportModal({ isOpen, onClose, msmeData, predictions, sh
             </div>
             <div>
               <div style={{ fontSize: '0.72rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--emerald-main)' }}>
-                Government of India • Statutory Advisory Framework
+                Government of India • Ministry of MSME Advisory Framework
               </div>
               <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.35rem', fontWeight: 800, color: 'var(--text-primary)', margin: '0.15rem 0' }}>
                 MSME Growth & Subsidy Executive Audit
@@ -72,7 +73,7 @@ export default function ReportModal({ isOpen, onClose, msmeData, predictions, sh
           <div className="print-only-meta" style={{ display: 'none', textAlign: 'right', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
             <div><strong>Audit Reference:</strong> {auditId}</div>
             <div><strong>Date of Issue:</strong> {auditDate}</div>
-            <div><strong>Verification:</strong> <span style={{ color: 'var(--emerald-main)', fontWeight: 700 }}>STATUTORY COMPLIANT</span></div>
+            <div><strong>Status:</strong> <span style={{ color: 'var(--emerald-main)', fontWeight: 700 }}>STATUTORY COMPLIANT</span></div>
           </div>
         </div>
 
@@ -93,8 +94,22 @@ export default function ReportModal({ isOpen, onClose, msmeData, predictions, sh
             gap: '0.75rem'
           }}>
             <div>
-              <div style={{ fontSize: '0.72rem', color: 'var(--primary)', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                Evaluated Enterprise
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+                <span style={{ fontSize: '0.72rem', color: 'var(--primary)', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                  Evaluated Enterprise
+                </span>
+                <span style={{
+                  fontSize: '0.7rem',
+                  fontWeight: 800,
+                  padding: '0.12rem 0.5rem',
+                  borderRadius: '999px',
+                  background: enterpriseTier.bgColor,
+                  color: enterpriseTier.color,
+                  border: `1px solid ${enterpriseTier.borderColor}`,
+                  textTransform: 'uppercase'
+                }}>
+                  {enterpriseTier.label}
+                </span>
               </div>
               <div style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-primary)', fontFamily: 'var(--font-serif)', marginTop: '0.15rem' }}>
                 {msmeData.enterpriseName || 'MSME Enterprise'}
@@ -116,7 +131,7 @@ export default function ReportModal({ isOpen, onClose, msmeData, predictions, sh
             </div>
           </div>
 
-          {/* Section 2: Enterprise Financial & Scale Overview */}
+          {/* Section 2: Enterprise Financial & Scale Overview (Composite Criteria) */}
           <div className="report-avoid-break" style={{
             background: 'var(--bg-primary)',
             padding: '1.25rem',
@@ -145,18 +160,18 @@ export default function ReportModal({ isOpen, onClose, msmeData, predictions, sh
             </div>
             <div>
               <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 700 }}>
-                Workforce Scale
+                Plant & Machinery (WDV)
               </div>
               <div style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--text-primary)', fontFamily: 'var(--font-serif)', marginTop: '0.2rem' }}>
-                {msmeData.employees} Permanent Staff
+                {formatINR(msmeData.machineryInvestment || 8500000, { showBoth: true })}
               </div>
             </div>
             <div>
               <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 700 }}>
-                Profit Margin / Debt
+                Workforce Scale
               </div>
               <div style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--text-primary)', fontFamily: 'var(--font-serif)', marginTop: '0.2rem' }}>
-                {msmeData.profitMargin}% / {(msmeData.debtRatio * 100).toFixed(0)}% Debt
+                {msmeData.employees} Permanent Staff
               </div>
             </div>
           </div>
@@ -322,11 +337,11 @@ export default function ReportModal({ isOpen, onClose, msmeData, predictions, sh
             <div>
               <strong>Statutory Framework:</strong> Gazette Notifications S.O. 2119(E) & S.O. 1364(E) • MoSPI ASUSE Microdata
               <br />
-              All investment and turnover limits strictly adhere to Government of India MSME definitions.
+              All investment and turnover limits strictly adhere to Government of India MSME composite definitions.
             </div>
             <div style={{ textAlign: 'right' }}>
               <div style={{ fontWeight: 700, color: 'var(--text-primary)' }}>Digitally Verified Audit Report</div>
-              <div>MSME Dual-Layer Advisory & Optimization Platform</div>
+              <div>Ministry of MSME Statutory Dual-Layer Platform</div>
             </div>
           </div>
 

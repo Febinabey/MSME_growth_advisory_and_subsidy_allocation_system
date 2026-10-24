@@ -29,16 +29,23 @@ export default function App() {
         {activeTab === 'layer2' && <Layer2Optimization />}
       </main>
 
-      <footer style={{ 
+      <footer className="no-print" style={{ 
         borderTop: '1px solid var(--border)', 
         padding: '1.25rem 0', 
         textAlign: 'center', 
         background: 'var(--muted)'
       }}>
-        <div className="app-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', color: 'var(--text-muted)', fontSize: '0.8rem' }}>
-          <span>MSME Growth Advisory & Subsidy Optimization Platform</span>
-          <span>•</span>
-          <span>Capstone Phase 2</span>
+        <div className="app-container" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '0.35rem', color: 'var(--text-muted)', fontSize: '0.78rem' }}>
+          <div style={{ fontWeight: 700, color: 'var(--text-secondary)' }}>
+            Ministry of Micro, Small and Medium Enterprises • Government of India
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+            <span>Statutory Composite Framework: Gazette Notifications S.O. 2119(E) & S.O. 1364(E)</span>
+            <span>•</span>
+            <span>MoSPI ASUSE 2023-24 Microdata</span>
+            <span>•</span>
+            <span>KVIC PMEGP Programme Registry</span>
+          </div>
         </div>
       </footer>
     </div>

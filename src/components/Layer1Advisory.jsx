@@ -6,33 +6,37 @@ import { REAL_UDYAM_DIRECTORY } from '../data/realUdyamDirectory';
 import SHAPWaterfall from './SHAPWaterfall';
 import ReportModal from './ReportModal';
 import { formatINR, getMSMETier } from '../utils/formatCurrency';
-import { Building2, Award, Sparkles, FileText, Leaf } from 'lucide-react';
+import { Building2, Award, Sparkles, FileText, Leaf, ShieldAlert } from 'lucide-react';
 
 export default function Layer1Advisory() {
   const [selectedUdyamId, setSelectedUdyamId] = useState('');
 
-  // 1. MSME Input State
+  // 1. MSME Input State (Statutory Composite Profile)
   const [formData, setFormData] = useState({
     enterpriseName: "Shri Salasar Balaji Contractor",
     state: "Uttar Pradesh",
     district: "Shahjahanpur",
     sector: "Manufacturing",
-    annualRevenue: 35000000, // ₹3.5 Crore
-    revenueGrowthRate: 18,   // 18% YoY
+    annualRevenue: 35000000,       // ₹3.5 Crore Turnover
+    machineryInvestment: 8500000, // ₹85 Lakhs Investment in Plant & Machinery (WDV)
+    revenueGrowthRate: 18,         // 18% YoY
     employees: 28,
-    debtRatio: 0.25,         // 25% debt/revenue
-    profitMargin: 13.5,      // 13.5%
-    techLevel: 3,            // 1-5 level
-    gstScore: 85,            // 85/100
-    exportShare: 12,         // 12% exports
+    debtRatio: 0.25,               // 25% debt/revenue
+    profitMargin: 13.5,            // 13.5% net margin
+    techLevel: 3,                  // 1-5 level
+    gstScore: 85,                  // 85/100 compliance
+    exportShare: 12,               // 12% exports
     requirementText: "Need funding to purchase automated CNC machinery and install solar panels for manufacturing facility."
   });
 
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [activeTabSection, setActiveTabSection] = useState('recommendations'); // recommendations | shap
 
-  // Current Statutory MSME Tier under Gazette Notification S.O. 1364(E)
-  const currentTier = useMemo(() => getMSMETier(formData.annualRevenue), [formData.annualRevenue]);
+  // Current Statutory MSME Tier under Gazette Composite Criteria (Turnover + Investment)
+  const currentTier = useMemo(
+    () => getMSMETier(formData.annualRevenue, formData.machineryInvestment),
+    [formData.annualRevenue, formData.machineryInvestment]
+  );
 
   // 2. Run Predictions & Calculations in Real-Time
   const predictions = useMemo(() => predictMSMEGrowth(formData), [formData]);
@@ -41,10 +45,16 @@ export default function Layer1Advisory() {
 
   const handleChange = (e) => {
     const { name, value, type } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: type === 'number' ? parseFloat(value) || 0 : value
-    }));
+    if (type === 'number') {
+      let parsed = parseFloat(value) || 0;
+      if (name === 'employees') parsed = Math.max(1, Math.min(10000, Math.round(parsed)));
+      else if (name === 'annualRevenue' || name === 'machineryInvestment') parsed = Math.max(0, parsed);
+      else if (name === 'debtRatio') parsed = Math.max(0, Math.min(1.0, parsed));
+      else if (name === 'gstScore' || name === 'exportShare') parsed = Math.max(0, Math.min(100, parsed));
+      setFormData(prev => ({ ...prev, [name]: parsed }));
+    } else {
+      setFormData(prev => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleUdyamSelect = (unitId) => {
@@ -68,6 +78,7 @@ export default function Layer1Advisory() {
       nicActivity: unit.nicActivity,
       sector: mappedSec,
       annualRevenue: unit.annualRevenue,
+      machineryInvestment: unit.machineryInvestment || 8500000,
       revenueGrowthRate: unit.revenueGrowthRate,
       employees: unit.employees,
       debtRatio: unit.debtRatio,
@@ -79,8 +90,6 @@ export default function Layer1Advisory() {
     });
   };
 
-  const currentUnit = REAL_UDYAM_DIRECTORY.find(u => u.id === selectedUdyamId);
-
   return (
     <div>
       <div className="no-print">
@@ -88,20 +97,25 @@ export default function Layer1Advisory() {
         
         {/* Left Column: MSME Data Entry Form */}
         <div className="glass-panel organic-card-3" style={{ padding: '2rem' }}>
-          <h3 style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-            <Building2 size={20} color="var(--primary)" />
-            Enterprise Profile Data
-          </h3>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem', flexWrap: 'wrap', gap: '0.5rem' }}>
+            <h3 style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--text-primary)', margin: 0, display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+              <Building2 size={20} color="var(--primary)" />
+              Enterprise Profile & Statutory Filing
+            </h3>
+            <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>
+              MSMED Act 2006 • Gazette S.O. 2119(E)
+            </span>
+          </div>
 
           {/* Quick-Import from Registered MSME Directory */}
           <div style={{ marginBottom: '1.25rem' }}>
-            <label className="form-label" style={{ fontSize: '0.78rem' }}>Preload Registered Enterprise Profile</label>
+            <label className="form-label" style={{ fontSize: '0.78rem' }}>Preload Registered Enterprise Profile (Official Registry)</label>
             <select 
               className="form-select"
               value={selectedUdyamId}
               onChange={(e) => handleUdyamSelect(e.target.value)}
             >
-              <option value="">-- Custom Profile (or choose sample MSME) --</option>
+              <option value="">-- Custom Profile (or choose registered MSME) --</option>
               {REAL_UDYAM_DIRECTORY.map((unit) => (
                 <option key={unit.id} value={unit.id}>
                   {unit.enterpriseName} ({unit.state} • {unit.district})
@@ -114,7 +128,7 @@ export default function Layer1Advisory() {
             
             {/* Enterprise Name */}
             <div className="form-group">
-              <label className="form-label">Enterprise Name</label>
+              <label className="form-label">Enterprise Legal Entity Name</label>
               <input 
                 type="text" 
                 name="enterpriseName" 
@@ -127,7 +141,7 @@ export default function Layer1Advisory() {
 
             {/* Sector */}
             <div className="form-group">
-              <label className="form-label">Enterprise Sector</label>
+              <label className="form-label">Enterprise Operational Sector</label>
               <select name="sector" value={formData.sector} onChange={handleChange} className="form-select">
                 <option value="Manufacturing">Manufacturing</option>
                 <option value="Electronics">Electronics</option>
@@ -138,7 +152,7 @@ export default function Layer1Advisory() {
               </select>
             </div>
 
-            {/* Annual Revenue (Turnover) */}
+            {/* Statutory Composite Criteria 1: Annual Turnover */}
             <div className="form-group">
               <div className="form-label" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.4rem' }}>
                 <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
@@ -154,7 +168,7 @@ export default function Layer1Advisory() {
                     textTransform: 'uppercase',
                     letterSpacing: '0.03em'
                   }}>
-                    {currentTier.label} ({currentTier.range})
+                    {currentTier.label}
                   </span>
                 </span>
                 <strong style={{ color: 'var(--primary)', fontFamily: 'var(--font-serif)', fontSize: '1.05rem' }}>
@@ -171,7 +185,7 @@ export default function Layer1Advisory() {
                 onChange={handleChange} 
                 className="slider-input" 
               />
-              {/* Quick tier presets */}
+              {/* Quick turnover tier presets */}
               <div style={{ display: 'flex', gap: '0.4rem', marginTop: '0.45rem', flexWrap: 'wrap' }}>
                 {[
                   { label: 'Micro (₹1 Cr)', val: 10000000 },
@@ -197,9 +211,58 @@ export default function Layer1Advisory() {
                   </button>
                 ))}
               </div>
+            </div>
+
+            {/* Statutory Composite Criteria 2: Investment in Plant & Machinery (WDV) */}
+            <div className="form-group">
+              <div className="form-label" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.4rem' }}>
+                <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <span>Investment in Plant & Machinery (WDV)</span>
+                  <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Written Down Value</span>
+                </span>
+                <strong style={{ color: 'var(--secondary)', fontFamily: 'var(--font-serif)', fontSize: '1.05rem' }}>
+                  {formatINR(formData.machineryInvestment, { showBoth: true })}
+                </strong>
+              </div>
+              <input 
+                type="range" 
+                name="machineryInvestment" 
+                min="500000" 
+                max="1250000000" 
+                step="500000" 
+                value={formData.machineryInvestment} 
+                onChange={handleChange} 
+                className="slider-input" 
+              />
+              {/* Quick investment presets */}
+              <div style={{ display: 'flex', gap: '0.4rem', marginTop: '0.45rem', flexWrap: 'wrap' }}>
+                {[
+                  { label: 'Micro (₹50 L)', val: 5000000 },
+                  { label: 'Small (₹10 Cr)', val: 100000000 },
+                  { label: 'Medium (₹50 Cr)', val: 500000000 }
+                ].map((preset) => (
+                  <button
+                    key={preset.val}
+                    type="button"
+                    onClick={() => setFormData(prev => ({ ...prev, machineryInvestment: preset.val }))}
+                    style={{
+                      fontSize: '0.72rem',
+                      padding: '0.2rem 0.6rem',
+                      borderRadius: 'var(--radius-sm)',
+                      border: formData.machineryInvestment === preset.val ? '1.5px solid var(--secondary)' : '1px solid var(--border)',
+                      background: formData.machineryInvestment === preset.val ? 'rgba(193, 140, 93, 0.15)' : 'var(--muted)',
+                      color: formData.machineryInvestment === preset.val ? 'var(--secondary)' : 'var(--text-secondary)',
+                      cursor: 'pointer',
+                      fontWeight: formData.machineryInvestment === preset.val ? 700 : 500
+                    }}
+                  >
+                    {preset.label}
+                  </button>
+                ))}
+              </div>
               {!currentTier.isMSME && (
-                <div style={{ color: '#dc2626', fontSize: '0.74rem', marginTop: '0.4rem', fontWeight: 600 }}>
-                  ⚠️ {currentTier.description}
+                <div style={{ color: '#dc2626', fontSize: '0.76rem', marginTop: '0.5rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                  <ShieldAlert size={14} /> {currentTier.description}
                 </div>
               )}
             </div>
@@ -208,7 +271,7 @@ export default function Layer1Advisory() {
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.25rem' }}>
               <div className="form-group">
                 <div className="form-label">
-                  <span>YoY Growth</span>
+                  <span>YoY Revenue Growth</span>
                   <strong>{formData.revenueGrowthRate}%</strong>
                 </div>
                 <input 
@@ -222,7 +285,7 @@ export default function Layer1Advisory() {
 
               <div className="form-group">
                 <div className="form-label">
-                  <span>Profit Margin</span>
+                  <span>Net Profit Margin</span>
                   <strong>{formData.profitMargin}%</strong>
                 </div>
                 <input 
@@ -280,17 +343,17 @@ export default function Layer1Advisory() {
                   <strong style={{ color: 'var(--primary)' }}>Level {formData.techLevel} / 5</strong>
                 </div>
                 <select name="techLevel" value={formData.techLevel} onChange={handleChange} className="form-select">
-                  <option value={1}>Level 1 (Basic/Manual)</option>
+                  <option value={1}>Level 1 (Basic / Manual)</option>
                   <option value={2}>Level 2 (Semi-Digital)</option>
                   <option value={3}>Level 3 (Digitalized)</option>
-                  <option value={4}>Level 4 (Automated/CNC)</option>
-                  <option value={5}>Level 5 (Industry 4.0/AI)</option>
+                  <option value={4}>Level 4 (Automated / CNC)</option>
+                  <option value={5}>Level 5 (Industry 4.0 / AI)</option>
                 </select>
               </div>
 
               <div className="form-group">
                 <div className="form-label">
-                  <span>GST Score</span>
+                  <span>GST Compliance</span>
                   <strong style={{ color: 'var(--secondary)' }}>{formData.gstScore} / 100</strong>
                 </div>
                 <input 
@@ -325,7 +388,7 @@ export default function Layer1Advisory() {
 
             {/* Operational Needs Text */}
             <div className="form-group">
-              <label className="form-label">Business Needs & Technology Upgradation Intent</label>
+              <label className="form-label">Business Needs & Technology Modernization Intent</label>
               <textarea 
                 name="requirementText" 
                 rows="3" 
