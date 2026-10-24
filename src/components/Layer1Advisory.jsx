@@ -182,19 +182,24 @@ export default function Layer1Advisory() {
                 type="range" 
                 name="annualRevenue" 
                 min="1000000" 
-                max="3000000000" 
+                max="2500000000" 
                 step="1000000" 
                 value={formData.annualRevenue} 
                 onChange={handleChange} 
                 className="slider-input" 
               />
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: '0.35rem' }}>
+                <span>₹10 Lakhs</span>
+                <span>₹100 Crore</span>
+                <span>₹250 Crore (Statutory MSME Ceiling)</span>
+              </div>
               {/* Quick turnover tier presets */}
               <div style={{ display: 'flex', gap: '0.4rem', marginTop: '0.45rem', flexWrap: 'wrap' }}>
                 {[
                   { label: 'Micro (₹1 Cr)', val: 10000000 },
                   { label: 'Small (₹25 Cr)', val: 250000000 },
                   { label: 'Medium (₹100 Cr)', val: 1000000000 },
-                  { label: 'Large (₹300 Cr)', val: 3000000000 }
+                  { label: 'Max MSME (₹250 Cr)', val: 2500000000 }
                 ].map((preset) => (
                   <button
                     key={preset.val}
@@ -232,19 +237,24 @@ export default function Layer1Advisory() {
                 type="range" 
                 name="machineryInvestment" 
                 min="500000" 
-                max="1500000000" 
+                max="1250000000" 
                 step="500000" 
                 value={formData.machineryInvestment} 
                 onChange={handleChange} 
                 className="slider-input" 
               />
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: '0.35rem' }}>
+                <span>₹5 Lakhs</span>
+                <span>₹50 Crore</span>
+                <span>₹125 Crore (Statutory Inv Ceiling)</span>
+              </div>
               {/* Quick investment presets */}
               <div style={{ display: 'flex', gap: '0.4rem', marginTop: '0.45rem', flexWrap: 'wrap' }}>
                 {[
                   { label: 'Micro (₹50 L)', val: 5000000 },
                   { label: 'Small (₹10 Cr)', val: 100000000 },
                   { label: 'Medium (₹50 Cr)', val: 500000000 },
-                  { label: 'Large (₹150 Cr)', val: 1500000000 }
+                  { label: 'Max MSME (₹125 Cr)', val: 1250000000 }
                 ].map((preset) => (
                   <button
                     key={preset.val}
