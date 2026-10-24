@@ -45,10 +45,18 @@ export default function Layer1Advisory() {
 
   const handleChange = (e) => {
     const { name, value, type } = e.target;
-    if (type === 'number') {
+    if (type === 'number' || type === 'range') {
       let parsed = parseFloat(value) || 0;
       if (name === 'employees') parsed = Math.max(1, Math.min(10000, Math.round(parsed)));
-      else if (name === 'annualRevenue' || name === 'machineryInvestment') parsed = Math.max(0, parsed);
+      else if (name === 'annualRevenue') {
+        parsed = Math.max(0, Math.min(2500000000, parsed));
+        setFormData(prev => ({
+          ...prev,
+          annualRevenue: parsed,
+          machineryInvestment: Math.round(parsed * 0.25)
+        }));
+        return;
+      }
       else if (name === 'debtRatio') parsed = Math.max(0, Math.min(1.0, parsed));
       else if (name === 'gstScore' || name === 'exportShare') parsed = Math.max(0, Math.min(100, parsed));
       setFormData(prev => ({ ...prev, [name]: parsed }));
@@ -204,7 +212,11 @@ export default function Layer1Advisory() {
                   <button
                     key={preset.val}
                     type="button"
-                    onClick={() => setFormData(prev => ({ ...prev, annualRevenue: preset.val }))}
+                    onClick={() => setFormData(prev => ({
+                      ...prev,
+                      annualRevenue: preset.val,
+                      machineryInvestment: Math.round(preset.val * 0.25)
+                    }))}
                     style={{
                       fontSize: '0.72rem',
                       padding: '0.2rem 0.6rem',
@@ -220,66 +232,6 @@ export default function Layer1Advisory() {
                   </button>
                 ))}
               </div>
-            </div>
-
-            {/* Statutory Composite Criteria 2: Investment in Plant & Machinery (WDV) */}
-            <div className="form-group">
-              <div className="form-label" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.4rem' }}>
-                <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  <span>Investment in Plant & Machinery (WDV)</span>
-                  <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Written Down Value</span>
-                </span>
-                <strong style={{ color: 'var(--secondary)', fontFamily: 'var(--font-serif)', fontSize: '1.05rem' }}>
-                  {formatINR(formData.machineryInvestment, { showBoth: true })}
-                </strong>
-              </div>
-              <input 
-                type="range" 
-                name="machineryInvestment" 
-                min="500000" 
-                max="1250000000" 
-                step="500000" 
-                value={formData.machineryInvestment} 
-                onChange={handleChange} 
-                className="slider-input" 
-              />
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: '0.35rem' }}>
-                <span>₹5 Lakhs</span>
-                <span>₹50 Crore</span>
-                <span>₹125 Crore (Statutory Inv Ceiling)</span>
-              </div>
-              {/* Quick investment presets */}
-              <div style={{ display: 'flex', gap: '0.4rem', marginTop: '0.45rem', flexWrap: 'wrap' }}>
-                {[
-                  { label: 'Micro (₹50 L)', val: 5000000 },
-                  { label: 'Small (₹10 Cr)', val: 100000000 },
-                  { label: 'Medium (₹50 Cr)', val: 500000000 },
-                  { label: 'Max MSME (₹125 Cr)', val: 1250000000 }
-                ].map((preset) => (
-                  <button
-                    key={preset.val}
-                    type="button"
-                    onClick={() => setFormData(prev => ({ ...prev, machineryInvestment: preset.val }))}
-                    style={{
-                      fontSize: '0.72rem',
-                      padding: '0.2rem 0.6rem',
-                      borderRadius: 'var(--radius-sm)',
-                      border: formData.machineryInvestment === preset.val ? '1.5px solid var(--secondary)' : '1px solid var(--border)',
-                      background: formData.machineryInvestment === preset.val ? 'rgba(193, 140, 93, 0.15)' : 'var(--muted)',
-                      color: formData.machineryInvestment === preset.val ? 'var(--secondary)' : 'var(--text-secondary)',
-                      cursor: 'pointer',
-                      fontWeight: formData.machineryInvestment === preset.val ? 700 : 500
-                    }}
-                  >
-                    {preset.label}
-                  </button>
-                ))}
-              </div>
-              {!currentTier.isMSME && (
-                <div style={{ color: '#dc2626', fontSize: '0.76rem', marginTop: '0.5rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                  <ShieldAlert size={14} /> {currentTier.description}
-                </div>
-              )}
             </div>
 
             {/* Revenue Growth Rate & Profit Margin */}
