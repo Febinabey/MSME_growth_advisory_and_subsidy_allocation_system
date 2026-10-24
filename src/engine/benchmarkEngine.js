@@ -22,11 +22,27 @@ export function benchmarkMSME(metrics) {
 
   const machineryInvestment = Number(metrics.machineryInvestment || metrics.investmentPlantMachinery) || 0;
 
-  const benchmark = 
-    ASUSE_UDYAM_BENCHMARKS.sectorBenchmarks[sector] || 
-    ASUSE_UDYAM_BENCHMARKS.sectorBenchmarks["Manufacturing - Metals & Engineering"] ||
-    ASUSE_UDYAM_BENCHMARKS.sectorBenchmarks["Manufacturing"] ||
-    Object.values(ASUSE_UDYAM_BENCHMARKS.sectorBenchmarks)[0];
+  const sLookup = (sector || '').toLowerCase();
+  let benchmark = ASUSE_UDYAM_BENCHMARKS.sectorBenchmarks[sector];
+  if (!benchmark) {
+    if (sLookup.includes('food') || sLookup.includes('agro')) {
+      benchmark = ASUSE_UDYAM_BENCHMARKS.sectorBenchmarks["Manufacturing - Food & Agro"];
+    } else if (sLookup.includes('textil') || sLookup.includes('apparel')) {
+      benchmark = ASUSE_UDYAM_BENCHMARKS.sectorBenchmarks["Manufacturing - Textiles & Apparel"];
+    } else if (sLookup.includes('it') || sLookup.includes('software') || sLookup.includes('digital')) {
+      benchmark = ASUSE_UDYAM_BENCHMARKS.sectorBenchmarks["IT & Technology Services"];
+    } else if (sLookup.includes('service') || sLookup.includes('trade') || sLookup.includes('retail') || sLookup.includes('wholesale')) {
+      benchmark = ASUSE_UDYAM_BENCHMARKS.sectorBenchmarks["Retail & Wholesale Trade"];
+    } else if (sLookup.includes('logistics') || sLookup.includes('transport')) {
+      benchmark = ASUSE_UDYAM_BENCHMARKS.sectorBenchmarks["Logistics & Transportation"];
+    } else if (sLookup.includes('pharma') || sLookup.includes('health')) {
+      benchmark = ASUSE_UDYAM_BENCHMARKS.sectorBenchmarks["Healthcare & Pharmaceuticals"];
+    } else if (sLookup.includes('chemical') || sLookup.includes('plastic')) {
+      benchmark = ASUSE_UDYAM_BENCHMARKS.sectorBenchmarks["Manufacturing - Chemicals & Plastics"];
+    } else {
+      benchmark = ASUSE_UDYAM_BENCHMARKS.sectorBenchmarks["Manufacturing - Metals & Engineering"] || Object.values(ASUSE_UDYAM_BENCHMARKS.sectorBenchmarks)[0];
+    }
+  }
 
   // 1. Revenue Percentile Estimation
   const revRatio = annualRevenue / benchmark.avgRevenue;

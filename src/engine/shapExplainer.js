@@ -75,7 +75,21 @@ export function computeSHAPValues(metrics) {
     "Textiles": 0.0,
     "Retail & Wholesale Trade": -1.0
   };
-  const phi_sector = sectorMultipliers[sector] !== undefined ? sectorMultipliers[sector] : 1.0;
+  let phi_sector = 1.0;
+  if (sectorMultipliers[sector] !== undefined) {
+    phi_sector = sectorMultipliers[sector];
+  } else {
+    const sLower = (sector || '').toLowerCase();
+    if (sLower.includes('it ') || sLower.includes('digital') || sLower.includes('software')) phi_sector = 4.0;
+    else if (sLower.includes('green') || sLower.includes('solar') || sLower.includes('clean')) phi_sector = 5.5;
+    else if (sLower.includes('electronic') || sLower.includes('hardware')) phi_sector = 3.0;
+    else if (sLower.includes('pharma') || sLower.includes('health')) phi_sector = 3.5;
+    else if (sLower.includes('metal') || sLower.includes('chemical') || sLower.includes('plastic') || sLower.includes('manufacturing')) phi_sector = 1.5;
+    else if (sLower.includes('agro') || sLower.includes('food')) phi_sector = 1.0;
+    else if (sLower.includes('logistics') || sLower.includes('transport')) phi_sector = 0.5;
+    else if (sLower.includes('textil') || sLower.includes('apparel') || sLower.includes('garment')) phi_sector = 0.0;
+    else if (sLower.includes('trade') || sLower.includes('retail') || sLower.includes('wholesale')) phi_sector = -1.0;
+  }
 
   const rawAttributions = [
     {

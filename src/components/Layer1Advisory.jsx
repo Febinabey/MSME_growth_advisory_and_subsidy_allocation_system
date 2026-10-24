@@ -68,7 +68,8 @@ export default function Layer1Advisory() {
     if (unit.sector.includes("Agro") || unit.sector.includes("Food")) mappedSec = "Agro-processing";
     else if (unit.sector.includes("Textil")) mappedSec = "Textiles";
     else if (unit.sector.includes("IT")) mappedSec = "IT Services";
-    else if (unit.sector.includes("Chemical")) mappedSec = "Manufacturing";
+    else if (unit.sector.includes("Trade") || unit.sector.includes("Retail") || unit.sector.includes("Logistics") || unit.sector.includes("Services")) mappedSec = "Services";
+    else if (unit.sector.includes("Chemical") || unit.sector.includes("Metal") || unit.sector.includes("Engineering")) mappedSec = "Manufacturing";
 
     setFormData({
       enterpriseName: unit.enterpriseName,
@@ -145,11 +146,12 @@ export default function Layer1Advisory() {
               <label className="form-label">Enterprise Operational Sector</label>
               <select name="sector" value={formData.sector} onChange={handleChange} className="form-select">
                 <option value="Manufacturing">Manufacturing</option>
+                <option value="Services">Services (Trade & Logistics)</option>
+                <option value="Agro-processing">Agro-processing / Food</option>
+                <option value="Textiles">Textiles & Apparel</option>
                 <option value="Electronics">Electronics</option>
-                <option value="Agro-processing">Agro-processing</option>
-                <option value="Textiles">Textiles</option>
-                <option value="IT Services">IT Services</option>
-                <option value="Green Tech">Green Tech</option>
+                <option value="IT Services">IT & Digital Services</option>
+                <option value="Green Tech">Green Tech & Clean Energy</option>
               </select>
             </div>
 

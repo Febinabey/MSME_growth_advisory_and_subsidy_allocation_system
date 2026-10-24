@@ -98,8 +98,9 @@ export function optimizeSubsidyBudget(applicants, availableBudgetINR, policyWeig
     const sJob = (app.jobIntensity - minJob) / jobRange;
     const sRev = (app.revROI - minRev) / revRange;
 
-    // Apply Green Sector bonus if enabled
-    const isGreen = app.sector === "Green Tech" || app.sector === "Agro-processing" || app.sector === "Manufacturing - Food & Agro";
+    // Apply Green Sector bonus if enabled (MoSPI green / agro / clean tech priority)
+    const secLower = (app.sector || '').toLowerCase();
+    const isGreen = secLower.includes('green') || secLower.includes('agro') || secLower.includes('food') || secLower.includes('solar') || secLower.includes('clean');
     const greenMultiplier = isGreen ? (1 + greenBonus) : 1.0;
 
     const baseDensity = (jobWeight * sJob) + (revenueWeight * sRev);

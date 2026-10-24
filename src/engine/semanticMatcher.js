@@ -1,6 +1,51 @@
 import { GOVERNMENT_SCHEMES } from '../data/schemes.js';
 
 /**
+ * Intelligent sector matching resolving both generic MSME categories (e.g. Services, Manufacturing)
+ * and granular official MoSPI ASUSE / Udyam Registry sector descriptions.
+ */
+export function matchesSector(eligibleSectors = [], applicantSector = "") {
+  if (!applicantSector) return false;
+  const s = applicantSector.toLowerCase();
+  
+  return eligibleSectors.some(eligible => {
+    const el = eligible.toLowerCase();
+    // 1. Direct equality or bidirectional containment
+    if (el === s || s.includes(el) || el.includes(s)) return true;
+    
+    // 2. Official MoSPI / Udyam Sector Cross-Mappings
+    if (el === 'services' && (
+      s.includes('trade') || s.includes('retail') || s.includes('wholesale') ||
+      s.includes('logistics') || s.includes('transport') || s.includes('hospitality') ||
+      s.includes('service')
+    )) return true;
+    
+    if (el === 'agro-processing' && (
+      s.includes('food') || s.includes('agro') || s.includes('agriculture') ||
+      s.includes('dairy') || s.includes('bakery')
+    )) return true;
+    
+    if (el === 'textiles' && (
+      s.includes('textil') || s.includes('apparel') || s.includes('garment') ||
+      s.includes('weaving') || s.includes('fabric') || s.includes('handloom')
+    )) return true;
+    
+    if (el === 'electronics' && (
+      s.includes('electronic') || s.includes('semiconductor') || s.includes('hardware')
+    )) return true;
+    
+    if (el === 'it services' && (
+      s.includes('it ') || s.includes('digital') || s.includes('software') ||
+      s.includes('technology services') || s.includes('data')
+    )) return true;
+    
+    if (el === 'manufacturing' && s.startsWith('manufacturing')) return true;
+    
+    return false;
+  });
+}
+
+/**
  * Evaluates Scheme Eligibility & Semantic Compatibility Score
  * Inputs MSME metrics & requirement text, outputs ranked matching schemes.
  * Enforces Government of India Gazette S.O. 2119(E) & S.O. 1364(E) composite criteria.
@@ -26,7 +71,7 @@ export function matchSchemesForMSME(metrics = {}, requirementText = "") {
     const checks = {
       turnoverMatch: !isLargeCorporate && annualRevenue >= scheme.minTurnover && annualRevenue <= scheme.maxTurnover,
       employeeMatch: employees >= scheme.minEmployees && employees <= scheme.maxEmployees,
-      sectorMatch: scheme.eligibleSectors.includes(sector),
+      sectorMatch: matchesSector(scheme.eligibleSectors, sector),
       techMatch: techLevel >= scheme.minTechLevel,
       gstMatch: gstScore >= scheme.minGstScore
     };
